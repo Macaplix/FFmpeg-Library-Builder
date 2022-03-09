@@ -97,37 +97,37 @@ In case any automatic step fails, you can perform it manually and have the insta
 
 All these steps are suppose to perform automatically thanks to the *installer* executable, the following **Manual step** procedures are only provided in case any step fails or if you want to customize further.
 
-###step 1 - Backup and clean FFmpeg source and destination
+### step 1 - Backup and clean FFmpeg source and destination
 
 This step will backup any previous source ffmpeg and project ffmpeg directories if not empty. No files in these directories will be kept to build the library.  
 In case you have edited any of these files, and want to use them in the library, you'll need to put them back in place manually from backup after step 4.
 
 
- * #####Manual step:
+ * **Manual step:**
 
 	1 - Remove or rename folder *FFmpeg-Library-Builder/ffmpeg*  
 	
 	2 - Delete content of folder *FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg*
 
 
-###step 2 - Download FFmpeg Source
+### step 2 - Download FFmpeg Source
 
 In this step latest source tar.bz2 file is downloaded from ffmpeg website <https://ffmpeg.org> into folder *FFmpeg-Library-Builder*
 
 
- * #####Manual step:
+ * **Manual step:**
 
 	1 - Download file at <https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2> 
 	
 	2 - Put downloaded file **ffmpeg-snapshot.tar.bz2** in folder *FFmpeg-Library-Builder*
 
-###step 3 - Unzip FFmpeg Source
+### step 3 - Unzip FFmpeg Source
 
- * #####Manual step:
+ * **Manual step:**
 
 	Double click on the file **ffmpeg-snapshot.tar.bz2** to unzip and untar in place.
 
-###step 4 - Configure FFmpeg
+### step 4 - Configure FFmpeg
 
 Runs the configure script in the source folder obtained by previous steps.
 The default arguments used to run configure are those listed bellow. If you need different settings, you can either run this step manually or either edit the argument list to be perfomed automatically in the macro MCX\_CONFIGURE\_ARGUMENTS located in the file installer/MCXInstaller.m  
@@ -147,7 +147,7 @@ The default arguments used to run configure are those listed bellow. If you need
 	 
 ```
 
-###step 5 - Make FFmpeg ( without actually building )
+### step 5 - Make FFmpeg ( without actually building )
 
 Runs *make* with *-t* ( touch ) argument which only generate empty .o files in place where *make* would normally build the binary files. The library isn't built at this step, it would be unnecessary and time consumming, but the empty files will later give us a clue on what source files are needed, taking in consideration the configuration that was set in previous step.
 
@@ -160,7 +160,7 @@ Runs *make* with *-t* ( touch ) argument which only generate empty .o files in p
 	cd "FFmpeg-Library-Builder/ffmpeg"   
 	make -t
 ```
-###step 6 - Move source files to Xcode project folder
+### step 6 - Move source files to Xcode project folder
 
 First make sure there is no files in *FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg* directory and in the coresponding group in Xcode project.    
 If this group is still full select all the files, delete them and choose *Move to Trash* instead of the default *Remove Reference* 
@@ -180,7 +180,7 @@ which consist on:
 	**5 -** removing libavutil/time.h   
 
 
-###step 7 - Add FFmpeg Sources to Xcode project
+### step 7 - Add FFmpeg Sources to Xcode project
 
  * **Manual step:**
 
@@ -188,7 +188,7 @@ which consist on:
 	
 	![add to xcode](images/add.png)
 
-###step 8 - Finish moving & patching source files
+### step 8 - Finish moving & patching source files
 
 
 
@@ -211,7 +211,7 @@ which consist on:
 
 
 
-###step 9 - Build FFmpeg Library
+### step 9 - Build FFmpeg Library
 
  * **Manual step:**
 
