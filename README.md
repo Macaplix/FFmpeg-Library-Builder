@@ -1,4 +1,4 @@
-![](images/macaplixlogo128.png) © Macaplix 2022
+![](images/macaplixlogo64.png) © Macaplix 2022
 # FFmpeg Library Builder
 
 
@@ -10,7 +10,9 @@ This program is heavily based upon FFmpeg-in-Xcode project from Single, which it
 
 The root folder called *FFmpeg-Library-Builder* will be the working directory where intermediate and final library files will end up at some point.
 
-For now it just contains the project folder, *FFmpeg-Library*, and a convenience alias to the Xcode project file *FFmpeg.xcodeproj*
+For now it just contains the project folder, called **FFmpeg-Library**, this **README.md** file, a directory **images** with its auxiliary pictures and a convenience alias to the Xcode project file **FFmpeg.xcodeproj**
+
+![root folder](images/root_folder.png)
 
 If you wish to provide an other version of ffmpeg than the release version available at <https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2> you can place in that folder either a file called **ffmpeg-snapshot.tar.bz2** or either an uncompressed folder **ffmpeg** containing the set of source files with the configure script ( in this last case you need to start installation from step 4 ).  
 Otherwise the installer will automatically download and unzip source files from ffmpeg repository.
