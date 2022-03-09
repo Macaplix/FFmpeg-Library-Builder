@@ -1,0 +1,58 @@
+{
+  "_buildCommand2" : {
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildOnly"
+  },
+  "buildCommand" : "build",
+  "configuredTargets" : [
+    {
+      "guid" : "d89fc7ede9471cb41818e901b118730d3dfe3c30498fe863725d0dbabe8bc9cb"
+    }
+  ],
+  "containerPath" : "/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg.xcodeproj",
+  "continueBuildingAfterErrors" : false,
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "arm64",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : false,
+      "platform" : "macosx",
+      "sdk" : "macosx12.1",
+      "sdkVariant" : "macos",
+      "supportedArchitectures" : [
+        "arm64e",
+        "arm64",
+        "x86_64"
+      ],
+      "targetArchitecture" : "arm64"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/pe/classeur/developer/github/FFmpeg-Library-Builder",
+      "derivedDataPath" : "/Users/pe/classeur/developer/github/FFmpeg-Library-Builder",
+      "indexDataStoreFolderPath" : "/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg/Index/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg/Index/PrecompiledHeaders",
+      "pchPath" : "/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Debug",
+    "overrides" : {
+      "synthesized" : {
+        "table" : {
+          "ENABLE_PREVIEWS" : "NO"
+        }
+      }
+    }
+  },
+  "schemeCommand" : "launch",
+  "schemeCommand2" : "launch",
+  "shouldCollectMetrics" : false,
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}
