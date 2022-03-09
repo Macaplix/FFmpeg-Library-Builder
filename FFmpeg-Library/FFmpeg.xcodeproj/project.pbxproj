@@ -688,8 +688,20 @@
 		9CE714E921934C51006527D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9CE714FC21934C85006527D2 /* AudioToolbox.framework */,
+				9CE714F821934C78006527D2 /* Carbon.framework */,
+				9CE714F221934C67006527D2 /* Cocoa.framework */,
+				9CE714EC21934C56006527D2 /* CoreAudio.framework */,
+				9CE714F621934C72006527D2 /* CoreFoundation.framework */,
+				8F4027FE27C940DD0095D637 /* CoreHaptics.framework */,
+				9CE714F021934C62006527D2 /* CoreVideo.framework */,
+				9CE714FA21934C80006527D2 /* ForceFeedback.framework */,
+				8F40281427C9450D0095D637 /* GameController.framework */,
+				9CE714F421934C6B006527D2 /* IOKit.framework */,
 				8F4027EA27C917D20095D637 /* libbz2.a */,
 				8F40278427C8EF540095D637 /* libcrypto.a */,
+				8F40284D27C94E1A0095D637 /* libiconv.2.4.0.tbd */,
+				9C35EC412193553A00FD4FE8 /* libiconv.tbd */,
 				8F4027EE27C921680095D637 /* libmetal.a */,
 				8F40278027C8EF530095D637 /* libogg.a */,
 				8F40278927C8EF540095D637 /* libopenjp2.a */,
@@ -729,21 +741,9 @@
 				8F40279127C8EF550095D637 /* libxcb.a */,
 				8F40277927C8EF530095D637 /* libXdmcp.a */,
 				8F40279C27C8EF560095D637 /* libz.a */,
-				9CE714FC21934C85006527D2 /* AudioToolbox.framework */,
-				9CE714F821934C78006527D2 /* Carbon.framework */,
-				9CE714F221934C67006527D2 /* Cocoa.framework */,
-				9CE714EC21934C56006527D2 /* CoreAudio.framework */,
-				9CE714F621934C72006527D2 /* CoreFoundation.framework */,
-				8F4027FE27C940DD0095D637 /* CoreHaptics.framework */,
-				9CE714F021934C62006527D2 /* CoreVideo.framework */,
-				9CE714FA21934C80006527D2 /* ForceFeedback.framework */,
-				8F40281427C9450D0095D637 /* GameController.framework */,
-				9CE714F421934C6B006527D2 /* IOKit.framework */,
 				9CE714EA21934C51006527D2 /* Metal.framework */,
 				9CE714EE21934C5D006527D2 /* QuartzCore.framework */,
 				8F4028C327CFB52A0095D637 /* XcodeEditor.framework */,
-				8F40284D27C94E1A0095D637 /* libiconv.2.4.0.tbd */,
-				9C35EC412193553A00FD4FE8 /* libiconv.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
