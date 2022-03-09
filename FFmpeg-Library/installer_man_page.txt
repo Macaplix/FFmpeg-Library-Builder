@@ -1,0 +1,95 @@
+% installer [-h][-help][-v][-q][-c][n1-n2]
+
+	-h -help prints this help message
+
+	n1-n2 starts with step number n1 and ends with step number n2
+		both steps n1 & n2 are included
+		to perform only step n, use n-n
+		default is to perform all the steps from 1st to last
+		using n without "-" will start at step n and continue to the last one
+
+	-v verbrose - prints more detailed messages and help
+
+	-q quiet - only prints errors ( on stderr )
+
+	-c clean intermediary files once Library is build
+
+Here are the steps preceded by there numbers:
+
+1 - Backup and clean FFmpeg source and destination
+
+ * Manual:
+
+	1 - Remove or rename folder /Users/pe/classeur/developer/MediaFactory/MediaFactory2/FFmpeg-Library-Builder/ffmpeg
+	2 - Delete content of folder /Users/pe/classeur/developer/MediaFactory/MediaFactory2/FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg
+
+
+2 - Download FFmpeg Source
+
+ * Manual:
+
+	1 - Download file at https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2
+	2 - Put file ffmpeg-snapshot.tar.bz2 in folder /Users/pe/classeur/developer/MediaFactory/MediaFactory2/FFmpeg-Library-Builder
+
+3 - Unzip FFmpeg Source
+
+ * Manual:
+
+	Double click on the file ffmpeg-snapshot.tar.bz2 to unzip and untar
+
+4 - Configure FFmpeg
+
+ * Manual:
+
+	cd "/Users/pe/classeur/developer/MediaFactory/MediaFactory2/FFmpeg-Library-Builder/ffmpeg"
+	./configure --prefix=/Users/pe/classeur/developer/MediaFactory/MediaFactory2/FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg --enable-static --disable-shared --enable-gpl --enable-version3 --enable-pthreads --enable-postproc --enable-filters --disable-asm --disable-programs --enable-runtime-cpudetect --enable-bzlib --enable-zlib --enable-opengl --enable-libvpx --enable-libx264 --enable-libspeex --enable-libopenjpeg
+
+5 - Make FFmpeg ( without actually building )
+
+ * Manual:
+
+	cd "/Users/pe/classeur/developer/MediaFactory/MediaFactory2/FFmpeg-Library-Builder/ffmpeg"
+	/usr/local/bin/make -t
+
+6 - Move source files to Xcode project folder
+
+ * Manual:
+
+	Run script "build1" from original  Single FFmpeg-in-Xcode project
+https://github.com/libobjc/FFmpeg-in-Xcode
+it consist on:
+	1 - removing the FFmpeg group physically deleting all the files it contains
+	2 - copying any header file in source ffmpeg directory to project folder
+	3 - copying any c source file for which make has generated a .o file
+	4 - copying extra header file config.h
+	5 - removing libavutil/time.h
+
+
+7 - Add FFmpeg Sources to Xcode project
+
+ * Manual:
+
+	In Xcode FFmpeg project choose add Files to FFmpeg in the File menu
+	Select FFmpeg folder inside the project folder ( /Users/pe/classeur/developer/MediaFactory/MediaFactory2/FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg ) and click "Add"
+
+8 - Finish moving & patching source files
+
+ * Manual:
+
+	Run script "build2" from original  Single FFmpeg-in-Xcode project
+https://github.com/libobjc/FFmpeg-in-Xcode
+it consist on:
+	1 - copying all header files from source ffmpeg directory to project
+	2 - copying any source .c file whose name contains template or list
+		( Those files are included in other c files but doesn't need to be compiled separately )
+	3 - copying source .c file listed in MCX_NO_COMPIL_C_FILES
+		( Those files are also included in other c files but there names doesn't show it )
+
+
+9 - Build FFmpeg Library
+
+ * Manual:
+
+	Select scheme FFmpeg in Xcode project and build Library (  B )
+
+

@@ -1,0 +1,15 @@
+//
+//  main.pch
+//
+//
+//  Created by Pierre Boué on 2022/02/22.
+//  Copyright © 2022 Macaplix. All rights reserved.
+//
+
+#ifndef main_pch
+#define main_pch
+
+#include "libavutil/internal.h"
+#include "libavutil/intmath.h"
+
+#endif /* main_pch */
