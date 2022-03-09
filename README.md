@@ -20,7 +20,7 @@ Otherwise the installer will automatically download and unzip source files from 
 The project contains 2 different schemes each one with its own target:
 
 * **install** scheme  
-Which will build a command line tool *installer* ( it's target ) that will perform all the necessary steps to add required source files to the second target. The available steps automatically performed starts from downloading source and ends with building the Library and cleanning intermediary files.
+Which will build a command line tool *installer* ( it's target ) that will perform all the necessary steps to add required source files to the second target. The available steps automatically performed starts from downloading source and ends with building the Library and cleaning intermediary files.
   
 * **FFmpeg** scheme  
 Which will build the static library *libFFmpeg.a* ( the scheme's target ) once the installation is completed
@@ -29,7 +29,7 @@ When you first open the project, the Install scheme will be selected with 2 argu
 
 ![install args](images/installer_args.png)
 
-If you build and run the project (  R ) it wil print the detailed ( -v for verbrose ) help ( -h ) of the installer program in the console log window.  
+If you build and run the project (  R ) it will print the detailed ( -v for verbose ) help ( -h ) of the installer program in the console log window.  
 
 ### FFmpeg target files
 
@@ -45,7 +45,7 @@ metal_patch.c is a patch I added to avoid a missing symbol failure when using th
 
 source file *libavfilter/vf\_yadif\_videotoolbox.m* references *ff\_vf\_yadif\_videotoolbox\_metallib\_data* and *ff\_vf\_yadif\_videotoolbox\_metallib\_len* as extern variables, but the same variables aren't define as non extern anywhere...
 
-So those variable are defined with fake values in *metal\_patch.c* file to prevent the generated library to yell for missing symbols when in use in a project
+So those variables are defined with fake values in *metal\_patch.c* file to prevent the generated library to yell for missing symbols when in use in a project
 
 ```
 Todo: find a cleaner solution to this issue   
@@ -66,7 +66,7 @@ Todo: provide cross-compiled binaries so the library would run on any Mac
 ## Running the installer
 
 After checking the help page like explained above, you can run the installer without arguments, so the installer can perform all the steps.  
-You'll need for that to edit the Xcode scheme *install* (  < ) in order to desactivate arguments -h and -v.  
+You'll need for that to edit the Xcode scheme *install* (  < ) in order to deactivate arguments -h and -v.  
 Uncheck the 2 checkboxes in front of -h, -v and close the scheme editor window.
 
 ![scheme checkboxes](images/scheme_args_checkbox.png)
@@ -85,9 +85,9 @@ To launch the installer and perform a complete installation you just need to bui
 		default is to perform all the steps from 1st to last
 		using n without "-" will start at step n and continue to the last one
 
-	-v verbrose - prints more detailed messages and help
+	-v verbose. prints more detailed messages and help
 
-	-q quiet - only prints errors ( on stderr )
+	-q quiet. only prints errors ( on stderr )
 
 	-c clean intermediary files once Library is build
 ```
@@ -130,7 +130,7 @@ In this step latest source tar.bz2 file is downloaded from ffmpeg website <https
 ### step 4 - Configure FFmpeg
 
 Runs the configure script in the source folder obtained by previous steps.
-The default arguments used to run configure are those listed bellow. If you need different settings, you can either run this step manually or either edit the argument list to be perfomed automatically in the macro MCX\_CONFIGURE\_ARGUMENTS located in the file installer/MCXInstaller.m  
+The default arguments used to run configure are those listed bellow. If you need different settings, you can either run this step manually or either edit the argument list to be performed automatically in the macro MCX\_CONFIGURE\_ARGUMENTS located in the file installer/MCXInstaller.m  
 
  * **Manual step:**   
  
@@ -149,7 +149,7 @@ The default arguments used to run configure are those listed bellow. If you need
 
 ### step 5 - Make FFmpeg ( without actually building )
 
-Runs *make* with *-t* ( touch ) argument which only generate empty .o files in place where *make* would normally build the binary files. The library isn't built at this step, it would be unnecessary and time consumming, but the empty files will later give us a clue on what source files are needed, taking in consideration the configuration that was set in previous step.
+Runs *make* with *-t* ( touch ) argument which only generate empty .o files in place where *make* would normally build the binary files. The library isn't built at this step, it would be unnecessary and time consuming, but the empty files will later give us a clue on what source files are needed, taking in consideration the configuration that was set in previous step.
 
 
  * **Manual step:**   
@@ -162,7 +162,7 @@ Runs *make* with *-t* ( touch ) argument which only generate empty .o files in p
 ```
 ### step 6 - Move source files to Xcode project folder
 
-First make sure there is no files in *FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg* directory and in the coresponding group in Xcode project.    
+First make sure there is no files in *FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg* directory and in the corresponding group in Xcode project.    
 If this group is still full select all the files, delete them and choose *Move to Trash* instead of the default *Remove Reference* 
 
 ![delete group](images/delete.png)
@@ -171,7 +171,7 @@ If this group is still full select all the files, delete them and choose *Move t
 
 	Run script "build1" from original  Single FFmpeg-in-Xcode project
 https://github.com/libobjc/FFmpeg-in-Xcode   
-which consist on:   
+Which consist on:   
  
 	**1 -** removing the FFmpeg group physically deleting all the files it contains   
 	**2 -** copying any header file in source ffmpeg directory to project folder   
@@ -196,7 +196,7 @@ which consist on:
 
 	Run script "build2" from original  Single FFmpeg-in-Xcode project
 <https://github.com/libobjc/FFmpeg-in-Xcode>   
-which consist on:   
+Which consist on:   
 
 	**1 -** copying all header files from source ffmpeg directory to project FFmpeg directory   
 	
@@ -205,7 +205,7 @@ which consist on:
 	  
 	**3 -** copying source .c file listed in MCX\_NO\_COMPIL\_C\_FILES    
 	   
-		Those files are also included in other c files but there names doesn't show it!!!
+		Those files are also included in other c files but their names doesn't show it!!!
 		Todo: get the file list by scanning C files for #include directives
 		involving something else than a .h header  
 
