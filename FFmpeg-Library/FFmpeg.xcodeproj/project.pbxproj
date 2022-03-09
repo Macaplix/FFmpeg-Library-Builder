@@ -51,11 +51,11 @@
 		8F40281527C9450D0095D637 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40281427C9450D0095D637 /* GameController.framework */; };
 		8F40284E27C94E1A0095D637 /* libiconv.2.4.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40284D27C94E1A0095D637 /* libiconv.2.4.0.tbd */; };
 		8F40285827C974670095D637 /* MCXInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F40285527C9743E0095D637 /* MCXInstaller.m */; };
-		8F40288A27CBF2A20095D637 /* libtar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40288127CBEEDC0095D637 /* libtar.a */; };
-		8F40288B27CBF2AD0095D637 /* libbz2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4027EA27C917D20095D637 /* libbz2.a */; };
 		8F4028C427CFB52A0095D637 /* XcodeEditor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4028C327CFB52A0095D637 /* XcodeEditor.framework */; };
 		8F4028C827CFBD5E0095D637 /* XcodeEditor.framework in Headers */ = {isa = PBXBuildFile; fileRef = 8F4028C327CFB52A0095D637 /* XcodeEditor.framework */; settings = {ATTRIBUTES = (Public, ); }; };
 		8F826EB327D686400050533D /* metal_patch.c in Sources */ = {isa = PBXBuildFile; fileRef = 8F826EA727D6157C0050533D /* metal_patch.c */; };
+		8FEF09C227D963E400DC1E5F /* libtar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40288127CBEEDC0095D637 /* libtar.a */; };
+		8FEF09C327D9640100DC1E5F /* libbz2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4027EA27C917D20095D637 /* libbz2.a */; };
 		9C993F932193DB20003761DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C993F922193DB20003761DB /* main.m */; };
 /* End PBXBuildFile section */
 
@@ -452,9 +452,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8F40288A27CBF2A20095D637 /* libtar.a in Frameworks */,
-				8F40288B27CBF2AD0095D637 /* libbz2.a in Frameworks */,
 				8F4028C427CFB52A0095D637 /* XcodeEditor.framework in Frameworks */,
+				8FEF09C327D9640100DC1E5F /* libbz2.a in Frameworks */,
+				8FEF09C227D963E400DC1E5F /* libtar.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1040,6 +1040,7 @@
 					/opt/local/libexec/openssl3/lib,
 					/opt/local/lib,
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/libs",
 				);
 				OTHER_CFLAGS = "-export-all-symbols";
 				OTHER_LDFLAGS = (
@@ -1069,6 +1070,7 @@
 					/opt/local/libexec/openssl3/lib,
 					/opt/local/lib,
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/libs",
 				);
 				OTHER_CFLAGS = "-export-all-symbols";
 				OTHER_LDFLAGS = (
@@ -1099,6 +1101,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/libs",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				OTHER_CFLAGS = (
@@ -1127,6 +1130,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/libs",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				OTHER_CFLAGS = (
