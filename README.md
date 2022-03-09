@@ -39,7 +39,7 @@ Now that none of ffmpeg sources are added to the *FFmpeg* target, if you go to t
    
    
 
-####C file to compile
+#### C file to compile
 
 metal_patch.c is a patch I added to avoid a missing symbol failure when using the Library:   
 
@@ -52,7 +52,7 @@ Todo: find a cleaner solution to this issue
 
 ```
 
-####Linked Librairies
+#### Linked Librairies
 
 Ffmpeg is using a set of Apple System Frameworks plus some third party C librairies, which depends on the configure options ffmpeg is build with.
 
@@ -167,7 +167,7 @@ If this group is still full select all the files, delete them and choose *Move t
 
 ![delete group](images/delete.png)
 
- * #####Manual step:
+ * **Manual step:**
 
 	Run script "build1" from original  Single FFmpeg-in-Xcode project
 https://github.com/libobjc/FFmpeg-in-Xcode   
