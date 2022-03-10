@@ -13,8 +13,8 @@
 #include <XcodeEditor/XcodeEditor.h>
 
 
-#define MCX_CONFIGURE_ARGUMENTS @[@"--enable-static", @"--disable-shared", @"--enable-gpl", @"--enable-version3", @"--enable-pthreads", @"--enable-postproc", @"--enable-filters", @"--disable-asm", @"--disable-programs", @"--enable-runtime-cpudetect", @"--enable-bzlib", @"--enable-zlib", @"--enable-opengl", @"--enable-libvpx", @"--enable-libx264", @"--enable-libspeex", @"--enable-libopenjpeg", @"--enable-libvorbis", @"--enable-openssl"]
-// @"--enable-libfdk-aac", @"--enable-nonfree",  @"--nm=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-nm"
+#define MCX_CONFIGURE_ARGUMENTS @[@"--enable-static", @"--disable-shared", @"--enable-gpl", @"--enable-version3", @"--enable-pthreads", @"--enable-postproc", @"--enable-filters", @"--disable-asm", @"--disable-programs", @"--enable-runtime-cpudetect", @"--enable-bzlib", @"--enable-zlib", @"--enable-opengl", @"--enable-libvpx", @"--enable-libspeex", @"--enable-libopenjpeg", @"--enable-libvorbis", @"--enable-openssl"]
+// @"--enable-libfdk-aac", @"--enable-libx264", @"--enable-nonfree",  @"--nm=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-nm"
 
 #define MCX_SOURCE_ZIP_FILENAME @"ffmpeg-snapshot.tar.bz2"
 #define MCX_SOURCE_URL @"https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2"

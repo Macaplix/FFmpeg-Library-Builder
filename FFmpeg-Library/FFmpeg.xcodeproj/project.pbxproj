@@ -462,13 +462,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		86C76DF1D01CCB5A8EE62B9A /* FFmpeg */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = FFmpeg;
-			sourceTree = "<group>";
-		};
 		8F40288327CBEEFB0095D637 /* libtar */ = {
 			isa = PBXGroup;
 			children = (
@@ -767,7 +760,7 @@
 				9C35EC8B2193592300FD4FE8 /* Installer */,
 				9CD550C8219337510075012A /* Products */,
 				9CE714E921934C51006527D2 /* Frameworks */,
-				86C76DF1D01CCB5A8EE62B9A /* FFmpeg */,
+				AC1060B92E235B8FE4AAF28B /* FFmpeg */,
 			);
 			sourceTree = "<group>";
 		};
@@ -909,6 +902,13 @@
 				8F4028C327CFB52A0095D637 /* XcodeEditor.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AC1060B92E235B8FE4AAF28B /* FFmpeg */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = FFmpeg;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
