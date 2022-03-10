@@ -145,7 +145,7 @@ The default arguments used to run configure are those listed bellow. If you need
 	--enable-static --disable-shared --enable-gpl --enable-version3 \
 	--enable-pthreads --enable-postproc --enable-filters --disable-asm \
 	--disable-programs --enable-runtime-cpudetect --enable-bzlib \
-	 --enable-zlib --enable-opengl --enable-libvpx --enable-libx264 \
+	 --enable-zlib --enable-opengl --enable-libvpx \
 	 --enable-libspeex --enable-libopenjpeg  
 	 
 ```
