@@ -56,7 +56,7 @@
 		8FEF09C227D963E400DC1E5F /* libtar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40288127CBEEDC0095D637 /* libtar.a */; };
 		8FEF09C327D9640100DC1E5F /* libbz2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4027EA27C917D20095D637 /* libbz2.a */; };
 		8FF6E4F127DA0D1200F4BA9F /* main.pch in Headers */ = {isa = PBXBuildFile; fileRef = 9CD552C52193389B0075012A /* main.pch */; };
-		8FF6E4F827DA10C900F4BA9F /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF6E4F727DA10C900F4BA9F /* libx264.a */; };
+		8FF6E4FA27DA15B300F4BA9F /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF6E4F927DA15B300F4BA9F /* libx264.a */; };
 		9C993F932193DB20003761DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C993F922193DB20003761DB /* main.m */; };
 /* End PBXBuildFile section */
 
@@ -319,7 +319,7 @@
 		8FF6E2EA27D93F8200F4BA9F /* asn1err.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = asn1err.h; sourceTree = "<group>"; };
 		8FF6E4F527DA10A600F4BA9F /* x264_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x264_config.h; sourceTree = "<group>"; };
 		8FF6E4F627DA10A600F4BA9F /* x264.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x264.h; sourceTree = "<group>"; };
-		8FF6E4F727DA10C900F4BA9F /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libx264.a; path = libs/libx264.a; sourceTree = "<group>"; };
+		8FF6E4F927DA15B300F4BA9F /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libx264.a; path = libs/libx264.a; sourceTree = "<group>"; };
 		9C169A872193E8FC0044126F /* libFFmpeg.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFFmpeg.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C35EC412193553A00FD4FE8 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		9C993F802193DAD0003761DB /* installer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = installer; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -403,7 +403,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8FF6E4F827DA10C900F4BA9F /* libx264.a in Frameworks */,
+				8FF6E4FA27DA15B300F4BA9F /* libx264.a in Frameworks */,
 				8F40284E27C94E1A0095D637 /* libiconv.2.4.0.tbd in Frameworks */,
 				8F40281527C9450D0095D637 /* GameController.framework in Frameworks */,
 				8F4027FF27C940DD0095D637 /* CoreHaptics.framework in Frameworks */,
@@ -462,7 +462,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		43EC13EB5D2A352DE5460584 /* FFmpeg */ = {
+		86C76DF1D01CCB5A8EE62B9A /* FFmpeg */ = {
 			isa = PBXGroup;
 			children = (
 			);
@@ -571,7 +571,6 @@
 		8FF6E25E27D93DF900F4BA9F /* include */ = {
 			isa = PBXGroup;
 			children = (
-				8FF6E4F427DA10A600F4BA9F /* x264 */,
 				8F40288227CBEEFB0095D637 /* bzlib.h */,
 				8F40288327CBEEFB0095D637 /* libtar */,
 				8FEF098527D95F1E00DC1E5F /* ogg */,
@@ -581,6 +580,7 @@
 				8FEF099427D95F1E00DC1E5F /* speex */,
 				8FEF09BD27D95F1E00DC1E5F /* vorbis */,
 				8FEF098927D95F1E00DC1E5F /* vpx */,
+				8FF6E4F427DA10A600F4BA9F /* x264 */,
 				8FEF099C27D95F1E00DC1E5F /* xcb */,
 			);
 			path = include;
@@ -767,7 +767,7 @@
 				9C35EC8B2193592300FD4FE8 /* Installer */,
 				9CD550C8219337510075012A /* Products */,
 				9CE714E921934C51006527D2 /* Frameworks */,
-				43EC13EB5D2A352DE5460584 /* FFmpeg */,
+				86C76DF1D01CCB5A8EE62B9A /* FFmpeg */,
 			);
 			sourceTree = "<group>";
 		};
@@ -851,7 +851,7 @@
 		9CE714E921934C51006527D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8FF6E4F727DA10C900F4BA9F /* libx264.a */,
+				8FF6E4F927DA15B300F4BA9F /* libx264.a */,
 				9CE714FC21934C85006527D2 /* AudioToolbox.framework */,
 				9CE714F821934C78006527D2 /* Carbon.framework */,
 				9CE714F221934C67006527D2 /* Cocoa.framework */,
