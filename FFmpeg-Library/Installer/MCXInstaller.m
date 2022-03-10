@@ -500,6 +500,7 @@ NSString * SGFAppend(NSString *s, NSString *a);
         return NO;
     }
     NSString *scpt = [@"tell application \"Finder\"\n\t open POSIX file \"" stringByAppendingFormat:@"%s\"\n\tactivate\nend tell\n", getenv("PWD")];
+    if ( ! _quietMode ) printf("running\n%s\n", scpt.UTF8String );
     ascpt = [[NSAppleScript alloc] initWithSource:scpt];
     [ascpt executeAndReturnError:&errdict];
     if ( errdict )
