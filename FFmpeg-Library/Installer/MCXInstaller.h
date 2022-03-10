@@ -30,7 +30,7 @@ typedef enum:unsigned char
 @property(readwrite, assign)MCXInstallStep firstStep;
 @property(readwrite, assign)MCXInstallStep lastStep;
 @property(readwrite, assign)BOOL noopMode;
-@property(readwrite, assign)BOOL verbroseMode;
+@property(readwrite, assign)BOOL verboseMode;
 @property(readwrite, assign)BOOL quietMode;
 @property(readonly)MCXInstallStep currentStep;
 @property(readonly)NSString *currentStepName;

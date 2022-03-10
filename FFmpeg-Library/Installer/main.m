@@ -27,13 +27,13 @@ int main(int argc, const char * argv[])
                 showHelp();
                 [installer setNoopMode:YES];
             } else if (strcmp(rgestr, "-v") == 0 ) {
-                [installer setVerbroseMode:YES];
+                [installer setVerboseMode:YES];
                 [installer setQuietMode:NO];
             } else if (strcmp(rgestr, "-c") == 0 ) {
                 lstep = MCXInstallStepClean;
             } else if (strcmp(rgestr, "-q") == 0 ) {
                 [installer setQuietMode:YES];
-                [installer setVerbroseMode:NO];
+                [installer setVerboseMode:NO];
             } else {
                 char *pt = strchr(rgestr, '-');
                 if ( pt )
@@ -67,7 +67,7 @@ void showHelp( void )
            "\t\tto perform only step n, use n-n\n"
            "\t\tdefault is to perform all the steps from 1st to last\n"
            "\t\tusing n without \"-\" will start at step n and continue to the last one\n\n"
-           "\t-v verbrose - prints more detailed messages and help\n\n"
+           "\t-v verbose - prints more detailed messages and help\n\n"
            "\t-q quiet - only prints errors ( on stderr )\n\n"
            "\t-c clean intermediary files once Library is build\n\n"
            "Here are the steps preceded by there numbers:\n"
