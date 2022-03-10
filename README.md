@@ -77,21 +77,22 @@ To launch the installer and perform a complete installation you just need to bui
 
 ## Installer man page
 ```
-% installer [-h][-help][-v][-q][-c][n1-n2]
+% installer [-hvqc] [n1-n2] [n]
 
-	-h -help prints this help message
+	-h help. prints this help message
 
 	n1-n2 starts with step number n1 and ends with step number n2
 		both steps n1 & n2 are included
 		to perform only step n, use n-n
 		default is to perform all the steps from 1st to last
-		using n without "-" will start at step n and continue to the last one
+	n	using n without "-" will start at step n and continue to the last one
 
 	-v verbose. prints more detailed messages and help
 
 	-q quiet. only prints errors ( on stderr )
 
-	-c clean intermediary files once Library is build
+	-c clean. cleans intermediary files once Library is build
+	
 ```
 In case any automatic step fails, you can perform it manually and have the installer do the remaining steps automatically passing the following step number as argument in the scheme
 

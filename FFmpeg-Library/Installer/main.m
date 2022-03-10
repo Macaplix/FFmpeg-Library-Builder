@@ -22,26 +22,42 @@ int main(int argc, const char * argv[])
         for (unsigned char argi=1; argi < argc; argi++)
         {
             const char *rgestr = argv[argi];
-            if (( strcmp(rgestr, "-h") == 0 ) || ( strcmp(rgestr, "-help") == 0  ))
+            if ( strlen(rgestr) < 1 ) continue;
+            if ( rgestr[0] == '-' )
             {
-                showHelp();
-                [installer setNoopMode:YES];
-            } else if (strcmp(rgestr, "-v") == 0 ) {
-                [installer setVerboseMode:YES];
-                [installer setQuietMode:NO];
-            } else if (strcmp(rgestr, "-c") == 0 ) {
-                lstep = MCXInstallStepClean;
-            } else if (strcmp(rgestr, "-q") == 0 ) {
-                [installer setQuietMode:YES];
-                [installer setVerboseMode:NO];
+                for (unsigned char sarg=1; sarg < strlen(rgestr); sarg++)
+                {
+                    switch (rgestr[sarg])
+                    {
+                        case 'h':
+                            showHelp();
+                            [installer setNoopMode:YES];
+                            break;
+                        case 'v':
+                            [installer setVerboseMode:YES];
+                            [installer setQuietMode:NO];
+                            break;
+                        case 'q':
+                            [installer setVerboseMode:NO];
+                            [installer setQuietMode:YES];
+                            break;
+                        case 'c':
+                            lstep = MCXInstallStepClean;
+                             break;
+                        default:
+                            fprintf(stderr, "unknow argument -%c\n", rgestr[sarg]);
+                            break;
+                    }
+                }
             } else {
+                
                 char *pt = strchr(rgestr, '-');
                 if ( pt )
                 {
                     char deb[8]="";
                     strncpy(deb, rgestr, pt -rgestr);
                     fstep = strlen(deb)?strtoul(deb, NULL, 0):0;
-                    lstep = strlen(pt+1)?strtoul(pt + 1, NULL, 0):MCX_LAST_STEP;
+                    lstep = strlen(pt+1)?strtoul(pt + 1, NULL, 0):9;///MCX_LAST_STEP;
                     if ( lstep > 0 )lstep--;
                 } else {
                     fstep = strtoul(rgestr, NULL, 0);
@@ -49,7 +65,6 @@ int main(int argc, const char * argv[])
                 if ( fstep > 0 )fstep--;
                 if ( lstep > MCXInstallStepBuildLibrary ) lstep = MCXInstallStepBuildLibrary;
                 if ( lstep > MCX_LAST_STEP ) lstep = MCX_LAST_STEP;
-
             }
         }
         [installer setFirstStep:fstep];
@@ -60,8 +75,8 @@ int main(int argc, const char * argv[])
 }
 void showHelp( void )
 {
-    printf("%% installer [-h][-help][-v][-q][-c][n1-n2]\n\n"
-           "\t-h -help prints this help message\n\n"
+    printf("# installer [-hvqc] [n1-n2] [n]\n\n"
+           "\t-h help. prints this help message\n\n"
            "\tn1-n2 starts with step number n1 and ends with step number n2\n"
            "\t\tboth steps n1 & n2 are included\n"
            "\t\tto perform only step n, use n-n\n"
