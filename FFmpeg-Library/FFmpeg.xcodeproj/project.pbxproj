@@ -56,6 +56,7 @@
 		8FEF09C227D963E400DC1E5F /* libtar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40288127CBEEDC0095D637 /* libtar.a */; };
 		8FEF09C327D9640100DC1E5F /* libbz2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4027EA27C917D20095D637 /* libbz2.a */; };
 		8FF6E4EE27DA0C5100F4BA9F /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF6E4ED27DA0C5000F4BA9F /* libx264.a */; };
+		8FF6E4F127DA0D1200F4BA9F /* main.pch in Headers */ = {isa = PBXBuildFile; fileRef = 9CD552C52193389B0075012A /* main.pch */; };
 		9C993F932193DB20003761DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C993F922193DB20003761DB /* main.m */; };
 /* End PBXBuildFile section */
 
@@ -925,6 +926,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8FF6E4F127DA0D1200F4BA9F /* main.pch in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
