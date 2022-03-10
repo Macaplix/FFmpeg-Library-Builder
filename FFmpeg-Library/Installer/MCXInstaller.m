@@ -499,7 +499,7 @@ NSString * SGFAppend(NSString *s, NSString *a);
         fprintf(stderr, "Can't execute script %s\n%s\n", scpturl.fileSystemRepresentation, errdict.description.UTF8String);
         return NO;
     }
-    NSString *scpt = [@"tell application \"Finder\"\n\t open POSIX file \"" stringByAppendingFormat:@"%s\"\n\tactivate\nend tell\n", getenv("PWD")];
+    NSString *scpt = [@"tell application \"Finder\"\n\t open POSIX file \"" stringByAppendingFormat:@"%@\"\n\tactivate\nend tell\n", [_selfExecutablePath stringByDeletingLastPathComponent]];
     if ( ! _quietMode ) printf("running\n%s\n", scpt.UTF8String );
     ascpt = [[NSAppleScript alloc] initWithSource:scpt];
     [ascpt executeAndReturnError:&errdict];
