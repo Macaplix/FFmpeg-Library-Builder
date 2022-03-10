@@ -514,6 +514,7 @@ NSString * SGFAppend(NSString *s, NSString *a);
 -(BOOL)_clean
 {
     BOOL rez =YES;
+    fprintf(stderr, "Not yet implemented\n");
     return rez;
 }
 #pragma mark HELPERS
