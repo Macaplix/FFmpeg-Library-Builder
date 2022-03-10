@@ -13,8 +13,8 @@
 #include <XcodeEditor/XcodeEditor.h>
 
 
-#define MCX_CONFIGURE_ARGUMENTS @[@"--enable-static", @"--disable-shared", @"--enable-gpl", @"--enable-version3", @"--enable-pthreads", @"--enable-postproc", @"--enable-filters", @"--disable-asm", @"--disable-programs", @"--enable-runtime-cpudetect", @"--enable-bzlib", @"--enable-zlib", @"--enable-opengl", @"--enable-libvpx", @"--enable-libx264", @"--enable-libspeex", @"--enable-libopenjpeg"]
-// @"--enable-libfdk-aac", @"--enable-nonfree", @"--enable-libvorbis", @"--enable-openssl",  @"--nm=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-nm"
+#define MCX_CONFIGURE_ARGUMENTS @[@"--enable-static", @"--disable-shared", @"--enable-gpl", @"--enable-version3", @"--enable-pthreads", @"--enable-postproc", @"--enable-filters", @"--disable-asm", @"--disable-programs", @"--enable-runtime-cpudetect", @"--enable-bzlib", @"--enable-zlib", @"--enable-opengl", @"--enable-libvpx", @"--enable-libspeex", @"--enable-libopenjpeg", @"--enable-libvorbis", @"--enable-openssl"]
+// @"--enable-libfdk-aac", @"--enable-libx264", @"--enable-nonfree",  @"--nm=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-nm"
 
 #define MCX_SOURCE_ZIP_FILENAME @"ffmpeg-snapshot.tar.bz2"
 #define MCX_SOURCE_URL @"https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2"
@@ -35,12 +35,13 @@
 
 BOOL unzip(const char *fname, char **outfile );
 BOOL untar(const char * filename);
+/*
 BOOL SGFCopy(NSString *s, NSString *d, BOOL force);
 BOOL SGFCopyExt(NSString *s, NSString *d, BOOL force, NSString *e, NSArray<NSString *> *es);
 BOOL SGFRemove(NSString *s);
 BOOL SGFReplace(NSString *s, NSString *f, NSString *t);
 NSString * SGFAppend(NSString *s, NSString *a);
-
+*/
 @interface MCXInstaller()<NSURLSessionDownloadDelegate>
 {
     MCXInstallStep _currentStep;
@@ -54,6 +55,12 @@ NSString * SGFAppend(NSString *s, NSString *a);
 -(BOOL)_performCurrentStep;
 -(NSString *)_prefixBackup;
 -(void)_clearFFmpegGroupIncludingFiles:(BOOL)delt;
+-(BOOL)_SGFCopy:(NSString *)src toDest:( NSString *)dest forcing:( BOOL) force;
+//-(BOOL)_SGFCopySource:(NSString *)src toDest:( NSString *)dest forcing:(BOOL)force;
+-(BOOL)_SGFCopyExtSource:(NSString *)src toDest:(NSString *)dest forcing:(BOOL) force withExt:( NSString *)ext exts2copy:( NSArray<NSString *> *) exts;
+-(BOOL)_SGFRemove:(NSString *)src;
+-(BOOL)_SGFReplaceInfile:(NSString *)fpath search:(NSString *)srch withText:( NSString *)txt;
+-(NSString *) _SGFAppendTo:(NSString *)src suffix:( NSString *)appd;
 /* STEPS */
 -(BOOL)_backupAndClean;
 -(BOOL)_downloadSource;
@@ -67,7 +74,7 @@ NSString * SGFAppend(NSString *s, NSString *a);
 -(BOOL)_clean;
 @end
 @implementation MCXInstaller
-@synthesize sourceFFmpegDir = _sourceFFmpegDir, destinationFFmpegDir =_destinationFFmpegDir, firstStep = _firstStep, lastStep = _lastStep, manualStep=_manualStep, noopMode=_noopMode, verbroseMode=_verbroseMode, quietMode = _quietMode, selfExecutablePath=_selfExecutablePath;
+@synthesize sourceFFmpegDir = _sourceFFmpegDir, destinationFFmpegDir =_destinationFFmpegDir, firstStep = _firstStep, lastStep = _lastStep, manualStep=_manualStep, noopMode=_noopMode, verboseMode=_verboseMode, quietMode = _quietMode, selfExecutablePath=_selfExecutablePath;
 -(instancetype)init
 {
     self = [super init];
@@ -144,7 +151,7 @@ NSString * SGFAppend(NSString *s, NSString *a);
             break;
     }
     if ( ! rez ) fprintf(stderr, "*** step %u %s\nfailed ***\n", _currentStep + 1, [self currentStepName].UTF8String);
-    if ( ( rez ) &&( _verbroseMode )) printf("\n * Manual:\n\n%s\n\n", _manualStep.UTF8String);
+    if ( ( rez ) &&( _verboseMode )) printf("\n * Manual:\n\n%s\n\n", _manualStep.UTF8String);
     return rez;
 }
 #pragma mark STEPS
@@ -341,13 +348,17 @@ NSString * SGFAppend(NSString *s, NSString *a);
     SGFRemove(SGFAppend(_destinationFFmpegDir, @"config.h"));
      */
     // Copy
-    for (NSString * o in MCX_LIB_DIRS)
+    for (NSString * dirname in MCX_LIB_DIRS)
     {
-        SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".h", nil);
-        SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".o", @[@".c", @".m"]);
+        //SGFCopyExt(SGFAppend(_sourceFFmpegDir, dirname), SGFAppend(_destinationFFmpegDir, dirname), YES, @".h", nil);
+        [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:dirname] forcing:YES withExt:@".h" exts2copy:nil];
+        //SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".o", @[@".c", @".m"]);
+        [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:dirname] forcing:YES withExt:@".o" exts2copy:@[@".c", @".m"]];
     }
-    SGFCopy(SGFAppend(_sourceFFmpegDir, @"config.h"), SGFAppend(_destinationFFmpegDir, @"config.h"), YES);
-    SGFRemove(SGFAppend(_destinationFFmpegDir, @"libavutil/time.h"));
+    //SGFCopy(SGFAppend(_sourceFFmpegDir, @"config.h"), SGFAppend(_destinationFFmpegDir, @"config.h"), YES);
+    [self _SGFCopy:[self _SGFAppendTo:_sourceFFmpegDir suffix:@"config.h"] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:@"config.h"] forcing:YES];
+    // SGFRemove(SGFAppend(_destinationFFmpegDir, @"libavutil/time.h"));
+    [self _SGFRemove:[self _SGFAppendTo:_destinationFFmpegDir suffix:@"libavutil/time.h"]];
     return rez;
 }
 -(void)_clearFFmpegGroupIncludingFiles:(BOOL)delt
@@ -442,18 +453,21 @@ NSString * SGFAppend(NSString *s, NSString *a);
     @"\t\t( Those files are also included in other c files but there names doesn't show it )\n";
     if ( _noopMode ) return YES;
     // Copy
-    for (NSString * o in MCX_LIB_DIRS)
+    for (NSString * dirname in MCX_LIB_DIRS)
     {
         // copy all the headers files
-        SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".h", nil);
+        //SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".h", nil);
+        [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:dirname] forcing:YES withExt:@".h" exts2copy:nil];
         // copy all files whose name contains template or list ( SGFCopyExt hack )
-        SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @"t", @[@".c"]);
+        //SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @"t", @[@".c"]);
+        [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:dirname] forcing:YES withExt:@"t" exts2copy:@[@".c"]];
         /* the files copied bellow are not all necessary and will be imported in xcode if previous step is ran again
         SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".c", nil);
         SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".inc", nil);
          */
     }
-    SGFCopyExt(SGFAppend(_sourceFFmpegDir, @"compat"), SGFAppend(_destinationFFmpegDir, @"compat"), YES, @".h", nil);
+    //SGFCopyExt(SGFAppend(_sourceFFmpegDir, @"compat"), SGFAppend(_destinationFFmpegDir, @"compat"), YES, @".h", nil);
+    [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:@"compat"] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:@"compat"] forcing:YES withExt:@".h" exts2copy:nil];
     //SGFCopyExt(SGFAppend(_sourceFFmpegDir, @"compat"), SGFAppend(_destinationFFmpegDir, @"compat"), YES, @".c", nil);
     
     // copying included C files that doesn't need to be compiled separetly
@@ -461,21 +475,32 @@ NSString * SGFAppend(NSString *s, NSString *a);
     // to make sure the installer would work with ffmpeg future updates without updating MCX_NO_COMPIL_C_FILES list
     for ( NSString *relpath in MCX_NO_COMPIL_C_FILES )
     {
-        SGFCopy([_sourceFFmpegDir stringByAppendingPathComponent:relpath], [_destinationFFmpegDir stringByAppendingPathComponent:relpath], YES);
+        //SGFCopy([_sourceFFmpegDir stringByAppendingPathComponent:relpath], [_destinationFFmpegDir stringByAppendingPathComponent:relpath], YES);
+        [self _SGFCopy:[_sourceFFmpegDir stringByAppendingPathComponent:relpath] toDest:[_destinationFFmpegDir stringByAppendingPathComponent:relpath] forcing:YES];
     }
 
 
     // Edit
-    SGFReplace(SGFAppend(_destinationFFmpegDir, @"libavcodec/videotoolbox.c"),
-               @"#include \"mpegvideo.h\"",
-               @"// Edit by Single\n#define Picture FFPicture\n#include \"mpegvideo.h\"\n#undef Picture");
-    SGFReplace(SGFAppend(_destinationFFmpegDir, @"libavfilter/vsrc_mandelbrot.c"),
-               @"typedef struct Point {",
-               @"// Edit by Single\ntypedef struct {");
+   // SGFReplace(SGFAppend(_destinationFFmpegDir, @"libavcodec/videotoolbox.c"),
+     //          @"#include \"mpegvideo.h\"",
+       //        @"// Edit by Single\n#define Picture FFPicture\n#include \"mpegvideo.h\"\n#undef Picture");
+    [self _SGFReplaceInfile:[_destinationFFmpegDir stringByAppendingPathComponent:@"libavcodec/videotoolbox.c"]
+                     search: @"#include \"mpegvideo.h\""
+                   withText:@"// Edit by Single\n#define Picture FFPicture\n#include \"mpegvideo.h\"\n#undef Picture"];
+    
+    //SGFReplace(SGFAppend(_destinationFFmpegDir, @"libavfilter/vsrc_mandelbrot.c"),
+    //           @"typedef struct Point {",
+    //           @"// Edit by Single\ntypedef struct {");
+    [self _SGFReplaceInfile:[_destinationFFmpegDir stringByAppendingPathComponent:@"libavfilter/vsrc_mandelbrot.c"]
+                     search:@"typedef struct Point {"
+                   withText:@"// Edit by Single\ntypedef struct {"];
     //This file would also reference 2 different definition of struct Point
-    SGFReplace(SGFAppend(_destinationFFmpegDir, @"libavfilter/signature.h"),
-               @"typedef struct Point {",
-               @"// Edit by MCX\ntypedef struct {");
+    //SGFReplace(SGFAppend(_destinationFFmpegDir, @"libavfilter/signature.h"),
+    //           @"typedef struct Point {",
+    //              @"// Edit by MCX\ntypedef struct {");
+    [self _SGFReplaceInfile:[_destinationFFmpegDir stringByAppendingPathComponent:@"libavfilter/signature.h"]
+                     search:@"typedef struct Point {"
+                   withText:@"// Edit by MCX\ntypedef struct {"];
     return rez;
 }
 -(BOOL)_buildLibrary;
@@ -499,7 +524,8 @@ NSString * SGFAppend(NSString *s, NSString *a);
         fprintf(stderr, "Can't execute script %s\n%s\n", scpturl.fileSystemRepresentation, errdict.description.UTF8String);
         return NO;
     }
-    NSString *scpt = [@"tell application \"Finder\"\n\t open POSIX file \"" stringByAppendingFormat:@"%s\"\n\tactivate\nend tell\n", getenv("PWD")];
+    NSString *scpt = [@"tell application \"Finder\"\n\t open POSIX file \"" stringByAppendingFormat:@"%@\"\n\tactivate\nend tell\n", [_selfExecutablePath stringByDeletingLastPathComponent]];
+    if ( ! _quietMode ) printf("running\n%s\n", scpt.UTF8String );
     ascpt = [[NSAppleScript alloc] initWithSource:scpt];
     [ascpt executeAndReturnError:&errdict];
     if ( errdict )
@@ -513,6 +539,7 @@ NSString * SGFAppend(NSString *s, NSString *a);
 -(BOOL)_clean
 {
     BOOL rez =YES;
+    fprintf(stderr, "Not yet implemented\n");
     return rez;
 }
 #pragma mark HELPERS
@@ -600,6 +627,106 @@ NSString * SGFAppend(NSString *s, NSString *a);
 {
     return  MCX_INSTALL_STEP_NAMES[_currentStep];
 }
+
+//BOOL SGFCopyExt(NSString *s, NSString *d, BOOL force, NSString *e, NSArray<NSString *> *es)
+-(BOOL) _SGFCopyExtSource:(NSString *)src toDest:(NSString *)dest forcing:(BOOL) force withExt:( NSString *)ext exts2copy:( NSArray<NSString *> *) exts
+{
+    NSFileManager *fm = [NSFileManager defaultManager];
+    for (NSString *o in [fm enumeratorAtPath:src])
+    {
+        NSString *p = [src stringByAppendingPathComponent:o];
+        if (([o hasSuffix:ext]) || (( [ext isEqualToString:@"t"]) && (( [o containsString:@"template"]) || ( [o containsString:@"list"]))))
+        {
+            NSString *r = p;
+            if (exts.count)
+            {
+                r = nil;
+                for (NSString *m in exts)
+                {
+                    r = ( [ext isEqualToString:@"t"])?p:[p stringByReplacingOccurrencesOfString:ext withString:m];
+                    //if ( r && [e isEqualToString:@"t"]) printf("%s\n", r.UTF8String );
+                    if ([fm fileExistsAtPath:r])
+                    {
+                        break;
+                    }
+                }
+            }
+            if (!r)
+            {
+                //NSLog(@"Not Found : %@", o);
+                fprintf(stderr, "Not Found : %s\n", o.UTF8String);
+                return NO;
+            }
+            NSString *t = [r stringByReplacingOccurrencesOfString:src withString:dest];
+           // SGFCopy(r, t, force);
+            [self _SGFCopy:r toDest:t forcing:YES];
+        }
+    }
+    return YES;
+}
+-(BOOL)_SGFCopy:(NSString *)src toDest:( NSString *)dest forcing:( BOOL) force
+{
+    BOOL dir = NO;
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if (![fm fileExistsAtPath:src isDirectory:&dir] || ([fm fileExistsAtPath:dest] && !force))
+    {
+        return NO;
+    }
+    [fm removeItemAtPath:dest error:nil];
+    NSMutableArray *c = [dest.pathComponents mutableCopy];
+    [(NSMutableArray *)c removeLastObject];
+    for (int i = 0; i < c.count; i++)
+    {
+        NSArray *c_t = [c subarrayWithRange:NSMakeRange(0, c.count - i)];
+        NSString *p = [NSString pathWithComponents:c_t];
+        if (![fm fileExistsAtPath:p])
+        {
+            [fm createDirectoryAtPath:p withIntermediateDirectories:yearMask ? YES : NO attributes:nil error:nil];
+        }
+    }
+    [fm copyItemAtPath:src toPath:dest error:nil];
+    if (_verboseMode) printf("\tcopy %s -> %s\n", src.UTF8String, dest.UTF8String);
+    return YES;
+}
+
+//BOOL SGFRemove(NSString *s)
+-(BOOL)_SGFRemove:(NSString *)src
+{
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if ([fm fileExistsAtPath:src])
+    {
+        return [fm removeItemAtPath:src error:nil];
+    }
+    return NO;
+}
+//BOOL SGFReplace(NSString *s, NSString *f, NSString *t)
+-(BOOL)_SGFReplaceInfile:(NSString *)fpath search:(NSString *)srch withText:( NSString *)txt
+{
+    BOOL dir = NO;
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if (![fm fileExistsAtPath:fpath isDirectory:&dir] || dir)
+    {
+        return NO;
+    }
+    NSString *cntnt = [NSString stringWithContentsOfFile:fpath encoding:NSUTF8StringEncoding error:nil];
+    if (cntnt.length == 0)
+    {
+        return NO;
+    }
+    cntnt = [cntnt stringByReplacingOccurrencesOfString:srch withString:txt];
+    return [cntnt writeToFile:fpath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+}
+//NSString * SGFAppend(NSString *s, NSString *a)
+-(NSString *)_SGFAppendTo:(NSString *)src suffix:( NSString *)appd
+{
+    return [src stringByAppendingPathComponent:appd];
+}
+
+
+
+
+
+
 @end
 BOOL untar(const char * filename)
 {
@@ -670,6 +797,7 @@ BOOL unzip(const char *fname, char **rootfilename )
     // printf("Successfully uncompressed %s to %s\n", fname, dfname);
     return YES;
 }
+/*
 BOOL SGFCopy(NSString *s, NSString *d, BOOL force)
 {
     BOOL dir = NO;
@@ -756,3 +884,4 @@ NSString * SGFAppend(NSString *s, NSString *a)
     return [s stringByAppendingPathComponent:a];
 }
 
+*/
