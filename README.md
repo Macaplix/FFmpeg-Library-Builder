@@ -76,8 +76,8 @@ Uncheck the 2 checkboxes in front of -h, -v and close the scheme editor window.
 To launch the installer and perform a complete installation you just need to build and run the *install* scheme (  R )
 
 ## Installer man page
-```
-% installer [-hvqc] [-c=n] [n1-n2] [n]
+```bash
+# installer [-hvqc] [-c=n] [n1-n2] [n]
 
 	-h help. prints this help message
 
@@ -95,6 +95,7 @@ To launch the installer and perform a complete installation you just need to bui
 	
 	-c=n cleans intermediary files with clean level n
 		default clean level is 2 with -c and 0 without
+		
 		0 - don't clean
 		1 - clean only unnecessary files
 		2 - cleans to rebuild a library with different ./configure settings
@@ -105,7 +106,7 @@ In case any automatic step fails, you can perform it manually and have the insta
 
 ## Installer steps in detail
 
-All these steps are suppose to perform automatically thanks to the *installer* executable, the following **Manual step** procedures are only provided in case any step fails or if you want to customize further.
+<mark>All these steps are suppose to perform automatically thanks to the *installer* executable, the following **Manual step** procedures are only provided in case any step fails or if you want to customize further.</mark>
 
 ### step 1 - Backup and clean FFmpeg source and destination
 
