@@ -22,7 +22,7 @@ int main(int argc, const char * argv[])
         for (unsigned char argi=1; argi < argc; argi++)
         {
             const char *rgestr = argv[argi];
-            if ( strcmp(rgestr, "--finish") == 0 )
+            if (( argi == 1) && ( strcmp(rgestr, "--finish") == 0 ))
             {
                 return [installer finish];
             }
