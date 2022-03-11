@@ -25,7 +25,8 @@
 #define MCX_LAST_STEP MCXInstallStepBuildLibrary
 
 #define MCX_NO_COMPIL_C_FILES @[ @"libswresample/noise_shaping_data.c", @"libavcodec/scpr3.c", @"libavfilter/signature_lookup.c", @"libavfilter/blend_modes.c", @"libavcodec/eac3dec.c", @"libavcodec/ac3dec.c", @"libavcodec/aacps.c", @"libavcodec/aacpsdata.c"]
-
+#define MCX_TO_DELETE_LIST_FILENAME @".ffmpeg_installer_trash_files.txt"
+#define MCX_FFMPEGLIB_FILENAME @"libFFmpeg.a"
 BOOL unzip(const char *fname, char **outfile );
 BOOL untar(const char * filename);
 
@@ -61,7 +62,7 @@ BOOL untar(const char * filename);
 -(BOOL)_clean;
 @end
 @implementation MCXInstaller
-@synthesize sourceFFmpegDir = _sourceFFmpegDir, destinationFFmpegDir =_destinationFFmpegDir, firstStep = _firstStep, lastStep = _lastStep, manualStep=_manualStep, noopMode=_noopMode, verboseMode=_verboseMode, quietMode = _quietMode, selfExecutablePath=_selfExecutablePath;
+@synthesize sourceFFmpegDir = _sourceFFmpegDir, destinationFFmpegDir =_destinationFFmpegDir, firstStep = _firstStep, lastStep = _lastStep, manualStep=_manualStep, noopMode=_noopMode, verboseMode=_verboseMode, quietMode = _quietMode, selfExecutablePath=_selfExecutablePath, clean_level=_clean_level;
 -(instancetype)init
 {
     self = [super init];
@@ -75,6 +76,7 @@ BOOL untar(const char * filename);
         _manualStep =@"no manual step provided";
         [self set_fileSystem2deleteItems:@[]];
         _noopMode = NO;
+        _clean_level = 0;
     }
     return self;
 }
@@ -164,7 +166,7 @@ BOOL untar(const char * filename);
             return NO;
         } else {
             if ( ! _quietMode ) printf("\tsource ffmpeg directory backup: %s\n", backupPath.UTF8String);
-            [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:backupPath]];
+            if ( _clean_level > 1 ) [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:backupPath]];
         }
 
     } else if ( ! _quietMode ) printf("\tSource ffmpeg directory doesn't exist. Nothing done\n");
@@ -189,7 +191,7 @@ BOOL untar(const char * filename);
             //} else printf("destination ffmpeg directory backup: %s\n", backupPath.UTF8String);
             } else {
                 if ( ! _quietMode ) printf("\tFFmpeg directory backup: %s\n", backupPath.UTF8String);
-                [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:backupPath]];
+                if ( _clean_level > 1 ) [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:backupPath]];
             }
 
         } else {
@@ -223,7 +225,9 @@ BOOL untar(const char * filename);
         if ( ! _quietMode ) printf("\tFile %s is already present. Nothing done\n", MCX_SOURCE_ZIP_FILENAME.UTF8String);
     } else {
         rez = [self _downloadFileAtURL:MCX_SOURCE_URL toDir:[_sourceFFmpegDir stringByDeletingLastPathComponent] timeout:1000.0] ;
+        if ( rez && ( _clean_level == 2 ))[self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:zipath]];
     }
+    if ( rez && ( _clean_level > 2 ))[self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:zipath]];
     return rez;
 }
 -(BOOL)_unzipSource
@@ -248,6 +252,7 @@ BOOL untar(const char * filename);
 
     NSFileManager *fm =[NSFileManager defaultManager];
     [fm removeItemAtPath:srcfile error:&err];
+    if ( _clean_level > 1 )[self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:_sourceFFmpegDir]];
     return rez;
 }
 -(BOOL)_configureFFmpeg
@@ -351,6 +356,7 @@ BOOL untar(const char * filename);
     XCProject* project = [[XCProject alloc] initWithFilePath:projpath];
     XCGroup* group = [project groupWithPathFromRoot:@"FFmpeg"];
     if ( group ) [group removeFromParentDeletingChildren:delt];
+    if ( delt ) [project save];
 }
 -(BOOL)_importInXcode;
 {
@@ -421,6 +427,7 @@ BOOL untar(const char * filename);
     }
     if ( ! _quietMode) printf("%u files added to Xcode project\n", c);
     [project save];
+    if ( rez && ( _clean_level > 1 ))[self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:@"***FFmpeg"]];
     return rez;
 }
 -(BOOL)_moveSrc2dest2;
@@ -492,7 +499,18 @@ BOOL untar(const char * filename);
         fprintf(stderr, "Can't execute script %s\n%s\n", scpturl.fileSystemRepresentation, errdict.description.UTF8String);
         return NO;
     }
-
+    if ( _clean_level > 1 )
+    {
+        NSString *interbuildpath = [[_destinationFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Build"];
+        [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:interbuildpath]];
+    }
+    if ( [[self _fileSystem2deleteItems] count] )
+    {
+        NSOutputStream *outstrm = [NSOutputStream outputStreamToFileAtPath:[[_sourceFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:MCX_TO_DELETE_LIST_FILENAME] append:NO];
+        NSError *err = nil;
+        NSInteger nbw = [NSPropertyListSerialization writePropertyList:[self _fileSystem2deleteItems] toStream:outstrm format:NSPropertyListBinaryFormat_v1_0 options:0 error:&err];
+        if ( nbw == 0 ) fprintf(stderr, "can't write files to delete list\n%s\n", err.description.UTF8String );
+    }
     return YES;
 }
 -(BOOL)_clean
@@ -504,16 +522,69 @@ BOOL untar(const char * filename);
 -(int)finish
 {
     int rez = 0;
+    NSError *err = nil;
+    NSString *libpath = [_sourceFFmpegDir stringByDeletingLastPathComponent];
+    NSString *flistpath = [libpath stringByAppendingPathComponent:MCX_TO_DELETE_LIST_FILENAME];
+    libpath = [libpath stringByAppendingPathComponent:[@"Debug" stringByAppendingPathComponent:MCX_FFMPEGLIB_FILENAME]];
+    NSFileManager *fm =[NSFileManager defaultManager];
+    if ( [fm fileExistsAtPath:libpath] )
+    {
+        NSDictionary<NSFileAttributeKey, id> *attrdict = [fm attributesOfItemAtPath:libpath error:&err];
+        if ( attrdict )
+        {
+            NSDate *modif = [attrdict fileModificationDate];
+            if ( ( ! modif ) ||( -[modif timeIntervalSinceNow] > 15.0 ))
+            {
+                fprintf(stderr, "Library seems to old: %s\n", ((modif)?[modif descriptionWithLocale:nil].UTF8String:"[no date available]"));
+                return 1;
+            }
+        } else {
+            fprintf(stderr, "Impossible to get library's attributes\n%s\n", err.description.UTF8String);
+            return 1;
+        }
+    } else {
+        fprintf(stderr, "Library file doesn't exist at path: %s\n", libpath.UTF8String );
+        return 1;
+    }
+    if ( ! _quietMode ) printf("Library seems properly built\nCleaning...\n");
     NSString *scpt = [@"tell application \"Finder\"\n\t open POSIX file \"" stringByAppendingFormat:@"%@\"\n\tactivate\nend tell\n", [_selfExecutablePath stringByDeletingLastPathComponent]];
     if ( _verboseMode ) printf("running\n%s\n", scpt.UTF8String );
-    ascpt = [[NSAppleScript alloc] initWithSource:scpt];
+    NSDictionary<NSString *,id> *errdict = nil;
+    NSAppleScript *ascpt = [[NSAppleScript alloc] initWithSource:scpt];
     [ascpt executeAndReturnError:&errdict];
     if ( errdict )
     {
         fprintf(stderr, "Can't execute script:\n%s\n%s\n", scpt.UTF8String, errdict.description.UTF8String);
-        return NO;
+        rez = 1;
     }
-
+    if ( [fm fileExistsAtPath:flistpath] )
+    {
+        NSInputStream *instrm = [NSInputStream inputStreamWithFileAtPath:flistpath];
+        NSArray<NSString *> *fpaths = (NSArray<NSString *> *)[NSPropertyListSerialization propertyListWithStream:instrm options:NSPropertyListImmutable format:nil error:&err];
+        if ( ! fpaths )
+        {
+            fprintf(stderr, "Impossible to read file to delete list file %s\n%s\n", flistpath.lastPathComponent.UTF8String, err.description.UTF8String);
+            return 1;
+        }
+        fpaths = [fpaths arrayByAddingObject:flistpath];
+        BOOL isdir=NO;
+        for ( NSString *ipath in fpaths )
+        {
+            if ( [[ipath substringToIndex:3] isEqualToString:@"***"] )
+            {
+                [self _clearFFmpegGroupIncludingFiles:YES];
+                continue;
+            }
+            if ( [fm fileExistsAtPath:ipath isDirectory:&isdir])
+            {
+                //(! [fm removeItemAtPath:ipath error:&err] )
+                if (! [fm trashItemAtURL:[NSURL fileURLWithPath:ipath] resultingItemURL:nil error:&err] )
+                {
+                    fprintf(stderr, "Can't move %s to trash\n%s\n", ipath.UTF8String, err.description.UTF8String );
+                } else if ( ! _quietMode ) printf("%s %s moved to trash\n", ((isdir)?"Directory":"File"), ipath.lastPathComponent.UTF8String );
+            }
+        }
+    } else if ( ! _quietMode ) printf("No cleaning requested\n");
     return rez;
 }
 #pragma mark HELPERS
