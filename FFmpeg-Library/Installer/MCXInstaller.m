@@ -178,7 +178,7 @@ BOOL untar(const char * filename);
             fprintf(stderr, "*** Unable to read content of %s\n", _destinationFFmpegDir.UTF8String);
             return NO;
         }
-        if ( [destFiles  count] )
+        if ( [destFiles  count] > 2 )// some invisible files makes an empty directory look full....
         {
             backupPath = [[_destinationFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:[prefx stringByAppendingString:[_destinationFFmpegDir lastPathComponent]]];
             rez = [fm moveItemAtPath:_destinationFFmpegDir toPath:backupPath error:&err];
@@ -188,7 +188,7 @@ BOOL untar(const char * filename);
                 return NO;
             //} else printf("destination ffmpeg directory backup: %s\n", backupPath.UTF8String);
             } else {
-                if ( ! _quietMode ) printf("\tsource ffmpeg directory backup: %s\n", backupPath.UTF8String);
+                if ( ! _quietMode ) printf("\tFFmpeg directory backup: %s\n", backupPath.UTF8String);
                 [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:backupPath]];
             }
 
@@ -492,8 +492,20 @@ BOOL untar(const char * filename);
         fprintf(stderr, "Can't execute script %s\n%s\n", scpturl.fileSystemRepresentation, errdict.description.UTF8String);
         return NO;
     }
+
+    return YES;
+}
+-(BOOL)_clean
+{
+    BOOL rez =YES;
+    fprintf(stderr, "Not yet implemented\n");
+    return rez;
+}
+-(int)finish
+{
+    int rez = 0;
     NSString *scpt = [@"tell application \"Finder\"\n\t open POSIX file \"" stringByAppendingFormat:@"%@\"\n\tactivate\nend tell\n", [_selfExecutablePath stringByDeletingLastPathComponent]];
-    if ( ! _quietMode ) printf("running\n%s\n", scpt.UTF8String );
+    if ( _verboseMode ) printf("running\n%s\n", scpt.UTF8String );
     ascpt = [[NSAppleScript alloc] initWithSource:scpt];
     [ascpt executeAndReturnError:&errdict];
     if ( errdict )
@@ -502,12 +514,6 @@ BOOL untar(const char * filename);
         return NO;
     }
 
-    return YES;
-}
--(BOOL)_clean
-{
-    BOOL rez =YES;
-    fprintf(stderr, "Not yet implemented\n");
     return rez;
 }
 #pragma mark HELPERS
