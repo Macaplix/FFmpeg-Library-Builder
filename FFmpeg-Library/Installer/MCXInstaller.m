@@ -59,7 +59,7 @@ BOOL untar(const char * filename);
 -(BOOL)_importInXcode;
 -(BOOL)_moveSrc2dest2;
 -(BOOL)_buildLibrary;
--(BOOL)_clean;
+//-(BOOL)_clean;
 @end
 @implementation MCXInstaller
 @synthesize sourceFFmpegDir = _sourceFFmpegDir, destinationFFmpegDir =_destinationFFmpegDir, firstStep = _firstStep, lastStep = _lastStep, manualStep=_manualStep, noopMode=_noopMode, verboseMode=_verboseMode, quietMode = _quietMode, selfExecutablePath=_selfExecutablePath, clean_level=_clean_level;
@@ -226,6 +226,7 @@ BOOL untar(const char * filename);
     } else {
         rez = [self _downloadFileAtURL:MCX_SOURCE_URL toDir:[_sourceFFmpegDir stringByDeletingLastPathComponent] timeout:1000.0] ;
         if ( rez && ( _clean_level == 2 ))[self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:zipath]];
+        puts("");//leaves the line with download progress empty
     }
     if ( rez && ( _clean_level > 2 ))[self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:zipath]];
     return rez;
@@ -444,10 +445,12 @@ BOOL untar(const char * filename);
     // Copy
     for (NSString * dirname in MCX_LIB_DIRS)
     {
+        NSString *destdirpath =[self _SGFAppendTo:_destinationFFmpegDir suffix:dirname];
         // copy all the headers files
-        [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:dirname] forcing:YES withExt:@".h" exts2copy:nil];
+        [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:destdirpath forcing:YES withExt:@".h" exts2copy:nil];
         // copy all files whose name contains template or list ( SGFCopyExt hack )
-        [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:dirname] forcing:YES withExt:@"t" exts2copy:@[@".c"]];
+        [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:destdirpath forcing:YES withExt:@"t" exts2copy:@[@".c"]];
+        if ( _clean_level > 1 ) [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:destdirpath]];
         /* the files copied bellow are not all necessary and will be imported in xcode if previous step is ran again
         SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".c", nil);
         SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".inc", nil);
@@ -506,18 +509,12 @@ BOOL untar(const char * filename);
     }
     if ( [[self _fileSystem2deleteItems] count] )
     {
-        NSOutputStream *outstrm = [NSOutputStream outputStreamToFileAtPath:[[_sourceFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:MCX_TO_DELETE_LIST_FILENAME] append:NO];
+        NSString *lpath =[[_sourceFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:MCX_TO_DELETE_LIST_FILENAME];
         NSError *err = nil;
-        NSInteger nbw = [NSPropertyListSerialization writePropertyList:[self _fileSystem2deleteItems] toStream:outstrm format:NSPropertyListBinaryFormat_v1_0 options:0 error:&err];
-        if ( nbw == 0 ) fprintf(stderr, "can't write files to delete list\n%s\n", err.description.UTF8String );
+        NSData *wdata = [[[self _fileSystem2deleteItems] componentsJoinedByString:@"\n"] dataUsingEncoding:NSUTF8StringEncoding];
+        if ( ! [wdata writeToFile:lpath atomically:YES] ) fprintf(stderr, "can't write files to delete list\n%s\n", err.description.UTF8String );
     }
     return YES;
-}
--(BOOL)_clean
-{
-    BOOL rez =YES;
-    fprintf(stderr, "Not yet implemented\n");
-    return rez;
 }
 -(int)finish
 {
@@ -559,8 +556,9 @@ BOOL untar(const char * filename);
     }
     if ( [fm fileExistsAtPath:flistpath] )
     {
-        NSInputStream *instrm = [NSInputStream inputStreamWithFileAtPath:flistpath];
-        NSArray<NSString *> *fpaths = (NSArray<NSString *> *)[NSPropertyListSerialization propertyListWithStream:instrm options:NSPropertyListImmutable format:nil error:&err];
+        //NSInputStream *instrm = [NSInputStream inputStreamWithFileAtPath:flistpath];
+        NSArray<NSString *> *fpaths = [[NSString stringWithContentsOfFile:flistpath encoding:NSUTF8StringEncoding error:&err] componentsSeparatedByString:@"\n"];
+        //(NSArray<NSString *> *)[NSPropertyListSerialization propertyListWithStream:instrm options:NSPropertyListImmutable format:nil error:&err];
         if ( ! fpaths )
         {
             fprintf(stderr, "Impossible to read file to delete list file %s\n%s\n", flistpath.lastPathComponent.UTF8String, err.description.UTF8String);

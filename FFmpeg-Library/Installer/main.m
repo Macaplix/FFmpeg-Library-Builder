@@ -98,8 +98,8 @@ void showHelp( void )
            "\t-v verbose - prints more detailed messages and help\n\n"
            "\t-q quiet - only prints errors ( on stderr )\n\n"
            "\t-c clean intermediary files once Library is build\n\n"
-           "\t-c=n apply clean level n to intermediary files once Library is build\n\n"
-           "\t\tdefault clean level with -c is 2 without 0\n"
+           "\t-c=n apply clean level n to intermediary files once Library is build\n"
+           "\t\tdefault clean level with -c is 2 without 0\n\n"
            "Here are the steps preceded by there numbers:\n"
            "\n"
            );

@@ -65,6 +65,10 @@
             argument = "-hv"
             isEnabled = "YES">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-c"
+            isEnabled = "YES">
+         </CommandLineArgument>
       </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable

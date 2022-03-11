@@ -462,7 +462,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8C85ADC9B8CFA994B3B5FC87 /* FFmpeg */ = {
+		6C239FCFD0D1AA213B2D75B4 /* FFmpeg */ = {
 			isa = PBXGroup;
 			children = (
 			);
@@ -767,7 +767,7 @@
 				9C35EC8B2193592300FD4FE8 /* Installer */,
 				9CD550C8219337510075012A /* Products */,
 				9CE714E921934C51006527D2 /* Frameworks */,
-				8C85ADC9B8CFA994B3B5FC87 /* FFmpeg */,
+				6C239FCFD0D1AA213B2D75B4 /* FFmpeg */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1018,10 +1018,11 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/shout.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n$(SYMROOT)/installer --finish\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n$SYMROOT/Debug/installer --finish\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

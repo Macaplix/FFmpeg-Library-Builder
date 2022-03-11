@@ -77,7 +77,7 @@ To launch the installer and perform a complete installation you just need to bui
 
 ## Installer man page
 ```
-% installer [-hvqc] [n1-n2] [n]
+% installer [-hvqc] [-c=n] [n1-n2] [n]
 
 	-h help. prints this help message
 
@@ -92,6 +92,13 @@ To launch the installer and perform a complete installation you just need to bui
 	-q quiet. only prints errors ( on stderr )
 
 	-c clean. cleans intermediary files once Library is build
+	
+	-c=n cleans intermediary files with clean level n
+		default clean level is 2 with -c and 0 without
+		0 - don't clean
+		1 - clean only unnecessary files
+		2 - cleans to rebuild a library with different ./configure settings
+		3 - cleans to have source downloaded anew
 	
 ```
 In case any automatic step fails, you can perform it manually and have the installer do the remaining steps automatically passing the following step number as argument in the scheme
