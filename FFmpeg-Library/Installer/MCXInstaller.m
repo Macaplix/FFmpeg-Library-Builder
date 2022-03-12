@@ -25,7 +25,7 @@
 #define MCX_LAST_STEP MCXInstallStepBuildLibrary
 
 #define MCX_NO_COMPIL_C_FILES @[ @"libswresample/noise_shaping_data.c", @"libavcodec/scpr3.c", @"libavfilter/signature_lookup.c", @"libavfilter/blend_modes.c", @"libavcodec/eac3dec.c", @"libavcodec/ac3dec.c", @"libavcodec/aacps.c", @"libavcodec/aacpsdata.c"]
-#define MCX_TO_DELETE_LIST_FILENAME @".ffmpeg_installer_trash_files.txt"
+#define MCX_TO_DELETE_LIST_FILENAME @".ffmpeg_installer_trash_files_list"
 #define MCX_FFMPEGLIB_FILENAME @"libFFmpeg.a"
 BOOL unzip(const char *fname, char **outfile );
 BOOL untar(const char * filename);
