@@ -67,7 +67,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-c"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
       <EnvironmentVariables>

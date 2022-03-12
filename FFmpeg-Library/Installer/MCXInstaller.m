@@ -49,6 +49,7 @@ BOOL untar(const char * filename);
 -(BOOL)_SGFRemove:(NSString *)src;
 -(BOOL)_SGFReplaceInfile:(NSString *)fpath search:(NSString *)srch withText:( NSString *)txt;
 -(NSString *) _SGFAppendTo:(NSString *)src suffix:( NSString *)appd;
+-(NSArray<NSString *> *)_non_headers_included;
 /* STEPS */
 -(BOOL)_backupAndClean;
 -(BOOL)_downloadSource;
@@ -449,7 +450,7 @@ BOOL untar(const char * filename);
         // copy all the headers files
         [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:destdirpath forcing:YES withExt:@".h" exts2copy:nil];
         // copy all files whose name contains template or list ( SGFCopyExt hack )
-        [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:destdirpath forcing:YES withExt:@"t" exts2copy:@[@".c"]];
+        //[self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:destdirpath forcing:YES withExt:@"t" exts2copy:@[@".c"]];
         if ( _clean_level > 1 ) [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:destdirpath]];
         /* the files copied bellow are not all necessary and will be imported in xcode if previous step is ran again
         SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".c", nil);
@@ -461,7 +462,7 @@ BOOL untar(const char * filename);
     // copying included C files that doesn't need to be compiled separetly
     // to do: get this list automatically scanning each to be compiled .c file for extra included .c files
     // to make sure the installer would work with ffmpeg future updates without updating MCX_NO_COMPIL_C_FILES list
-    for ( NSString *relpath in MCX_NO_COMPIL_C_FILES )
+    for ( NSString *relpath in [self _non_headers_included] )//MCX_NO_COMPIL_C_FILES
     {
         [self _SGFCopy:[_sourceFFmpegDir stringByAppendingPathComponent:relpath] toDest:[_destinationFFmpegDir stringByAppendingPathComponent:relpath] forcing:YES];
     }
@@ -586,6 +587,41 @@ BOOL untar(const char * filename);
     return rez;
 }
 #pragma mark HELPERS
+-(NSArray<NSString *> *)_non_headers_included
+{
+    NSArray<NSString *> *fpaths = @[];
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *err = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"#include \"(.*\\.[^h]*)\"" options:0 error:&err];
+    if ( (! regex ) || ( err ))
+    {
+        fprintf(stderr, "Impossible to create regex\n%s\n", err.description.UTF8String );
+        return nil;
+    }
+    for ( NSString *dirname  in MCX_LIB_DIRS)
+    {
+        NSString *srcdir = [[_destinationFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:dirname];
+        for (NSString *fpath in [fm enumeratorAtPath:srcdir])
+        {
+           if ( [fpath hasSuffix:@".c"])
+           {
+               NSString *contentstr = [NSString stringWithContentsOfFile:(NSString *)fpath encoding:NSUTF8StringEncoding error:&err];
+               if ( (! contentstr ) || ( err ))
+               {
+                   fprintf(stderr, "Error getting content of %s:\n%s\n", fpath.lastPathComponent.UTF8String, err.description.UTF8String);
+                   return nil;
+               }
+               for ( NSTextCheckingResult *tcrez in [regex matchesInString:contentstr options:0 range:NSMakeRange(0, [contentstr length])])
+               {
+                   NSString *ipath =[contentstr substringWithRange:[tcrez rangeAtIndex:1]];
+                   if ( ! [fpaths containsObject:ipath] ) fpaths = [fpaths arrayByAddingObject:ipath];
+               }
+           }
+        }
+    }
+    printf("%s found:\n%s\n", __func__, fpaths.description.UTF8String);
+    return fpaths;
+}
 -(BOOL)_downloadFileAtURL:(NSString *)fileURL
                                     toDir:(NSString *)toDir
                                   timeout:(unsigned)timeout
@@ -671,7 +707,7 @@ BOOL untar(const char * filename);
     return  MCX_INSTALL_STEP_NAMES[_currentStep];
 }
 
--(BOOL) _SGFCopyExtSource:(NSString *)src toDest:(NSString *)dest forcing:(BOOL) force withExt:( NSString *)ext exts2copy:( NSArray<NSString *> *) exts
+-(BOOL)_SGFCopyExtSource:(NSString *)src toDest:(NSString *)dest forcing:(BOOL) force withExt:( NSString *)ext exts2copy:( NSArray<NSString *> *) exts
 {
     NSFileManager *fm = [NSFileManager defaultManager];
     for (NSString *o in [fm enumeratorAtPath:src])
