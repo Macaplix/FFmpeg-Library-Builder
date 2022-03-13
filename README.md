@@ -210,15 +210,13 @@ Which consist on:
 Which consist on:   
 
 	**1 -** copying all header files from source ffmpeg directory to project FFmpeg directory   
+		  
+	**2 -** copying included source template .c files that doesn't need to be compiled but are referenced in one of the to build .c or .h files.   
+	Running the following regular expression on any file in FFmpeg directory will do the trick
 	
-	**2 -** copying any source .c file whose name contains template or list   
-	  >  Those files are included in other c files but doesn't need to be compiled separately   
-	  
-	**3 -** copying source .c file listed in MCX\_NO\_COMPIL\_C\_FILES    
+	   ~~~
+	   ^#(?:include|import) \"(\\V*\\.[^h^\"]{1,3})\"$
 	   
-		Those files are also included in other c files but their names doesn't show it!!!
-		Todo: get the file list by scanning C files for #include directives
-		involving something else than a .h header  
 
 
 
