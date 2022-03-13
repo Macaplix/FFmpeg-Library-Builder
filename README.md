@@ -220,7 +220,7 @@ Which consist on:
  
 	
 ```
-	   "^#(?:include|import) \"(\\V*\\.[^h^\"]{1,3})\"$"
+	   "^#(?:include|import) \"(\\V*\\.[^h^\"]+)\"$"
 ```
 
 

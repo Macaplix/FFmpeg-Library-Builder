@@ -454,7 +454,7 @@ BOOL untar(const char * filename);
     [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:@"compat"] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:@"compat"] forcing:YES withExt:@".h" exts2copy:nil];
     
     // copying included C files that doesn't need to be compiled separetly
-    for ( NSString *relpath in [self _non_headers_included] )//MCX_NO_COMPIL_C_FILES
+    for ( NSString *relpath in [self _non_headers_included] )
     {
         [self _SGFCopy:[_sourceFFmpegDir stringByAppendingPathComponent:relpath] toDest:[_destinationFFmpegDir stringByAppendingPathComponent:relpath] forcing:YES];
     }
@@ -582,7 +582,7 @@ BOOL untar(const char * filename);
     NSArray<NSString *> *fpaths = @[];
     NSFileManager *fm = [NSFileManager defaultManager];
     NSError *err = nil;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^#(?:include|import) \"(\\V*\\.[^h^\"]{1,3})\"$" options:NSRegularExpressionAnchorsMatchLines error:&err];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^#(?:include|import) \"(\\V*\\.[^h^\"]+)\"$" options:NSRegularExpressionAnchorsMatchLines error:&err];
     if ( (! regex ) || ( err ))
     {
         fprintf(stderr, "Impossible to create regex\n%s\n", err.description.UTF8String );
