@@ -216,6 +216,7 @@ Which consist on:
 	**2 -** copying included source template .c files that doesn't need to be compiled but are referenced in one of the to build .c or .h files.   
 	Running the following regular expression on any file in FFmpeg directory will do the trick.   
 	
+	* 
 	
 	   ```
 	   ^#(?:include|import) \"(\\V*\\.[^h^\"]{1,3})\"$
