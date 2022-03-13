@@ -214,11 +214,14 @@ Which consist on:
 	**1 -** copying all header files from source ffmpeg directory to project FFmpeg directory   
 		  
 	**2 -** copying included source template .c files that doesn't need to be compiled but are referenced in one of the to build .c or .h files.   
-	Running the following regular expression on any file in FFmpeg directory will do the trick
+	Running the following regular expression on any file in FFmpeg directory will do the trick.   
 	
-	   ```
+   
+ 
+	
+```
 	   ^#(?:include|import) \"(\\V*\\.[^h^\"]{1,3})\"$
-	   ```
+```
 
 
 
@@ -226,7 +229,7 @@ Which consist on:
 
  * **Manual step:**
 
-	Select scheme FFmpeg in Xcode project and build Library (  R or B )
+	Select scheme FFmpeg in Xcode project and build Library (  B )
 
 
 
