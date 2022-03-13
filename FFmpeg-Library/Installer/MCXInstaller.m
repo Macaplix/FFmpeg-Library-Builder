@@ -18,30 +18,18 @@
 
 #define MCX_SOURCE_ZIP_FILENAME @"ffmpeg-snapshot.tar.bz2"
 #define MCX_SOURCE_URL @"https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2"
-//@"fftools",
+
 #define MCX_LIB_DIRS @[@"libavcodec",@"libavdevice",@"libavfilter",@"libavformat",\
 @"libavresample",@"libavutil",@"libpostproc",@"libswresample",@"libswscale"]
 #define MCX_INSTALL_STEP_NAMES @[@"Backup and clean FFmpeg source and destination",@"Download FFmpeg Source", @"Unzip FFmpeg Source", @"Configure FFmpeg", @"Make FFmpeg ( without actually building )", @"Move source files to Xcode project folder", @"Add FFmpeg Sources to Xcode project", @"Finish moving & patching source files", @"Build FFmpeg Library"]
 #define MCX_LAST_STEP MCXInstallStepBuildLibrary
+#define MCX_FFMPEGLIB_FILENAME @"libFFmpeg.a"
 
-//FFmpeg-in-Xcode-master/FFmpeg/libswresample/dither.c:24:10: 'noise_shaping_data.c' file not found
-//FFmpeg-in-Xcode-master/Build/build.pch:36:10: 'scpr3.c' file not found
-//FFmpeg-in-Xcode-master/Build/build.pch:37:10: 'signature_lookup.c' file not found
-//FFmpeg-in-Xcode-master/FFmpeg/libavutil/mathematics.h:37:10: 'blend_modes.c' file not found
-//FFmpeg-in-Xcode-master/FFmpeg/libavutil/internal.h:31:10: 'eac3dec.c' file not found
-//FFmpeg-in-Xcode-master/Build/build.pch:24:10: 'aacps.c' file not found
-//FFmpeg-in-Xcode-master/FFmpeg/libavutil/internal.h:27:10: 'aacpsdata.c' file not found
-#define MCX_NO_COMPIL_C_FILES @[ @"libswresample/noise_shaping_data.c", @"libavcodec/scpr3.c", @"libavfilter/signature_lookup.c", @"libavfilter/blend_modes.c", @"libavcodec/eac3dec.c", @"libavcodec/ac3dec.c", @"libavcodec/aacps.c", @"libavcodec/aacpsdata.c"]
+#define MCX_TO_DELETE_LIST_FILENAME @".ffmpeg_installer_trash_files_list"
 
 BOOL unzip(const char *fname, char **outfile );
 BOOL untar(const char * filename);
-/*
-BOOL SGFCopy(NSString *s, NSString *d, BOOL force);
-BOOL SGFCopyExt(NSString *s, NSString *d, BOOL force, NSString *e, NSArray<NSString *> *es);
-BOOL SGFRemove(NSString *s);
-BOOL SGFReplace(NSString *s, NSString *f, NSString *t);
-NSString * SGFAppend(NSString *s, NSString *a);
-*/
+
 @interface MCXInstaller()<NSURLSessionDownloadDelegate>
 {
     MCXInstallStep _currentStep;
@@ -61,6 +49,7 @@ NSString * SGFAppend(NSString *s, NSString *a);
 -(BOOL)_SGFRemove:(NSString *)src;
 -(BOOL)_SGFReplaceInfile:(NSString *)fpath search:(NSString *)srch withText:( NSString *)txt;
 -(NSString *) _SGFAppendTo:(NSString *)src suffix:( NSString *)appd;
+-(NSArray<NSString *> *)_non_headers_included;
 /* STEPS */
 -(BOOL)_backupAndClean;
 -(BOOL)_downloadSource;
@@ -71,10 +60,10 @@ NSString * SGFAppend(NSString *s, NSString *a);
 -(BOOL)_importInXcode;
 -(BOOL)_moveSrc2dest2;
 -(BOOL)_buildLibrary;
--(BOOL)_clean;
+//-(BOOL)_clean;
 @end
 @implementation MCXInstaller
-@synthesize sourceFFmpegDir = _sourceFFmpegDir, destinationFFmpegDir =_destinationFFmpegDir, firstStep = _firstStep, lastStep = _lastStep, manualStep=_manualStep, noopMode=_noopMode, verboseMode=_verboseMode, quietMode = _quietMode, selfExecutablePath=_selfExecutablePath;
+@synthesize sourceFFmpegDir = _sourceFFmpegDir, destinationFFmpegDir =_destinationFFmpegDir, firstStep = _firstStep, lastStep = _lastStep, manualStep=_manualStep, noopMode=_noopMode, verboseMode=_verboseMode, quietMode = _quietMode, selfExecutablePath=_selfExecutablePath, clean_level=_clean_level;
 -(instancetype)init
 {
     self = [super init];
@@ -88,6 +77,7 @@ NSString * SGFAppend(NSString *s, NSString *a);
         _manualStep =@"no manual step provided";
         [self set_fileSystem2deleteItems:@[]];
         _noopMode = NO;
+        _clean_level = 0;
     }
     return self;
 }
@@ -177,7 +167,7 @@ NSString * SGFAppend(NSString *s, NSString *a);
             return NO;
         } else {
             if ( ! _quietMode ) printf("\tsource ffmpeg directory backup: %s\n", backupPath.UTF8String);
-            [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:backupPath]];
+            if ( _clean_level > 1 ) [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:backupPath]];
         }
 
     } else if ( ! _quietMode ) printf("\tSource ffmpeg directory doesn't exist. Nothing done\n");
@@ -191,7 +181,7 @@ NSString * SGFAppend(NSString *s, NSString *a);
             fprintf(stderr, "*** Unable to read content of %s\n", _destinationFFmpegDir.UTF8String);
             return NO;
         }
-        if ( [destFiles  count] )
+        if ( [destFiles  count] > 2 )// some invisible files makes an empty directory look full....
         {
             backupPath = [[_destinationFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:[prefx stringByAppendingString:[_destinationFFmpegDir lastPathComponent]]];
             rez = [fm moveItemAtPath:_destinationFFmpegDir toPath:backupPath error:&err];
@@ -201,8 +191,8 @@ NSString * SGFAppend(NSString *s, NSString *a);
                 return NO;
             //} else printf("destination ffmpeg directory backup: %s\n", backupPath.UTF8String);
             } else {
-                if ( ! _quietMode ) printf("\tsource ffmpeg directory backup: %s\n", backupPath.UTF8String);
-                [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:backupPath]];
+                if ( ! _quietMode ) printf("\tFFmpeg directory backup: %s\n", backupPath.UTF8String);
+                if ( _clean_level > 1 ) [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:backupPath]];
             }
 
         } else {
@@ -235,10 +225,11 @@ NSString * SGFAppend(NSString *s, NSString *a);
     {
         if ( ! _quietMode ) printf("\tFile %s is already present. Nothing done\n", MCX_SOURCE_ZIP_FILENAME.UTF8String);
     } else {
-        // git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg
-        // https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2
         rez = [self _downloadFileAtURL:MCX_SOURCE_URL toDir:[_sourceFFmpegDir stringByDeletingLastPathComponent] timeout:1000.0] ;
+        if ( rez && ( _clean_level == 2 ))[self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:zipath]];
+        puts("");//leaves the line with download progress empty
     }
+    if ( rez && ( _clean_level > 2 ))[self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:zipath]];
     return rez;
 }
 -(BOOL)_unzipSource
@@ -263,7 +254,7 @@ NSString * SGFAppend(NSString *s, NSString *a);
 
     NSFileManager *fm =[NSFileManager defaultManager];
     [fm removeItemAtPath:srcfile error:&err];
-    //[fm removeItemAtPath:[_sourceFFmpegDir stringByAppendingPathComponent:@"tests"] error:&err];
+    if ( _clean_level > 1 )[self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:_sourceFFmpegDir]];
     return rez;
 }
 -(BOOL)_configureFFmpeg
@@ -367,6 +358,7 @@ NSString * SGFAppend(NSString *s, NSString *a);
     XCProject* project = [[XCProject alloc] initWithFilePath:projpath];
     XCGroup* group = [project groupWithPathFromRoot:@"FFmpeg"];
     if ( group ) [group removeFromParentDeletingChildren:delt];
+    if ( delt ) [project save];
 }
 -(BOOL)_importInXcode;
 {
@@ -412,14 +404,11 @@ NSString * SGFAppend(NSString *s, NSString *a);
             continue;
         } else if ( [ext isEqualToString:@"c"]) {
             typ =SourceCodeObjC;
-            //[subgroup addFileReference:fileURL.path withType:SourceCodeObjC];
         } else if ( [ext isEqualToString:@"h"]) {
-            //typ=SourceCodeHeader;
             [subgroup addFileReference:fileURL.path withType:SourceCodeHeader];
             continue;
         } else if ( [ext isEqualToString:@"m"]) {
-            //[subgroup addFileReference:fileURL.path withType:SourceCodeObjC];
-            typ=SourceCodeObjC;
+             typ=SourceCodeObjC;
         } else {
             fprintf(stderr, "File extension %s unknown for %s\n", ext.UTF8String, relativePath.UTF8String);
             continue;
@@ -428,17 +417,19 @@ NSString * SGFAppend(NSString *s, NSString *a);
         XCSourceFile* sourceFile = [project fileWithName:[fileURL path]];
         if ( sourceFile )
         {
-           if ( typ == SourceCodeHeader )
-           {
-               //[libFFmpegTarget addDependency:sourceFile.key];
-           } else [libFFmpegTarget addMember:sourceFile];
-            if ( ! _quietMode) printf("%s added to target\n", [relativePath lastPathComponent].UTF8String);
+            if ( typ != SourceCodeHeader )
+            {
+                [libFFmpegTarget addMember:sourceFile];
+                if ( ! _quietMode ) printf("Imported %s\n", relativePath.UTF8String );
+            }
+            
         } else fprintf(stderr, "sourceFile %s not created\n", [relativePath lastPathComponent].UTF8String );
         //printf("%s\n", relativePath.UTF8String );
         c++;
     }
     if ( ! _quietMode) printf("%u files added to Xcode project\n", c);
     [project save];
+    if ( rez && ( _clean_level > 1 ))[self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:@"***FFmpeg"]];
     return rez;
 }
 -(BOOL)_moveSrc2dest2;
@@ -455,49 +446,27 @@ NSString * SGFAppend(NSString *s, NSString *a);
     // Copy
     for (NSString * dirname in MCX_LIB_DIRS)
     {
+        NSString *destdirpath =[self _SGFAppendTo:_destinationFFmpegDir suffix:dirname];
         // copy all the headers files
-        //SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".h", nil);
-        [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:dirname] forcing:YES withExt:@".h" exts2copy:nil];
-        // copy all files whose name contains template or list ( SGFCopyExt hack )
-        //SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @"t", @[@".c"]);
-        [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:dirname] forcing:YES withExt:@"t" exts2copy:@[@".c"]];
-        /* the files copied bellow are not all necessary and will be imported in xcode if previous step is ran again
-        SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".c", nil);
-        SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".inc", nil);
-         */
+        [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:destdirpath forcing:YES withExt:@".h" exts2copy:nil];
+        if ( _clean_level > 1 ) [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:destdirpath]];
     }
-    //SGFCopyExt(SGFAppend(_sourceFFmpegDir, @"compat"), SGFAppend(_destinationFFmpegDir, @"compat"), YES, @".h", nil);
     [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:@"compat"] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:@"compat"] forcing:YES withExt:@".h" exts2copy:nil];
-    //SGFCopyExt(SGFAppend(_sourceFFmpegDir, @"compat"), SGFAppend(_destinationFFmpegDir, @"compat"), YES, @".c", nil);
     
     // copying included C files that doesn't need to be compiled separetly
-    // to do: get this list automatically scanning each to be compiled .c file for extra included .c files
-    // to make sure the installer would work with ffmpeg future updates without updating MCX_NO_COMPIL_C_FILES list
-    for ( NSString *relpath in MCX_NO_COMPIL_C_FILES )
+    for ( NSString *relpath in [self _non_headers_included] )//MCX_NO_COMPIL_C_FILES
     {
-        //SGFCopy([_sourceFFmpegDir stringByAppendingPathComponent:relpath], [_destinationFFmpegDir stringByAppendingPathComponent:relpath], YES);
         [self _SGFCopy:[_sourceFFmpegDir stringByAppendingPathComponent:relpath] toDest:[_destinationFFmpegDir stringByAppendingPathComponent:relpath] forcing:YES];
     }
-
-
     // Edit
-   // SGFReplace(SGFAppend(_destinationFFmpegDir, @"libavcodec/videotoolbox.c"),
-     //          @"#include \"mpegvideo.h\"",
-       //        @"// Edit by Single\n#define Picture FFPicture\n#include \"mpegvideo.h\"\n#undef Picture");
     [self _SGFReplaceInfile:[_destinationFFmpegDir stringByAppendingPathComponent:@"libavcodec/videotoolbox.c"]
                      search: @"#include \"mpegvideo.h\""
                    withText:@"// Edit by Single\n#define Picture FFPicture\n#include \"mpegvideo.h\"\n#undef Picture"];
     
-    //SGFReplace(SGFAppend(_destinationFFmpegDir, @"libavfilter/vsrc_mandelbrot.c"),
-    //           @"typedef struct Point {",
-    //           @"// Edit by Single\ntypedef struct {");
     [self _SGFReplaceInfile:[_destinationFFmpegDir stringByAppendingPathComponent:@"libavfilter/vsrc_mandelbrot.c"]
                      search:@"typedef struct Point {"
                    withText:@"// Edit by Single\ntypedef struct {"];
     //This file would also reference 2 different definition of struct Point
-    //SGFReplace(SGFAppend(_destinationFFmpegDir, @"libavfilter/signature.h"),
-    //           @"typedef struct Point {",
-    //              @"// Edit by MCX\ntypedef struct {");
     [self _SGFReplaceInfile:[_destinationFFmpegDir stringByAppendingPathComponent:@"libavfilter/signature.h"]
                      search:@"typedef struct Point {"
                    withText:@"// Edit by MCX\ntypedef struct {"];
@@ -524,25 +493,180 @@ NSString * SGFAppend(NSString *s, NSString *a);
         fprintf(stderr, "Can't execute script %s\n%s\n", scpturl.fileSystemRepresentation, errdict.description.UTF8String);
         return NO;
     }
+    if ( _clean_level > 1 )
+    {
+        NSString *interbuildpath = [[_destinationFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Build"];
+        [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:interbuildpath]];
+    }
+    if ( [[self _fileSystem2deleteItems] count] )
+    {
+        NSString *lpath =[[_sourceFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:MCX_TO_DELETE_LIST_FILENAME];
+        NSError *err = nil;
+        NSData *wdata = [[[self _fileSystem2deleteItems] componentsJoinedByString:@"\n"] dataUsingEncoding:NSUTF8StringEncoding];
+        if ( ! [wdata writeToFile:lpath atomically:YES] ) fprintf(stderr, "can't write files to delete list\n%s\n", err.description.UTF8String );
+    }
+    return YES;
+}
+-(int)finish
+{
+    int rez = 0;
+    NSError *err = nil;
+    NSString *libpath = [_sourceFFmpegDir stringByDeletingLastPathComponent];
+    NSString *flistpath = [libpath stringByAppendingPathComponent:MCX_TO_DELETE_LIST_FILENAME];
+    libpath = [libpath stringByAppendingPathComponent:[@"Debug" stringByAppendingPathComponent:MCX_FFMPEGLIB_FILENAME]];
+    NSFileManager *fm =[NSFileManager defaultManager];
+    if ( [fm fileExistsAtPath:libpath] )
+    {
+        NSDictionary<NSFileAttributeKey, id> *attrdict = [fm attributesOfItemAtPath:libpath error:&err];
+        if ( attrdict )
+        {
+            NSDate *modif = [attrdict fileModificationDate];
+            if ( ( ! modif ) ||( -[modif timeIntervalSinceNow] > 15.0 ))
+            {
+                fprintf(stderr, "Library seems to old: %s\n", ((modif)?[modif descriptionWithLocale:nil].UTF8String:"[no date available]"));
+                return 1;
+            }
+        } else {
+            fprintf(stderr, "Impossible to get library's attributes\n%s\n", err.description.UTF8String);
+            return 1;
+        }
+    } else {
+        fprintf(stderr, "Library file doesn't exist at path: %s\n", libpath.UTF8String );
+        return 1;
+    }
+    if ( ! _quietMode ) printf("Library seems properly built\nCleaning...\n");
     NSString *scpt = [@"tell application \"Finder\"\n\t open POSIX file \"" stringByAppendingFormat:@"%@\"\n\tactivate\nend tell\n", [_selfExecutablePath stringByDeletingLastPathComponent]];
-    if ( ! _quietMode ) printf("running\n%s\n", scpt.UTF8String );
-    ascpt = [[NSAppleScript alloc] initWithSource:scpt];
+    if ( _verboseMode ) printf("running\n%s\n", scpt.UTF8String );
+    NSDictionary<NSString *,id> *errdict = nil;
+    NSAppleScript *ascpt = [[NSAppleScript alloc] initWithSource:scpt];
     [ascpt executeAndReturnError:&errdict];
     if ( errdict )
     {
         fprintf(stderr, "Can't execute script:\n%s\n%s\n", scpt.UTF8String, errdict.description.UTF8String);
-        return NO;
+        rez = 1;
     }
-
-    return YES;
-}
--(BOOL)_clean
-{
-    BOOL rez =YES;
-    fprintf(stderr, "Not yet implemented\n");
+    if ( [fm fileExistsAtPath:flistpath] )
+    {
+        //NSInputStream *instrm = [NSInputStream inputStreamWithFileAtPath:flistpath];
+        NSArray<NSString *> *fpaths = [[NSString stringWithContentsOfFile:flistpath encoding:NSUTF8StringEncoding error:&err] componentsSeparatedByString:@"\n"];
+        //(NSArray<NSString *> *)[NSPropertyListSerialization propertyListWithStream:instrm options:NSPropertyListImmutable format:nil error:&err];
+        if ( ! fpaths )
+        {
+            fprintf(stderr, "Impossible to read file to delete list file %s\n%s\n", flistpath.lastPathComponent.UTF8String, err.description.UTF8String);
+            return 1;
+        }
+        fpaths = [fpaths arrayByAddingObject:flistpath];
+        BOOL isdir=NO;
+        for ( NSString *ipath in fpaths )
+        {
+            if ( [[ipath substringToIndex:3] isEqualToString:@"***"] )
+            {
+                [self _clearFFmpegGroupIncludingFiles:YES];
+                continue;
+            }
+            if ( [fm fileExistsAtPath:ipath isDirectory:&isdir])
+            {
+                //(! [fm removeItemAtPath:ipath error:&err] )
+                if (! [fm trashItemAtURL:[NSURL fileURLWithPath:ipath] resultingItemURL:nil error:&err] )
+                {
+                    fprintf(stderr, "Can't move %s to trash\n%s\n", ipath.UTF8String, err.description.UTF8String );
+                } else if ( ! _quietMode ) printf("%s %s moved to trash\n", ((isdir)?"Directory":"File"), ipath.lastPathComponent.UTF8String );
+            }
+        }
+    } else if ( ! _quietMode ) printf("No cleaning requested\n");
     return rez;
 }
 #pragma mark HELPERS
+-(NSArray<NSString *> *)_non_headers_included
+{
+    NSArray<NSString *> *fpaths = @[];
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *err = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^#(?:include|import) \"(\\V*\\.[^h^\"]{1,3})\"$" options:NSRegularExpressionAnchorsMatchLines error:&err];
+    if ( (! regex ) || ( err ))
+    {
+        fprintf(stderr, "Impossible to create regex\n%s\n", err.description.UTF8String );
+        return nil;
+    }
+    NSArray<NSString *> *dirs2search =[MCX_LIB_DIRS arrayByAddingObject:@"compat"];
+    for ( NSString *dirname  in dirs2search)
+    {
+        NSString *srcdir = [_destinationFFmpegDir stringByAppendingPathComponent:dirname];
+        NSDirectoryEnumerator *dirEnum = [fm enumeratorAtPath:srcdir];
+        NSString *fpath = nil;
+        if ( _verboseMode ) printf("\n--- %s ---\n%s\n\n", dirname.UTF8String, srcdir.UTF8String);
+        while ((fpath = [dirEnum nextObject] ))
+        {
+           if (( [fpath hasSuffix:@".c"] ) || ( [fpath hasSuffix:@".h"]))
+           {
+               if ( _verboseMode ) printf("%s\n", fpath.UTF8String);
+               NSString *contentstr = [NSString stringWithContentsOfFile:[srcdir stringByAppendingPathComponent:fpath] encoding:NSUTF8StringEncoding error:&err];
+               if ( (! contentstr ) || ( err ))
+               {
+                   fprintf(stderr, "Error getting content of %s:\n%s\n", fpath.lastPathComponent.UTF8String, err.description.UTF8String);
+                   return nil;
+               }
+               for ( NSTextCheckingResult *tcrez in [regex matchesInString:contentstr options:0 range:NSMakeRange(0, [contentstr length])])
+               {
+                   NSRange r=[tcrez rangeAtIndex:1];
+                   if ( r.location == NSNotFound )
+                   {
+                       if ( _verboseMode ) fprintf(stderr, "Not really found %s\n", [contentstr substringWithRange:[tcrez rangeAtIndex:0]].UTF8String);
+                       continue;
+                   }
+                   NSString *ipath =[contentstr substringWithRange:r];
+                   NSArray<NSString *> *compnts =[ipath pathComponents];
+                   if (( [compnts count] < 2 ) || ( ! [dirs2search containsObject:compnts[0]] ))
+                   {
+                       ipath = [dirname stringByAppendingPathComponent:ipath];
+                   }
+                   if ( ! [fpaths containsObject:ipath] )
+                   {
+                       fpaths = [fpaths arrayByAddingObject:ipath];
+                       if ( _verboseMode ) printf("\tadded %s\n", ipath.UTF8String);
+                   } else if ( _verboseMode ) printf("\tignored %s\n", ipath.UTF8String );
+               }
+           }
+        }
+    }
+    if ( !_quietMode ) printf("%s found: %lu\n%s\n", __func__, [fpaths count], fpaths.description.UTF8String);
+    return fpaths;
+
+/*
+    NSArray<NSString *> *fpaths = @[];
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *err = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"#include \"(.*\\.[^h]*)\"" options:0 error:&err];
+    if ( (! regex ) || ( err ))
+    {
+        fprintf(stderr, "Impossible to create regex\n%s\n", err.description.UTF8String );
+        return nil;
+    }
+    for ( NSString *dirname  in MCX_LIB_DIRS)
+    {
+        NSString *srcdir = [[_destinationFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:dirname];
+        for (NSString *fpath in [fm enumeratorAtPath:srcdir])
+        {
+           if ( [fpath hasSuffix:@".c"])
+           {
+               NSString *contentstr = [NSString stringWithContentsOfFile:(NSString *)fpath encoding:NSUTF8StringEncoding error:&err];
+               if ( (! contentstr ) || ( err ))
+               {
+                   fprintf(stderr, "Error getting content of %s:\n%s\n", fpath.lastPathComponent.UTF8String, err.description.UTF8String);
+                   return nil;
+               }
+               for ( NSTextCheckingResult *tcrez in [regex matchesInString:contentstr options:0 range:NSMakeRange(0, [contentstr length])])
+               {
+                   NSString *ipath =[contentstr substringWithRange:[tcrez rangeAtIndex:1]];
+                   if ( ! [fpaths containsObject:ipath] ) fpaths = [fpaths arrayByAddingObject:ipath];
+               }
+           }
+        }
+    }
+    printf("%s found:\n%s\n", __func__, fpaths.description.UTF8String);
+    return fpaths;
+ */
+}
 -(BOOL)_downloadFileAtURL:(NSString *)fileURL
                                     toDir:(NSString *)toDir
                                   timeout:(unsigned)timeout
@@ -628,8 +752,7 @@ NSString * SGFAppend(NSString *s, NSString *a);
     return  MCX_INSTALL_STEP_NAMES[_currentStep];
 }
 
-//BOOL SGFCopyExt(NSString *s, NSString *d, BOOL force, NSString *e, NSArray<NSString *> *es)
--(BOOL) _SGFCopyExtSource:(NSString *)src toDest:(NSString *)dest forcing:(BOOL) force withExt:( NSString *)ext exts2copy:( NSArray<NSString *> *) exts
+-(BOOL)_SGFCopyExtSource:(NSString *)src toDest:(NSString *)dest forcing:(BOOL) force withExt:( NSString *)ext exts2copy:( NSArray<NSString *> *) exts
 {
     NSFileManager *fm = [NSFileManager defaultManager];
     for (NSString *o in [fm enumeratorAtPath:src])
@@ -644,7 +767,6 @@ NSString * SGFAppend(NSString *s, NSString *a);
                 for (NSString *m in exts)
                 {
                     r = ( [ext isEqualToString:@"t"])?p:[p stringByReplacingOccurrencesOfString:ext withString:m];
-                    //if ( r && [e isEqualToString:@"t"]) printf("%s\n", r.UTF8String );
                     if ([fm fileExistsAtPath:r])
                     {
                         break;
@@ -653,12 +775,11 @@ NSString * SGFAppend(NSString *s, NSString *a);
             }
             if (!r)
             {
-                //NSLog(@"Not Found : %@", o);
                 fprintf(stderr, "Not Found : %s\n", o.UTF8String);
                 return NO;
             }
             NSString *t = [r stringByReplacingOccurrencesOfString:src withString:dest];
-           // SGFCopy(r, t, force);
+            //if (  _verboseMode ) printf("Copied %s\n", t.lastPathComponent.UTF8String );
             [self _SGFCopy:r toDest:t forcing:YES];
         }
     }
@@ -689,17 +810,16 @@ NSString * SGFAppend(NSString *s, NSString *a);
     return YES;
 }
 
-//BOOL SGFRemove(NSString *s)
 -(BOOL)_SGFRemove:(NSString *)src
 {
     NSFileManager *fm = [NSFileManager defaultManager];
     if ([fm fileExistsAtPath:src])
     {
+        if ( _verboseMode ) printf("Removed %s\n", src.lastPathComponent.UTF8String );
         return [fm removeItemAtPath:src error:nil];
     }
     return NO;
 }
-//BOOL SGFReplace(NSString *s, NSString *f, NSString *t)
 -(BOOL)_SGFReplaceInfile:(NSString *)fpath search:(NSString *)srch withText:( NSString *)txt
 {
     BOOL dir = NO;
@@ -714,9 +834,10 @@ NSString * SGFAppend(NSString *s, NSString *a);
         return NO;
     }
     cntnt = [cntnt stringByReplacingOccurrencesOfString:srch withString:txt];
-    return [cntnt writeToFile:fpath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    BOOL rez =[cntnt writeToFile:fpath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    if ( rez && _verboseMode ) printf("File %s patched\n", fpath.lastPathComponent.UTF8String);
+    return rez;
 }
-//NSString * SGFAppend(NSString *s, NSString *a)
 -(NSString *)_SGFAppendTo:(NSString *)src suffix:( NSString *)appd
 {
     return [src stringByAppendingPathComponent:appd];
@@ -797,91 +918,3 @@ BOOL unzip(const char *fname, char **rootfilename )
     // printf("Successfully uncompressed %s to %s\n", fname, dfname);
     return YES;
 }
-/*
-BOOL SGFCopy(NSString *s, NSString *d, BOOL force)
-{
-    BOOL dir = NO;
-    NSFileManager *fm = [NSFileManager defaultManager];
-    if (![fm fileExistsAtPath:s isDirectory:&dir] || ([fm fileExistsAtPath:d] && !force)) {
-        return NO;
-    }
-    [fm removeItemAtPath:d error:nil];
-    NSMutableArray *c = [d.pathComponents mutableCopy];
-    [(NSMutableArray *)c removeLastObject];
-    for (int i = 0; i < c.count; i++) {
-        NSArray *c_t = [c subarrayWithRange:NSMakeRange(0, c.count - i)];
-        NSString *p = [NSString pathWithComponents:c_t];
-        if (![fm fileExistsAtPath:p]) {
-            [fm createDirectoryAtPath:p withIntermediateDirectories:yearMask ? YES : NO attributes:nil error:nil];
-        }
-    }
-    [fm copyItemAtPath:s toPath:d error:nil];
-    //printf("\tcopy %s -> %s\n", s.UTF8String, d.UTF8String);
-    return YES;
-}
-
-BOOL SGFCopyExt(NSString *s, NSString *d, BOOL force, NSString *e, NSArray<NSString *> *es)
-{
-    NSFileManager *fm = [NSFileManager defaultManager];
-    for (NSString *o in [fm enumeratorAtPath:s])
-    {
-        NSString *p = [s stringByAppendingPathComponent:o];
-        if (([o hasSuffix:e]) || (( [e isEqualToString:@"t"]) && (( [o containsString:@"template"]) || ( [o containsString:@"list"]))))
-        {
-            NSString *r = p;
-            if (es.count)
-            {
-                r = nil;
-                for (NSString *m in es)
-                {
-                    r = ( [e isEqualToString:@"t"])?p:[p stringByReplacingOccurrencesOfString:e withString:m];
-                    //if ( r && [e isEqualToString:@"t"]) printf("%s\n", r.UTF8String );
-                    if ([fm fileExistsAtPath:r])
-                    {
-                        break;
-                    }
-                }
-            }
-            if (!r)
-            {
-                //NSLog(@"Not Found : %@", o);
-                fprintf(stderr, "Not Found : %s\n", o.UTF8String);
-                return NO;
-            }
-            NSString *t = [r stringByReplacingOccurrencesOfString:s withString:d];
-            SGFCopy(r, t, force);
-        }
-    }
-    return YES;
-}
-
-BOOL SGFRemove(NSString *s)
-{
-    NSFileManager *fm = [NSFileManager defaultManager];
-    if ([fm fileExistsAtPath:s]) {
-        return [fm removeItemAtPath:s error:nil];
-    }
-    return NO;
-}
-
-BOOL SGFReplace(NSString *s, NSString *f, NSString *t)
-{
-    BOOL dir = NO;
-    NSFileManager *fm = [NSFileManager defaultManager];
-    if (![fm fileExistsAtPath:s isDirectory:&dir] || dir) {
-        return NO;
-    }
-    NSString *c = [NSString stringWithContentsOfFile:s encoding:NSUTF8StringEncoding error:nil];
-    if (c.length == 0) {
-        return NO;
-    }
-    c = [c stringByReplacingOccurrencesOfString:f withString:t];
-    return [c writeToFile:s atomically:YES encoding:NSUTF8StringEncoding error:nil];
-}
-
-NSString * SGFAppend(NSString *s, NSString *a)
-{
-    return [s stringByAppendingPathComponent:a];
-}
-
-*/

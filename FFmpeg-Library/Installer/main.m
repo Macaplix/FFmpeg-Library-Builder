@@ -22,11 +22,23 @@ int main(int argc, const char * argv[])
         for (unsigned char argi=1; argi < argc; argi++)
         {
             const char *rgestr = argv[argi];
+            if (( argi == 1) && ( strcmp(rgestr, "--finish") == 0 ))
+            {
+                return [installer finish];
+            }
             if ( strlen(rgestr) < 1 ) continue;
             if ( rgestr[0] == '-' )
             {
                 for (unsigned char sarg=1; sarg < strlen(rgestr); sarg++)
                 {
+                    if (( sarg == 1 ) && ( rgestr[sarg] == 'c' ) && ( strlen(rgestr) > 3 ) && ( rgestr[2] == '=') ) //arg -c=n
+                    {
+                        char *endptr="";
+                        unsigned char cleanlevel = strtoul(rgestr +3, &endptr, 0);
+                        if ( strlen(endptr) ) fprintf(stderr, "ignored %s end of argument%s\n", endptr, rgestr );
+                        [installer setClean_level:cleanlevel];
+                        break;
+                    }
                     switch (rgestr[sarg])
                     {
                         case 'h':
@@ -42,7 +54,8 @@ int main(int argc, const char * argv[])
                             [installer setQuietMode:YES];
                             break;
                         case 'c':
-                            lstep = MCXInstallStepClean;
+                            //lstep = MCXInstallStepClean;
+                            [installer setClean_level:2];
                              break;
                         default:
                             fprintf(stderr, "unknow argument -%c\n", rgestr[sarg]);
@@ -75,7 +88,7 @@ int main(int argc, const char * argv[])
 }
 void showHelp( void )
 {
-    printf("# installer [-hvqc] [n1-n2] [n]\n\n"
+    printf("# installer [-hvqc] [-c=n] [n1-n2] [n]\n\n"
            "\t-h help. prints this help message\n\n"
            "\tn1-n2 starts with step number n1 and ends with step number n2\n"
            "\t\tboth steps n1 & n2 are included\n"
@@ -85,6 +98,8 @@ void showHelp( void )
            "\t-v verbose - prints more detailed messages and help\n\n"
            "\t-q quiet - only prints errors ( on stderr )\n\n"
            "\t-c clean intermediary files once Library is build\n\n"
+           "\t-c=n apply clean level n to intermediary files once Library is build\n"
+           "\t\tdefault clean level with -c is 2 without 0\n\n"
            "Here are the steps preceded by there numbers:\n"
            "\n"
            );

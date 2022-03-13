@@ -1,0 +1,11 @@
+client:
+  name: basic
+  version: 0
+  file-system: default
+
+targets:
+  "": ["<all>"]
+
+commands:
+  "<all>": {"tool":"phony","inputs":[],"outputs":["<all>"]}
+

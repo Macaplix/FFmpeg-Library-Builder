@@ -462,13 +462,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8C85ADC9B8CFA994B3B5FC87 /* FFmpeg */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = FFmpeg;
-			sourceTree = "<group>";
-		};
 		8F40288327CBEEFB0095D637 /* libtar */ = {
 			isa = PBXGroup;
 			children = (
@@ -767,7 +760,7 @@
 				9C35EC8B2193592300FD4FE8 /* Installer */,
 				9CD550C8219337510075012A /* Products */,
 				9CE714E921934C51006527D2 /* Frameworks */,
-				8C85ADC9B8CFA994B3B5FC87 /* FFmpeg */,
+				D9C9AB0195F068CDFFD8724B /* FFmpeg */,
 			);
 			sourceTree = "<group>";
 		};
@@ -911,6 +904,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		D9C9AB0195F068CDFFD8724B /* FFmpeg */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = FFmpeg;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -940,6 +940,7 @@
 				9C169A832193E8FC0044126F /* Headers */,
 				9C169A842193E8FC0044126F /* Sources */,
 				9C169A852193E8FC0044126F /* Frameworks */,
+				8FF6E50127DBB7EE00F4BA9F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1003,6 +1004,27 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8FF6E50127DBB7EE00F4BA9F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SYMROOT)/shout.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\n$SYMROOT/Debug/installer --finish\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9C169A842193E8FC0044126F /* Sources */ = {
@@ -1195,7 +1217,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1249,7 +1271,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;

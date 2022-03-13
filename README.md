@@ -76,8 +76,8 @@ Uncheck the 2 checkboxes in front of -h, -v and close the scheme editor window.
 To launch the installer and perform a complete installation you just need to build and run the *install* scheme (  R )
 
 ## Installer man page
-```
-% installer [-hvqc] [n1-n2] [n]
+```bash
+# installer [-hvqc] [-c=n] [n1-n2] [n]
 
 	-h help. prints this help message
 
@@ -93,12 +93,20 @@ To launch the installer and perform a complete installation you just need to bui
 
 	-c clean. cleans intermediary files once Library is build
 	
+	-c=n cleans intermediary files with clean level n
+		default clean level is 2 with -c and 0 without
+		
+		0 - don't clean
+		1 - clean only unnecessary files
+		2 - cleans to rebuild a library with different ./configure settings
+		3 - cleans to have source downloaded anew
+	
 ```
 In case any automatic step fails, you can perform it manually and have the installer do the remaining steps automatically passing the following step number as argument in the scheme
 
 ## Installer steps in detail
 
-All these steps are suppose to perform automatically thanks to the *installer* executable, the following **Manual step** procedures are only provided in case any step fails or if you want to customize further.
+<mark>All these steps are suppose to perform automatically thanks to the *installer* executable, the following **Manual step** procedures are only provided in case any step fails or if you want to customize further.</mark>
 
 ### step 1 - Backup and clean FFmpeg source and destination
 
@@ -145,7 +153,7 @@ The default arguments used to run configure are those listed bellow. If you need
 	--enable-static --disable-shared --enable-gpl --enable-version3 \
 	--enable-pthreads --enable-postproc --enable-filters --disable-asm \
 	--disable-programs --enable-runtime-cpudetect --enable-bzlib \
-	 --enable-zlib --enable-opengl --enable-libvpx --enable-libx264 \
+	 --enable-zlib --enable-opengl --enable-libvpx \
 	 --enable-libspeex --enable-libopenjpeg  
 	 
 ```
@@ -185,6 +193,8 @@ Which consist on:
 
 ### step 7 - Add FFmpeg Sources to Xcode project
 
+To automate this step I am using XcodeEditor framework from Jasper Blues available at : <https://github.com/appsquickly/XcodeEditor>
+
  * **Manual step:**
 
 	In Xcode *FFmpeg* project select *FFmpeg* ( empty ) group choose add Files to "FFmpeg" in the File menu, select the FFmpeg folder inside the project folder ( *FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg* ) and click "Add"
@@ -202,15 +212,13 @@ Which consist on:
 Which consist on:   
 
 	**1 -** copying all header files from source ffmpeg directory to project FFmpeg directory   
+		  
+	**2 -** copying included source template .c files that doesn't need to be compiled but are referenced in one of the to build .c or .h files.   
+	Running the following regular expression on any file in FFmpeg directory will do the trick
 	
-	**2 -** copying any source .c file whose name contains template or list   
-	  >  Those files are included in other c files but doesn't need to be compiled separately   
-	  
-	**3 -** copying source .c file listed in MCX\_NO\_COMPIL\_C\_FILES    
+	   ~~~
+	   ^#(?:include|import) \"(\\V*\\.[^h^\"]{1,3})\"$
 	   
-		Those files are also included in other c files but their names doesn't show it!!!
-		Todo: get the file list by scanning C files for #include directives
-		involving something else than a .h header  
 
 
 
