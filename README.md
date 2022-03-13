@@ -193,6 +193,8 @@ Which consist on:
 
 ### step 7 - Add FFmpeg Sources to Xcode project
 
+To automate this step I am using XcodeEditor framework from Jasper Blues available at : <https://github.com/appsquickly/XcodeEditor>
+
  * **Manual step:**
 
 	In Xcode *FFmpeg* project select *FFmpeg* ( empty ) group choose add Files to "FFmpeg" in the File menu, select the FFmpeg folder inside the project folder ( *FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg* ) and click "Add"
