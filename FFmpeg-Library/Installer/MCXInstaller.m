@@ -23,10 +23,10 @@
 @"libavresample",@"libavutil",@"libpostproc",@"libswresample",@"libswscale"]
 #define MCX_INSTALL_STEP_NAMES @[@"Backup and clean FFmpeg source and destination",@"Download FFmpeg Source", @"Unzip FFmpeg Source", @"Configure FFmpeg", @"Make FFmpeg ( without actually building )", @"Move source files to Xcode project folder", @"Add FFmpeg Sources to Xcode project", @"Finish moving & patching source files", @"Build FFmpeg Library"]
 #define MCX_LAST_STEP MCXInstallStepBuildLibrary
-
-#define MCX_NO_COMPIL_C_FILES @[ @"libswresample/noise_shaping_data.c", @"libavcodec/scpr3.c", @"libavfilter/signature_lookup.c", @"libavfilter/blend_modes.c", @"libavcodec/eac3dec.c", @"libavcodec/ac3dec.c", @"libavcodec/aacps.c", @"libavcodec/aacpsdata.c"]
-#define MCX_TO_DELETE_LIST_FILENAME @".ffmpeg_installer_trash_files_list"
 #define MCX_FFMPEGLIB_FILENAME @"libFFmpeg.a"
+
+#define MCX_TO_DELETE_LIST_FILENAME @".ffmpeg_installer_trash_files_list"
+
 BOOL unzip(const char *fname, char **outfile );
 BOOL untar(const char * filename);
 
@@ -449,25 +449,15 @@ BOOL untar(const char * filename);
         NSString *destdirpath =[self _SGFAppendTo:_destinationFFmpegDir suffix:dirname];
         // copy all the headers files
         [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:destdirpath forcing:YES withExt:@".h" exts2copy:nil];
-        // copy all files whose name contains template or list ( SGFCopyExt hack )
-        //[self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:dirname] toDest:destdirpath forcing:YES withExt:@"t" exts2copy:@[@".c"]];
         if ( _clean_level > 1 ) [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:destdirpath]];
-        /* the files copied bellow are not all necessary and will be imported in xcode if previous step is ran again
-        SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".c", nil);
-        SGFCopyExt(SGFAppend(_sourceFFmpegDir, o), SGFAppend(_destinationFFmpegDir, o), YES, @".inc", nil);
-         */
     }
     [self _SGFCopyExtSource:[self _SGFAppendTo:_sourceFFmpegDir suffix:@"compat"] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:@"compat"] forcing:YES withExt:@".h" exts2copy:nil];
     
     // copying included C files that doesn't need to be compiled separetly
-    // to do: get this list automatically scanning each to be compiled .c file for extra included .c files
-    // to make sure the installer would work with ffmpeg future updates without updating MCX_NO_COMPIL_C_FILES list
     for ( NSString *relpath in [self _non_headers_included] )//MCX_NO_COMPIL_C_FILES
     {
         [self _SGFCopy:[_sourceFFmpegDir stringByAppendingPathComponent:relpath] toDest:[_destinationFFmpegDir stringByAppendingPathComponent:relpath] forcing:YES];
     }
-
-
     // Edit
     [self _SGFReplaceInfile:[_destinationFFmpegDir stringByAppendingPathComponent:@"libavcodec/videotoolbox.c"]
                      search: @"#include \"mpegvideo.h\""
@@ -592,6 +582,60 @@ BOOL untar(const char * filename);
     NSArray<NSString *> *fpaths = @[];
     NSFileManager *fm = [NSFileManager defaultManager];
     NSError *err = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^#(?:include|import) \"(\\V*\\.[^h^\"]{1,3})\"$" options:NSRegularExpressionAnchorsMatchLines error:&err];
+    if ( (! regex ) || ( err ))
+    {
+        fprintf(stderr, "Impossible to create regex\n%s\n", err.description.UTF8String );
+        return nil;
+    }
+    NSArray<NSString *> *dirs2search =[MCX_LIB_DIRS arrayByAddingObject:@"compat"];
+    for ( NSString *dirname  in dirs2search)
+    {
+        NSString *srcdir = [_destinationFFmpegDir stringByAppendingPathComponent:dirname];
+        NSDirectoryEnumerator *dirEnum = [fm enumeratorAtPath:srcdir];
+        NSString *fpath = nil;
+        if ( _verboseMode ) printf("\n--- %s ---\n%s\n\n", dirname.UTF8String, srcdir.UTF8String);
+        while ((fpath = [dirEnum nextObject] ))
+        {
+           if (( [fpath hasSuffix:@".c"] ) || ( [fpath hasSuffix:@".h"]))
+           {
+               if ( _verboseMode ) printf("%s\n", fpath.UTF8String);
+               NSString *contentstr = [NSString stringWithContentsOfFile:[srcdir stringByAppendingPathComponent:fpath] encoding:NSUTF8StringEncoding error:&err];
+               if ( (! contentstr ) || ( err ))
+               {
+                   fprintf(stderr, "Error getting content of %s:\n%s\n", fpath.lastPathComponent.UTF8String, err.description.UTF8String);
+                   return nil;
+               }
+               for ( NSTextCheckingResult *tcrez in [regex matchesInString:contentstr options:0 range:NSMakeRange(0, [contentstr length])])
+               {
+                   NSRange r=[tcrez rangeAtIndex:1];
+                   if ( r.location == NSNotFound )
+                   {
+                       if ( _verboseMode ) fprintf(stderr, "Not really found %s\n", [contentstr substringWithRange:[tcrez rangeAtIndex:0]].UTF8String);
+                       continue;
+                   }
+                   NSString *ipath =[contentstr substringWithRange:r];
+                   NSArray<NSString *> *compnts =[ipath pathComponents];
+                   if (( [compnts count] < 2 ) || ( ! [dirs2search containsObject:compnts[0]] ))
+                   {
+                       ipath = [dirname stringByAppendingPathComponent:ipath];
+                   }
+                   if ( ! [fpaths containsObject:ipath] )
+                   {
+                       fpaths = [fpaths arrayByAddingObject:ipath];
+                       if ( _verboseMode ) printf("\tadded %s\n", ipath.UTF8String);
+                   } else if ( _verboseMode ) printf("\tignored %s\n", ipath.UTF8String );
+               }
+           }
+        }
+    }
+    if ( !_quietMode ) printf("%s found: %lu\n%s\n", __func__, [fpaths count], fpaths.description.UTF8String);
+    return fpaths;
+
+/*
+    NSArray<NSString *> *fpaths = @[];
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *err = nil;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"#include \"(.*\\.[^h]*)\"" options:0 error:&err];
     if ( (! regex ) || ( err ))
     {
@@ -621,6 +665,7 @@ BOOL untar(const char * filename);
     }
     printf("%s found:\n%s\n", __func__, fpaths.description.UTF8String);
     return fpaths;
+ */
 }
 -(BOOL)_downloadFileAtURL:(NSString *)fileURL
                                     toDir:(NSString *)toDir
