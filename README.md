@@ -199,7 +199,8 @@ To automate this step I am using XcodeEditor framework from Jasper Blues availab
 
 	In Xcode *FFmpeg* project select *FFmpeg* ( empty ) group choose add Files to "FFmpeg" in the File menu, select the FFmpeg folder inside the project folder ( *FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg* ) and click "Add"
 	
-	![add to xcode](images/add.png)
+	![add to xcode](images/add.png)   
+
 
 ### step 8 - Finish moving & patching source files
 
@@ -213,14 +214,13 @@ Which consist on:
 
 	**1 -** copying all header files from source ffmpeg directory to project FFmpeg directory   
 		  
-	**2 -** copying included source template .c files that doesn't need to be compiled but are referenced in one of the to build .c or .h files.   
-	Running the following regular expression on any file in FFmpeg directory will do the trick.   
+	**2 -** copying included source template .c files that doesn't need to be compiled on there own but are referenced in one of the .c or .h files required in the target library.   
+	* Running the following regular expression on any file in FFmpeg directory will do the trick.   
 	
-   
  
 	
 ```
-	   ^#(?:include|import) \"(\\V*\\.[^h^\"]{1,3})\"$
+	   "^#(?:include|import) \"(\\V*\\.[^h^\"]{1,3})\"$"
 ```
 
 
