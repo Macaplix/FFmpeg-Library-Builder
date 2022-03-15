@@ -459,6 +459,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		319551A08236CF9223983A1C /* FFmpeg */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = FFmpeg;
+			sourceTree = "<group>";
+		};
 		8F40288327CBEEFB0095D637 /* libtar */ = {
 			isa = PBXGroup;
 			children = (
@@ -757,6 +764,7 @@
 				9C35EC8B2193592300FD4FE8 /* Installer */,
 				9CD550C8219337510075012A /* Products */,
 				9CE714E921934C51006527D2 /* Frameworks */,
+				319551A08236CF9223983A1C /* FFmpeg */,
 			);
 			sourceTree = "<group>";
 		};

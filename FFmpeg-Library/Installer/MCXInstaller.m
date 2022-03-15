@@ -631,8 +631,9 @@ BOOL untar(const char * filename);
                        if ( _verboseMode ) fprintf(stderr, "Not really found %s\n", [contentstr substringWithRange:[tcrez rangeAtIndex:0]].UTF8String);
                        continue;
                    }
-                   NSString *ipath =[contentstr substringWithRange:r];
-                   NSArray<NSString *> *compnts =[ipath pathComponents];
+                   NSString *spath =[contentstr substringWithRange:r];
+                   NSArray<NSString *> *compnts =[spath pathComponents];
+                   NSString  *ipath = spath;
                    if (( [compnts count] < 2 ) || ( ! [dirs2search containsObject:compnts[0]] ))
                    {
                        ipath = [dirname stringByAppendingPathComponent:ipath];
@@ -640,7 +641,7 @@ BOOL untar(const char * filename);
                    if ( ! [fpaths containsObject:ipath] )
                    {
                        fpaths = [fpaths arrayByAddingObject:ipath];
-                       [newPaths push:[ipath lastPathComponent]];
+                       [newPaths push:spath];
                        if ( _verboseMode ) printf("\tadded %s\n", ipath.UTF8String);
                    } else if ( _verboseMode ) printf("\tignored %s\n", ipath.UTF8String );
                }
