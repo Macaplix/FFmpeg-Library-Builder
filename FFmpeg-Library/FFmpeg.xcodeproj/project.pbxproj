@@ -43,7 +43,6 @@
 		8F4027DE27C8EF560095D637 /* libvorbisenc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40279827C8EF560095D637 /* libvorbisenc.a */; };
 		8F4027E027C8EF560095D637 /* libvorbisfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40279A27C8EF560095D637 /* libvorbisfile.a */; };
 		8F4027E227C8EF560095D637 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40279C27C8EF560095D637 /* libz.a */; };
-		8F4027EB27C917D20095D637 /* libbz2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4027EA27C917D20095D637 /* libbz2.a */; };
 		8F4027EF27C921680095D637 /* libmetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4027EE27C921680095D637 /* libmetal.a */; };
 		8F4027FB27C93B160095D637 /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4027F927C939D00095D637 /* libSDL2.a */; };
 		8F4027FF27C940DD0095D637 /* CoreHaptics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4027FE27C940DD0095D637 /* CoreHaptics.framework */; };
@@ -52,11 +51,11 @@
 		8F40285827C974670095D637 /* MCXInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F40285527C9743E0095D637 /* MCXInstaller.m */; };
 		8F4028C427CFB52A0095D637 /* XcodeEditor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4028C327CFB52A0095D637 /* XcodeEditor.framework */; };
 		8F4028C827CFBD5E0095D637 /* XcodeEditor.framework in Headers */ = {isa = PBXBuildFile; fileRef = 8F4028C327CFB52A0095D637 /* XcodeEditor.framework */; settings = {ATTRIBUTES = (Public, ); }; };
+		8F82233627E0B3F6006FE332 /* libtarbz2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82233527E0B3F6006FE332 /* libtarbz2.a */; };
+		8F82233727E0B3FC006FE332 /* libtarbz2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82233527E0B3F6006FE332 /* libtarbz2.a */; };
 		8F826EB327D686400050533D /* metal_patch.c in Sources */ = {isa = PBXBuildFile; fileRef = 8F826EA727D6157C0050533D /* metal_patch.c */; };
-		8FEF09C327D9640100DC1E5F /* libbz2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4027EA27C917D20095D637 /* libbz2.a */; };
 		8FF6E4F127DA0D1200F4BA9F /* main.pch in Headers */ = {isa = PBXBuildFile; fileRef = 9CD552C52193389B0075012A /* main.pch */; };
 		8FF6E4FA27DA15B300F4BA9F /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF6E4F927DA15B300F4BA9F /* libx264.a */; };
-		8FF6E50027DA6C5000F4BA9F /* libtar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF6E4FF27DA6C5000F4BA9F /* libtar.a */; };
 		9C993F932193DB20003761DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C993F922193DB20003761DB /* main.m */; };
 /* End PBXBuildFile section */
 
@@ -109,7 +108,6 @@
 		8F40279827C8EF560095D637 /* libvorbisenc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbisenc.a; path = libs/libvorbisenc.a; sourceTree = "<group>"; };
 		8F40279A27C8EF560095D637 /* libvorbisfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbisfile.a; path = libs/libvorbisfile.a; sourceTree = "<group>"; };
 		8F40279C27C8EF560095D637 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = libs/libz.a; sourceTree = "<group>"; };
-		8F4027EA27C917D20095D637 /* libbz2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libbz2.a; path = libs/libbz2.a; sourceTree = "<group>"; };
 		8F4027EE27C921680095D637 /* libmetal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmetal.a; path = libs/libmetal.a; sourceTree = "<group>"; };
 		8F4027F927C939D00095D637 /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = libs/libSDL2.a; sourceTree = "<group>"; };
 		8F4027FE27C940DD0095D637 /* CoreHaptics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreHaptics.framework; path = System/Library/Frameworks/CoreHaptics.framework; sourceTree = SDKROOT; };
@@ -121,6 +119,7 @@
 		8F40288427CBEEFB0095D637 /* libtar_listhash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libtar_listhash.h; sourceTree = "<group>"; };
 		8F40288527CBEEFB0095D637 /* libtar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libtar.h; sourceTree = "<group>"; };
 		8F4028C327CFB52A0095D637 /* XcodeEditor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = XcodeEditor.framework; sourceTree = "<group>"; };
+		8F82233527E0B3F6006FE332 /* libtarbz2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtarbz2.a; path = libs/libtarbz2.a; sourceTree = "<group>"; };
 		8F826EA727D6157C0050533D /* metal_patch.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = metal_patch.c; sourceTree = "<group>"; };
 		8F826EAD27D61FA40050533D /* buildFFmpegLib.scpt */ = {isa = PBXFileReference; lastKnownFileType = file; path = buildFFmpegLib.scpt; sourceTree = "<group>"; };
 		8FEF098627D95F1E00DC1E5F /* ogg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ogg.h; sourceTree = "<group>"; };
@@ -319,7 +318,6 @@
 		8FF6E4F527DA10A600F4BA9F /* x264_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x264_config.h; sourceTree = "<group>"; };
 		8FF6E4F627DA10A600F4BA9F /* x264.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x264.h; sourceTree = "<group>"; };
 		8FF6E4F927DA15B300F4BA9F /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libx264.a; path = libs/libx264.a; sourceTree = "<group>"; };
-		8FF6E4FF27DA6C5000F4BA9F /* libtar.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtar.a; path = libs/libtar.a; sourceTree = "<group>"; };
 		9C169A872193E8FC0044126F /* libFFmpeg.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFFmpeg.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C35EC412193553A00FD4FE8 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		9C993F802193DAD0003761DB /* installer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = installer; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -409,7 +407,6 @@
 				8F4027FF27C940DD0095D637 /* CoreHaptics.framework in Frameworks */,
 				8F4027FB27C93B160095D637 /* libSDL2.a in Frameworks */,
 				8F4027EF27C921680095D637 /* libmetal.a in Frameworks */,
-				8F4027EB27C917D20095D637 /* libbz2.a in Frameworks */,
 				8F40279F27C8EF560095D637 /* libxcb-xfixes.a in Frameworks */,
 				8F4027A027C8EF560095D637 /* libxcb-render.a in Frameworks */,
 				8F4027A127C8EF560095D637 /* libxcb-shm.a in Frameworks */,
@@ -424,6 +421,7 @@
 				8F4027B527C8EF560095D637 /* libxcb-present.a in Frameworks */,
 				8F4027B727C8EF560095D637 /* libX11.a in Frameworks */,
 				8F4027B927C8EF560095D637 /* libxcb-sync.a in Frameworks */,
+				8F82233727E0B3FC006FE332 /* libtarbz2.a in Frameworks */,
 				8F4027BB27C8EF560095D637 /* libssl.a in Frameworks */,
 				8F4027BC27C8EF560095D637 /* libxcb-res.a in Frameworks */,
 				8F4027BD27C8EF560095D637 /* libxcb-xv.a in Frameworks */,
@@ -453,9 +451,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F82233627E0B3F6006FE332 /* libtarbz2.a in Frameworks */,
 				8F4028C427CFB52A0095D637 /* XcodeEditor.framework in Frameworks */,
-				8FEF09C327D9640100DC1E5F /* libbz2.a in Frameworks */,
-				8FF6E50027DA6C5000F4BA9F /* libtar.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -844,6 +841,7 @@
 		9CE714E921934C51006527D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8F82233527E0B3F6006FE332 /* libtarbz2.a */,
 				9CE714FC21934C85006527D2 /* AudioToolbox.framework */,
 				9CE714F821934C78006527D2 /* Carbon.framework */,
 				9CE714F221934C67006527D2 /* Cocoa.framework */,
@@ -854,7 +852,6 @@
 				9CE714FA21934C80006527D2 /* ForceFeedback.framework */,
 				8F40281427C9450D0095D637 /* GameController.framework */,
 				9CE714F421934C6B006527D2 /* IOKit.framework */,
-				8F4027EA27C917D20095D637 /* libbz2.a */,
 				8F40278427C8EF540095D637 /* libcrypto.a */,
 				8F40284D27C94E1A0095D637 /* libiconv.2.4.0.tbd */,
 				9C35EC412193553A00FD4FE8 /* libiconv.tbd */,
@@ -864,7 +861,6 @@
 				8F4027F927C939D00095D637 /* libSDL2.a */,
 				8F40277C27C8EF530095D637 /* libspeex.a */,
 				8F40277527C8EF520095D637 /* libssl.a */,
-				8FF6E4FF27DA6C5000F4BA9F /* libtar.a */,
 				8F40276A27C8EF510095D637 /* libvorbis.a */,
 				8F40279827C8EF560095D637 /* libvorbisenc.a */,
 				8F40279A27C8EF560095D637 /* libvorbisfile.a */,

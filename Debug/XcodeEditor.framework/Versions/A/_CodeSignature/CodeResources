@@ -6,7 +6,7 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		Cb51t6l16Db88JHShuYUX3SNgw0=
+		aeKUda5Mhv9ae7VSh+xMGTQ6ZdA=
 		</data>
 		<key>Resources/XcodeEditor-Info.plist</key>
 		<data>
@@ -35,7 +35,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			PP6yYBxunUKQsW5WZ+PzAKxlxev9E9w0G16vqIuoL5A=
+			8qqNWoDxbJKwrZykwUXSPzPaTCL870lRb51gMMPJLsI=
 			</data>
 		</dict>
 		<key>Headers/XCBuildShellScript.h</key>
@@ -150,6 +150,13 @@
 			kCKZ8ZIUjbj/oHBg12dTboNWMjpJbZA9x81meOS0uXg=
 			</data>
 		</dict>
+		<key>Headers/XcodeEditor-Prefix.pch</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			1hB2ATBRrI9vHYbpeuOuFyu7vewUo/iX0J2Onaw7fzs=
+			</data>
+		</dict>
 		<key>Headers/XcodeEditor.h</key>
 		<dict>
 			<key>hash2</key>
@@ -196,7 +203,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Yn6I3P0WihH9Xy7VFDacacquxNmHHcSxOOBrkQ5wfUE=
+			hyCgzbjhgyFRagYcBFL9WGs8FWwHiLZVh39sBp7/aUs=
 			</data>
 		</dict>
 		<key>Resources/XcodeEditor-Info.plist</key>
