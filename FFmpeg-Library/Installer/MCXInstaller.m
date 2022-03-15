@@ -29,7 +29,23 @@
 
 BOOL unzip(const char *fname, char **outfile );
 BOOL untar(const char * filename);
-
+@interface NSMutableArray (StackAdditions)
+- (id)pop;
+- (void)push:(id)obj;
+@end
+@implementation NSMutableArray (StackAdditions)
+- (id)pop
+{
+    id lastObject = [self lastObject] ;
+    if (lastObject)
+        [self removeLastObject];
+    return lastObject;
+}
+- (void)push:(id)obj
+{
+     [self addObject: obj];
+}
+@end
 @interface MCXInstaller()<NSURLSessionDownloadDelegate>
 {
     MCXInstallStep _currentStep;
@@ -595,7 +611,8 @@ BOOL untar(const char * filename);
         NSDirectoryEnumerator *dirEnum = [fm enumeratorAtPath:srcdir];
         NSString *fpath = nil;
         if ( _verboseMode ) printf("\n--- %s ---\n%s\n\n", dirname.UTF8String, srcdir.UTF8String);
-        while ((fpath = [dirEnum nextObject] ))
+        NSMutableArray *newPaths = [NSMutableArray array];
+        while ((fpath = [dirEnum nextObject] ) || ( fpath = [newPaths pop]))
         {
            if (( [fpath hasSuffix:@".c"] ) || ( [fpath hasSuffix:@".h"]))
            {
@@ -623,6 +640,7 @@ BOOL untar(const char * filename);
                    if ( ! [fpaths containsObject:ipath] )
                    {
                        fpaths = [fpaths arrayByAddingObject:ipath];
+                       [newPaths push:[ipath lastPathComponent]];
                        if ( _verboseMode ) printf("\tadded %s\n", ipath.UTF8String);
                    } else if ( _verboseMode ) printf("\tignored %s\n", ipath.UTF8String );
                }
