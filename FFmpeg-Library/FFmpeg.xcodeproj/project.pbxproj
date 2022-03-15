@@ -1018,7 +1018,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n$SYMROOT/Debug/installer --finish\n";
+			shellScript = "osascript -e 'tell application \"Terminal\"\n    if not (exists window 1) then reopen\n    activate\n    tell window 1 to do script \"'$SYMROOT'/Debug/installer --finish\"\nend tell'\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
