@@ -66,6 +66,7 @@ BOOL untar(const char * filename);
 -(BOOL)_SGFReplaceInfile:(NSString *)fpath search:(NSString *)srch withText:( NSString *)txt;
 -(NSString *) _SGFAppendTo:(NSString *)src suffix:( NSString *)appd;
 -(NSArray<NSString *> *)_non_headers_included;
+-(void)_scanIncludedInFile:(NSString *)fpath inRootDir:(NSString *)srcdir subdir:(NSString *)dirname found:(NSArray<NSString *> **)fpaths;
 /* STEPS */
 -(BOOL)_backupAndClean;
 -(BOOL)_downloadSource;
@@ -573,20 +574,20 @@ BOOL untar(const char * filename);
         }
         fpaths = [fpaths arrayByAddingObject:flistpath];
         BOOL isdir=NO;
-        for ( NSString *ipath in fpaths )
+        for ( NSString *rpath in fpaths )
         {
-            if ( [[ipath substringToIndex:3] isEqualToString:@"***"] )
+            if ( [[rpath substringToIndex:3] isEqualToString:@"***"] )
             {
                 [self _clearFFmpegGroupIncludingFiles:YES];
                 continue;
             }
-            if ( [fm fileExistsAtPath:ipath isDirectory:&isdir])
+            if ( [fm fileExistsAtPath:rpath isDirectory:&isdir])
             {
-                //(! [fm removeItemAtPath:ipath error:&err] )
-                if (! [fm trashItemAtURL:[NSURL fileURLWithPath:ipath] resultingItemURL:nil error:&err] )
+                //(! [fm removeItemAtPath:rpath error:&err] )
+                if (! [fm trashItemAtURL:[NSURL fileURLWithPath:rpath] resultingItemURL:nil error:&err] )
                 {
-                    fprintf(stderr, "Can't move %s to trash\n%s\n", ipath.UTF8String, err.description.UTF8String );
-                } else if ( ! _quietMode ) printf("%s %s moved to trash\n", ((isdir)?"Directory":"File"), ipath.lastPathComponent.UTF8String );
+                    fprintf(stderr, "Can't move %s to trash\n%s\n", rpath.UTF8String, err.description.UTF8String );
+                } else if ( ! _quietMode ) printf("%s %s moved to trash\n", ((isdir)?"Directory":"File"), rpath.lastPathComponent.UTF8String );
             }
         }
     } else if ( ! _quietMode ) printf("No cleaning requested\n");
@@ -605,17 +606,20 @@ BOOL untar(const char * filename);
         return nil;
     }
     NSArray<NSString *> *dirs2search =[MCX_LIB_DIRS arrayByAddingObject:@"compat"];
+    [self _scanIncludedInFile:@"libavutil/internal.h" inRootDir:_destinationFFmpegDir subdir:@"libavutil" found:&fpaths];
     for ( NSString *dirname  in dirs2search)
     {
         NSString *srcdir = [_destinationFFmpegDir stringByAppendingPathComponent:dirname];
         NSDirectoryEnumerator *dirEnum = [fm enumeratorAtPath:srcdir];
         NSString *fpath = nil;
         if ( _verboseMode ) printf("\n--- %s ---\n%s\n\n", dirname.UTF8String, srcdir.UTF8String);
-        NSMutableArray *newPaths = [NSMutableArray array];
-        while ((fpath = [dirEnum nextObject] ) || ( fpath = [newPaths pop]))
+        //NSMutableArray *newPaths = [NSMutableArray array];
+        while (fpath = [dirEnum nextObject] )
         {
            if (( [fpath hasSuffix:@".c"] ) || ( [fpath hasSuffix:@".h"]))
            {
+               [self _scanIncludedInFile:fpath inRootDir:srcdir subdir:dirname found:&fpaths];
+               /*
                if ( _verboseMode ) printf("%s\n", fpath.UTF8String);
                NSString *contentstr = [NSString stringWithContentsOfFile:[srcdir stringByAppendingPathComponent:fpath] encoding:NSUTF8StringEncoding error:&err];
                if ( (! contentstr ) || ( err ))
@@ -633,59 +637,85 @@ BOOL untar(const char * filename);
                    }
                    NSString *spath =[contentstr substringWithRange:r];
                    NSArray<NSString *> *compnts =[spath pathComponents];
-                   NSString  *ipath = spath;
+                   NSString  *rpath = spath;
                    if (( [compnts count] < 2 ) || ( ! [dirs2search containsObject:compnts[0]] ))
                    {
-                       ipath = [dirname stringByAppendingPathComponent:ipath];
+                       rpath = [dirname stringByAppendingPathComponent:rpath];
                    }
-                   if ( ! [fpaths containsObject:ipath] )
+                   if ( ! [fpaths containsObject:rpath] )
                    {
-                       fpaths = [fpaths arrayByAddingObject:ipath];
+                       fpaths = [fpaths arrayByAddingObject:rpath];
                        [newPaths push:spath];
-                       if ( _verboseMode ) printf("\tadded %s\n", ipath.UTF8String);
-                   } else if ( _verboseMode ) printf("\tignored %s\n", ipath.UTF8String );
+                       if ( _verboseMode ) printf("\tadded %s\n", rpath.UTF8String);
+                   } else if ( _verboseMode ) printf("\tignored %s\n", rpath.UTF8String );
                }
+                */
            }
         }
     }
     if ( !_quietMode ) printf("%s found: %lu\n%s\n", __func__, [fpaths count], fpaths.description.UTF8String);
     return fpaths;
-
-/*
-    NSArray<NSString *> *fpaths = @[];
+}
+-(void)_scanIncludedInFile:(NSString *)fpath inRootDir:(NSString *)srcdir subdir:(NSString *)dirname found:(NSArray<NSString *> **)fpaths
+{
+    if (! _quietMode ) printf("%s\n", fpath.UTF8String);
     NSFileManager *fm = [NSFileManager defaultManager];
-    NSError *err = nil;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"#include \"(.*\\.[^h]*)\"" options:0 error:&err];
+    NSError *err =nil;
+    static NSRegularExpression *regex = nil;
+    if ( ! regex ) regex =[NSRegularExpression regularExpressionWithPattern:@"^#(?:include|import) \"(\\V*\\.[^h^\"]+)\"$" options:NSRegularExpressionAnchorsMatchLines error:&err];
     if ( (! regex ) || ( err ))
     {
         fprintf(stderr, "Impossible to create regex\n%s\n", err.description.UTF8String );
-        return nil;
+        return;
     }
-    for ( NSString *dirname  in MCX_LIB_DIRS)
+    NSString *fullpath = [srcdir stringByAppendingPathComponent:fpath];
+    if ( ! [fm fileExistsAtPath:fullpath])
     {
-        NSString *srcdir = [[_destinationFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:dirname];
-        for (NSString *fpath in [fm enumeratorAtPath:srcdir])
-        {
-           if ( [fpath hasSuffix:@".c"])
-           {
-               NSString *contentstr = [NSString stringWithContentsOfFile:(NSString *)fpath encoding:NSUTF8StringEncoding error:&err];
-               if ( (! contentstr ) || ( err ))
-               {
-                   fprintf(stderr, "Error getting content of %s:\n%s\n", fpath.lastPathComponent.UTF8String, err.description.UTF8String);
-                   return nil;
-               }
-               for ( NSTextCheckingResult *tcrez in [regex matchesInString:contentstr options:0 range:NSMakeRange(0, [contentstr length])])
-               {
-                   NSString *ipath =[contentstr substringWithRange:[tcrez rangeAtIndex:1]];
-                   if ( ! [fpaths containsObject:ipath] ) fpaths = [fpaths arrayByAddingObject:ipath];
-               }
-           }
-        }
+        fprintf(stderr, "!!! Requested file doesn't exist\n%s\n", fullpath.UTF8String);
+        return;
     }
-    printf("%s found:\n%s\n", __func__, fpaths.description.UTF8String);
-    return fpaths;
- */
+    NSString *contentstr = [NSString stringWithContentsOfFile:fullpath encoding:NSUTF8StringEncoding error:&err];
+    if ( (! contentstr ) || ( err ))
+    {
+        fprintf(stderr, "Error getting content of %s:\n%s\n", fpath.lastPathComponent.UTF8String, err.description.UTF8String);
+        return;
+    }
+    unsigned short i=0;
+    for ( NSTextCheckingResult *tcrez in [regex matchesInString:contentstr options:0 range:NSMakeRange(0, [contentstr length])])
+    {
+        NSRange r=[tcrez rangeAtIndex:1];
+        if ( r.location == NSNotFound )
+        {
+            fprintf(stderr, "Not really found %s\n", [contentstr substringWithRange:[tcrez rangeAtIndex:0]].UTF8String);
+            continue;
+        }
+        i++;
+        NSString *spath =[contentstr substringWithRange:r];
+        NSArray<NSString *> *compos =[spath pathComponents];
+        NSString *rpath = spath;
+        NSArray<NSString *> *dirs2search =[@[@"compat"] arrayByAddingObjectsFromArray:MCX_LIB_DIRS];//[MCX_LIB_DIRS
+        if (( [compos count] < 2 ) || ( ! [dirs2search containsObject:compos[0]] ))
+        {
+            rpath = [dirname stringByAppendingPathComponent:rpath];
+        }
+        if ( ! [*fpaths containsObject:rpath] )
+        {
+            *fpaths = [*fpaths arrayByAddingObject:rpath];
+            if ( ! _quietMode )printf("\t");
+            [self _scanIncludedInFile:rpath inRootDir:_sourceFFmpegDir subdir:dirname found:fpaths];
+            /*
+            if (![fm copyItemAtPath:[_sourceFFmpegDir stringByAppendingPathComponent:rpath] toPath:[_destinationFFmpegDir stringByAppendingPathComponent:rpath] error:&err])
+            {
+                fprintf(stderr, "Error copying %s\n", err.description.UTF8String);
+            }
+            */
+            if ( ! _quietMode ) printf("\tadded %s\n", rpath.UTF8String);
+        } else if (! _quietMode) printf("\tignored %s\n", rpath.UTF8String );
+    }
+    if (i && (! _quietMode)) printf("\tfound %u included file%c\n", i, ((i > 1)?'s':'.') ); else if (! _quietMode) puts("\t-------------");
+
 }
+
 -(BOOL)_downloadFileAtURL:(NSString *)fileURL
                                     toDir:(NSString *)toDir
                                   timeout:(unsigned)timeout
