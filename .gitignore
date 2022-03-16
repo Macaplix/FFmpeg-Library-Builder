@@ -1,3 +1,4 @@
-libFFmpeg.a
+Debug/libFFmpeg.a
 ffmpeg-snapshot.tar.bz2
 ffmpeg
+Debug/installer

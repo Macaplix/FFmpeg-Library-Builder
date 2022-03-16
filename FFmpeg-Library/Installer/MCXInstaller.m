@@ -177,16 +177,18 @@ BOOL untar(const char * filename);
     BOOL isdir=NO;
     if ([fm fileExistsAtPath:_sourceFFmpegDir isDirectory:&isdir] && isdir )
     {
-        rez = [fm moveItemAtPath:_sourceFFmpegDir toPath:backupPath error:&err];
-        if ( ! rez )
+        if ( [[fm contentsOfDirectoryAtPath:_sourceFFmpegDir error:&err] count] > 2 )
         {
-            fprintf(stderr, "*** Failed to move %s to %s\n%s\n", _sourceFFmpegDir.UTF8String, backupPath.UTF8String, [[err localizedDescription] UTF8String] );
-            return NO;
-        } else {
-            if ( ! _quietMode ) printf("\tsource ffmpeg directory backup: %s\n", backupPath.UTF8String);
-            if ( _clean_level > 1 ) [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:backupPath]];
-        }
-
+            rez = [fm moveItemAtPath:_sourceFFmpegDir toPath:backupPath error:&err];
+            if ( ! rez )
+            {
+                fprintf(stderr, "*** Failed to move %s to %s\n%s\n", _sourceFFmpegDir.UTF8String, backupPath.UTF8String, [[err localizedDescription] UTF8String] );
+                return NO;
+            } else {
+                if ( ! _quietMode ) printf("\tsource ffmpeg directory backup: %s\n", backupPath.UTF8String);
+                if ( _clean_level > 1 ) [self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:backupPath]];
+            }
+        } else if ( ! _quietMode ) printf("\tSource ffmpeg directory is empty. Nothing done\n");
     } else if ( ! _quietMode ) printf("\tSource ffmpeg directory doesn't exist. Nothing done\n");
     isdir = NO;
     BOOL needsDir = YES;
@@ -195,7 +197,7 @@ BOOL untar(const char * filename);
         NSArray<NSString *> *destFiles = [fm contentsOfDirectoryAtPath:_destinationFFmpegDir error:&err];
         if ( ! destFiles )
         {
-            fprintf(stderr, "*** Unable to read content of %s\n", _destinationFFmpegDir.UTF8String);
+            fprintf(stderr, "*** Unable to read content of %s\n%s\n", _destinationFFmpegDir.UTF8String, err.description.UTF8String);
             return NO;
         }
         if ( [destFiles  count] > 2 )// some invisible files makes an empty directory look full....
