@@ -7,14 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8F4027AD27C8EF560095D637 /* libXau.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40276727C8EF510095D637 /* libXau.a */; };
-		8F4027B427C8EF560095D637 /* libvpx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40276E27C8EF520095D637 /* libvpx.a */; };
-		8F4027B727C8EF560095D637 /* libX11.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40277127C8EF520095D637 /* libX11.a */; };
 		8F4027BB27C8EF560095D637 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40277527C8EF520095D637 /* libssl.a */; };
-		8F4027BF27C8EF560095D637 /* libXdmcp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40277927C8EF530095D637 /* libXdmcp.a */; };
-		8F4027C227C8EF560095D637 /* libspeex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40277C27C8EF530095D637 /* libspeex.a */; };
 		8F4027CA27C8EF560095D637 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40278427C8EF540095D637 /* libcrypto.a */; };
-		8F4027CF27C8EF560095D637 /* libopenjp2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40278927C8EF540095D637 /* libopenjp2.a */; };
 		8F4027FF27C940DD0095D637 /* CoreHaptics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4027FE27C940DD0095D637 /* CoreHaptics.framework */; };
 		8F40281527C9450D0095D637 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40281427C9450D0095D637 /* GameController.framework */; };
 		8F40284E27C94E1A0095D637 /* libiconv.2.4.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40284D27C94E1A0095D637 /* libiconv.2.4.0.tbd */; };
@@ -29,9 +23,15 @@
 		8F82234927E22CFE006FE332 /* libSDL2-all.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82234827E22CFE006FE332 /* libSDL2-all.a */; };
 		8F82234B27E22F38006FE332 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82234A27E22F37006FE332 /* libz.a */; };
 		8F82234D27E23A9A006FE332 /* libmetal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82234C27E23A9A006FE332 /* libmetal.a */; };
+		8F82234F27E25232006FE332 /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82234E27E25232006FE332 /* libx264.a */; };
+		8F82235127E255EB006FE332 /* libXau.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82235027E255EB006FE332 /* libXau.a */; };
+		8F82235327E25DFA006FE332 /* libXdmcp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82235227E25DFA006FE332 /* libXdmcp.a */; };
+		8F82235527E265A3006FE332 /* libopenjp2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82235427E265A3006FE332 /* libopenjp2.a */; };
+		8F82235727E27A31006FE332 /* libX11.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82235627E27A31006FE332 /* libX11.a */; };
+		8F82235927E27BD3006FE332 /* libvpx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82235827E27BD3006FE332 /* libvpx.a */; };
+		8F82235B27E27D6F006FE332 /* libspeex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82235A27E27D6F006FE332 /* libspeex.a */; };
 		8F826EB327D686400050533D /* metal_patch.c in Sources */ = {isa = PBXBuildFile; fileRef = 8F826EA727D6157C0050533D /* metal_patch.c */; };
 		8FF6E4F127DA0D1200F4BA9F /* main.pch in Headers */ = {isa = PBXBuildFile; fileRef = 9CD552C52193389B0075012A /* main.pch */; };
-		8FF6E4FA27DA15B300F4BA9F /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF6E4F927DA15B300F4BA9F /* libx264.a */; };
 		9C993F932193DB20003761DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C993F922193DB20003761DB /* main.m */; };
 /* End PBXBuildFile section */
 
@@ -48,14 +48,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		8F40276727C8EF510095D637 /* libXau.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libXau.a; path = libs/libXau.a; sourceTree = "<group>"; };
-		8F40276E27C8EF520095D637 /* libvpx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvpx.a; path = libs/libvpx.a; sourceTree = "<group>"; };
-		8F40277127C8EF520095D637 /* libX11.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libX11.a; path = libs/libX11.a; sourceTree = "<group>"; };
 		8F40277527C8EF520095D637 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = libs/libssl.a; sourceTree = "<group>"; };
-		8F40277927C8EF530095D637 /* libXdmcp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libXdmcp.a; path = libs/libXdmcp.a; sourceTree = "<group>"; };
-		8F40277C27C8EF530095D637 /* libspeex.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libspeex.a; path = libs/libspeex.a; sourceTree = "<group>"; };
 		8F40278427C8EF540095D637 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = libs/libcrypto.a; sourceTree = "<group>"; };
-		8F40278927C8EF540095D637 /* libopenjp2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopenjp2.a; path = libs/libopenjp2.a; sourceTree = "<group>"; };
 		8F4027FE27C940DD0095D637 /* CoreHaptics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreHaptics.framework; path = System/Library/Frameworks/CoreHaptics.framework; sourceTree = SDKROOT; };
 		8F40281427C9450D0095D637 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		8F40284D27C94E1A0095D637 /* libiconv.2.4.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.4.0.tbd; path = usr/lib/libiconv.2.4.0.tbd; sourceTree = SDKROOT; };
@@ -72,6 +66,13 @@
 		8F82234827E22CFE006FE332 /* libSDL2-all.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libSDL2-all.a"; path = "libs/libSDL2-all.a"; sourceTree = "<group>"; };
 		8F82234A27E22F37006FE332 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = libs/libz.a; sourceTree = "<group>"; };
 		8F82234C27E23A9A006FE332 /* libmetal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmetal.a; path = libs/libmetal.a; sourceTree = "<group>"; };
+		8F82234E27E25232006FE332 /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libx264.a; path = libs/libx264.a; sourceTree = "<group>"; };
+		8F82235027E255EB006FE332 /* libXau.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libXau.a; path = libs/libXau.a; sourceTree = "<group>"; };
+		8F82235227E25DFA006FE332 /* libXdmcp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libXdmcp.a; path = libs/libXdmcp.a; sourceTree = "<group>"; };
+		8F82235427E265A3006FE332 /* libopenjp2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopenjp2.a; path = libs/libopenjp2.a; sourceTree = "<group>"; };
+		8F82235627E27A31006FE332 /* libX11.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libX11.a; path = libs/libX11.a; sourceTree = "<group>"; };
+		8F82235827E27BD3006FE332 /* libvpx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvpx.a; path = libs/libvpx.a; sourceTree = "<group>"; };
+		8F82235A27E27D6F006FE332 /* libspeex.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libspeex.a; path = libs/libspeex.a; sourceTree = "<group>"; };
 		8F826EA727D6157C0050533D /* metal_patch.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = metal_patch.c; sourceTree = "<group>"; };
 		8F826EAD27D61FA40050533D /* buildFFmpegLib.scpt */ = {isa = PBXFileReference; lastKnownFileType = file; path = buildFFmpegLib.scpt; sourceTree = "<group>"; };
 		8FEF098627D95F1E00DC1E5F /* ogg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ogg.h; sourceTree = "<group>"; };
@@ -269,7 +270,6 @@
 		8FF6E2EA27D93F8200F4BA9F /* asn1err.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = asn1err.h; sourceTree = "<group>"; };
 		8FF6E4F527DA10A600F4BA9F /* x264_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x264_config.h; sourceTree = "<group>"; };
 		8FF6E4F627DA10A600F4BA9F /* x264.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x264.h; sourceTree = "<group>"; };
-		8FF6E4F927DA15B300F4BA9F /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libx264.a; path = libs/libx264.a; sourceTree = "<group>"; };
 		9C169A872193E8FC0044126F /* libFFmpeg.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFFmpeg.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C35EC412193553A00FD4FE8 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		9C993F802193DAD0003761DB /* installer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = installer; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -353,25 +353,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F82235B27E27D6F006FE332 /* libspeex.a in Frameworks */,
+				8F82235927E27BD3006FE332 /* libvpx.a in Frameworks */,
+				8F82235727E27A31006FE332 /* libX11.a in Frameworks */,
+				8F82235527E265A3006FE332 /* libopenjp2.a in Frameworks */,
+				8F82235327E25DFA006FE332 /* libXdmcp.a in Frameworks */,
+				8F82235127E255EB006FE332 /* libXau.a in Frameworks */,
+				8F82234F27E25232006FE332 /* libx264.a in Frameworks */,
 				8F82234D27E23A9A006FE332 /* libmetal.a in Frameworks */,
 				8F82234B27E22F38006FE332 /* libz.a in Frameworks */,
 				8F82234927E22CFE006FE332 /* libSDL2-all.a in Frameworks */,
 				8F82234727E2281F006FE332 /* libxcb-all.a in Frameworks */,
 				8F82234427E1FDCF006FE332 /* libsvorbis.a in Frameworks */,
 				8F82234527E1FDCF006FE332 /* libogg.a in Frameworks */,
-				8FF6E4FA27DA15B300F4BA9F /* libx264.a in Frameworks */,
 				8F40284E27C94E1A0095D637 /* libiconv.2.4.0.tbd in Frameworks */,
 				8F40281527C9450D0095D637 /* GameController.framework in Frameworks */,
 				8F4027FF27C940DD0095D637 /* CoreHaptics.framework in Frameworks */,
-				8F4027AD27C8EF560095D637 /* libXau.a in Frameworks */,
-				8F4027B427C8EF560095D637 /* libvpx.a in Frameworks */,
-				8F4027B727C8EF560095D637 /* libX11.a in Frameworks */,
 				8F82233727E0B3FC006FE332 /* libtarbz2.a in Frameworks */,
 				8F4027BB27C8EF560095D637 /* libssl.a in Frameworks */,
-				8F4027BF27C8EF560095D637 /* libXdmcp.a in Frameworks */,
-				8F4027C227C8EF560095D637 /* libspeex.a in Frameworks */,
 				8F4027CA27C8EF560095D637 /* libcrypto.a in Frameworks */,
-				8F4027CF27C8EF560095D637 /* libopenjp2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -768,6 +768,13 @@
 		9CE714E921934C51006527D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8F82235A27E27D6F006FE332 /* libspeex.a */,
+				8F82235827E27BD3006FE332 /* libvpx.a */,
+				8F82235627E27A31006FE332 /* libX11.a */,
+				8F82235427E265A3006FE332 /* libopenjp2.a */,
+				8F82235227E25DFA006FE332 /* libXdmcp.a */,
+				8F82235027E255EB006FE332 /* libXau.a */,
+				8F82234E27E25232006FE332 /* libx264.a */,
 				8F82234C27E23A9A006FE332 /* libmetal.a */,
 				8F82234A27E22F37006FE332 /* libz.a */,
 				8F82234827E22CFE006FE332 /* libSDL2-all.a */,
@@ -788,14 +795,7 @@
 				8F40278427C8EF540095D637 /* libcrypto.a */,
 				8F40284D27C94E1A0095D637 /* libiconv.2.4.0.tbd */,
 				9C35EC412193553A00FD4FE8 /* libiconv.tbd */,
-				8F40278927C8EF540095D637 /* libopenjp2.a */,
-				8F40277C27C8EF530095D637 /* libspeex.a */,
 				8F40277527C8EF520095D637 /* libssl.a */,
-				8F40276E27C8EF520095D637 /* libvpx.a */,
-				8F40277127C8EF520095D637 /* libX11.a */,
-				8FF6E4F927DA15B300F4BA9F /* libx264.a */,
-				8F40276727C8EF510095D637 /* libXau.a */,
-				8F40277927C8EF530095D637 /* libXdmcp.a */,
 				9CE714EA21934C51006527D2 /* Metal.framework */,
 				9CE714EE21934C5D006527D2 /* QuartzCore.framework */,
 				8F4028C327CFB52A0095D637 /* XcodeEditor.framework */,
