@@ -26,6 +26,7 @@ typedef enum:unsigned char
 @property(readwrite, retain)NSString *selfExecutablePath;
 @property(readwrite, retain)NSString *sourceFFmpegDir;
 @property(readwrite, retain)NSString *destinationFFmpegDir;
+@property(readwrite, retain)NSString *resultDestinationPath;
 @property(readwrite, retain)NSString *manualStep;
 @property(readwrite, assign)MCXInstallStep firstStep;
 @property(readwrite, assign)MCXInstallStep lastStep;

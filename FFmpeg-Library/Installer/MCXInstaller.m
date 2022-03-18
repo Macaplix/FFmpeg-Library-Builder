@@ -51,7 +51,7 @@ BOOL untar(const char * filename);
     MCXInstallStep _currentStep;
 }
 @property(readwrite, retain)NSArray<NSString *> *_fileSystem2deleteItems;
-@property(readwrite, retain)NSString *_fileDownloadFinalPath;
+//@property(readwrite, retain)NSString *_fileDownloadFinalPath;
 @property(readwrite, retain)dispatch_semaphore_t _waitHandle;
 -(BOOL)_downloadFileAtURL:(NSString *)fileURL
                                 toDir:(NSString *)toDir
@@ -80,7 +80,7 @@ BOOL untar(const char * filename);
 //-(BOOL)_clean;
 @end
 @implementation MCXInstaller
-@synthesize sourceFFmpegDir = _sourceFFmpegDir, destinationFFmpegDir =_destinationFFmpegDir, firstStep = _firstStep, lastStep = _lastStep, manualStep=_manualStep, noopMode=_noopMode, verboseMode=_verboseMode, quietMode = _quietMode, selfExecutablePath=_selfExecutablePath, clean_level=_clean_level;
+@synthesize sourceFFmpegDir = _sourceFFmpegDir, destinationFFmpegDir =_destinationFFmpegDir, resultDestinationPath=_resultDestinationPath, firstStep = _firstStep, lastStep = _lastStep, manualStep=_manualStep, noopMode=_noopMode, verboseMode=_verboseMode, quietMode = _quietMode, selfExecutablePath=_selfExecutablePath, clean_level=_clean_level;
 -(instancetype)init
 {
     self = [super init];
@@ -447,6 +447,25 @@ BOOL untar(const char * filename);
         c++;
     }
     if ( ! _quietMode) printf("%u files added to Xcode project\n", c);
+    // Script Update
+    XCTarget  *target = [project targetWithName:@"FFmpeg"];
+    /*
+    NSArray<XCBuildShellScript *> *scripts = [target buildShellScripts];
+    for ( XCBuildShellScript *scpt in scripts )
+    {
+        [target removeShellScriptByName:[scpt name]];
+        
+    }
+     */
+    [target removeShellScriptByName:@"Finish Script"];
+    NSString *scptxt = [@"osascript -e 'tell application \"Terminal\"\n"
+                        @"\tif not (exists window 1) then reopen\n"
+                        @"\tactivate\n"
+                        @"\ttell window 1 to do script \"" stringByAppendingFormat:@"%@/Debug/installer --finish '$SYMROOT'\"\n"
+                        @"end tell'\n", [self selfExecutablePath]];
+    
+    XCBuildShellScriptDefinition *newscpt = [XCBuildShellScriptDefinition shellScriptDefinitionWithName:@"Finish Script" files:nil inputPaths:nil outputPaths:nil runOnlyForDeploymentPostprocessing:NO shellPath:nil shellScript:scptxt];     [target makeAndAddShellScript:newscpt];
+    // Script Update End
     [project save];
     if ( rez && ( _clean_level > 1 ))[self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:@"***FFmpeg"]];
     return rez;
@@ -457,10 +476,9 @@ BOOL untar(const char * filename);
     _manualStep = @"\tRun script \"build2\" from original  Single FFmpeg-in-Xcode project\nhttps://github.com/libobjc/FFmpeg-in-Xcode\n"
     @"it consist on:\n"
     @"\t1 - copying all header files from source ffmpeg directory to project\n"
-    @"\t2 - copying any source .c file whose name contains template or list\n"
-    @"\t\t( Those files are included in other c files but doesn't need to be compiled separately )\n"
-    @"\t3 - copying source .c file listed in MCX_NO_COMPIL_C_FILES\n"
-    @"\t\t( Those files are also included in other c files but there names doesn't show it )\n";
+    @"\t2 - copying any source .c file that is included in selected headers and sources\n"
+    @"\t\t( Those files are included but doesn't need to be compiled separately )\n"
+    @"\t\t using the regular expression \"^#(?:include|import) \\\"(\\V*\\.[^h^\"]+)\"$\\\"\n";
     if ( _noopMode ) return YES;
     // Copy
     for (NSString * dirname in MCX_LIB_DIRS)
@@ -554,16 +572,19 @@ BOOL untar(const char * filename);
         return 1;
     }
     if ( ! _quietMode ) printf("Library seems properly built\nCleaning...\n");
-    NSString *scpt = [@"tell application \"Finder\"\n\t open POSIX file \"" stringByAppendingFormat:@"%@\"\n\tactivate\nend tell\n", [_selfExecutablePath stringByDeletingLastPathComponent]];
-    if ( _verboseMode ) printf("running\n%s\n", scpt.UTF8String );
-    NSDictionary<NSString *,id> *errdict = nil;
-    NSAppleScript *ascpt = [[NSAppleScript alloc] initWithSource:scpt];
-    [ascpt executeAndReturnError:&errdict];
-    if ( errdict )
+    if ( _resultDestinationPath )
     {
-        fprintf(stderr, "Can't execute script:\n%s\n%s\n", scpt.UTF8String, errdict.description.UTF8String);
-        rez = 1;
-    }
+        NSString *scpt = [@"tell application \"Finder\"\n\t open POSIX file \"" stringByAppendingFormat:@"%@\"\n\tactivate\nend tell\n", _resultDestinationPath];
+        if ( _verboseMode ) printf("running\n%s\n", scpt.UTF8String );
+        NSDictionary<NSString *,id> *errdict = nil;
+        NSAppleScript *ascpt = [[NSAppleScript alloc] initWithSource:scpt];
+        [ascpt executeAndReturnError:&errdict];
+        if ( errdict )
+        {
+            fprintf(stderr, "Can't execute script:\n%s\n%s\n", scpt.UTF8String, errdict.description.UTF8String);
+            rez = 1;
+        }
+    } fprintf(stderr, "no folder path to show in Finder\n");
     if ( [fm fileExistsAtPath:flistpath] )
     {
         //NSInputStream *instrm = [NSInputStream inputStreamWithFileAtPath:flistpath];
@@ -581,6 +602,7 @@ BOOL untar(const char * filename);
             if ( [[rpath substringToIndex:3] isEqualToString:@"***"] )
             {
                 [self _clearFFmpegGroupIncludingFiles:YES];
+                if ( [fm fileExistsAtPath:_destinationFFmpegDir isDirectory:&isdir] && isdir ) [fm removeItemAtPath:_destinationFFmpegDir error:&err];
                 continue;
             }
             if ( [fm fileExistsAtPath:rpath isDirectory:&isdir])
@@ -727,7 +749,7 @@ BOOL untar(const char * filename);
     [self set_waitHandle:dispatch_semaphore_create(0)];
     // save file name for later
     NSString *downloadFileName = [fileURL lastPathComponent];
-    [self set_fileDownloadFinalPath:[toDir stringByAppendingPathComponent:downloadFileName]];
+    [self setResultDestinationPath:[toDir stringByAppendingPathComponent:downloadFileName]];
     // Configure Cache behavior for default session
     NSURLSessionConfiguration
     *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -756,7 +778,7 @@ BOOL untar(const char * filename);
     });
     dispatch_semaphore_wait([self _waitHandle], timeout ? dispatch_time(DISPATCH_TIME_NOW, (int64_t)timeout * 1000000000 ) :DISPATCH_TIME_FOREVER);
   //  NSError *error = nil;
-    rez = [[NSFileManager defaultManager] fileExistsAtPath:[self _fileDownloadFinalPath]];
+    rez = [[NSFileManager defaultManager] fileExistsAtPath:[self resultDestinationPath]];
     return rez;
 }
 
@@ -774,7 +796,7 @@ BOOL untar(const char * filename);
     {
         NSError *error = nil;
         BOOL fileCopied = [fileManager moveItemAtPath:[location path]
-                                               toPath:[self _fileDownloadFinalPath]
+                                               toPath:_resultDestinationPath
                                                 error:&error];
        if ((! fileCopied) || ( error )) fprintf(stderr,"Error copying: %s", error.description.UTF8String );
         //NSLog(fileCopied ? @"File Copied OK" : @"ERROR Copying file.");

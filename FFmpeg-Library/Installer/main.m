@@ -24,6 +24,7 @@ int main(int argc, const char * argv[])
             const char *rgestr = argv[argi];
             if (( argi == 1) && ( strcmp(rgestr, "--finish") == 0 ))
             {
+                if ( argc > 2 ) [installer setResultDestinationPath:[NSString stringWithUTF8String:argv[2]]];
                 return [installer finish];
             }
             if ( strlen(rgestr) < 1 ) continue;
