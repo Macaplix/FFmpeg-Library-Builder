@@ -130,6 +130,7 @@
 		8FEF09BE27D95F1E00DC1E5F /* vorbisfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vorbisfile.h; sourceTree = "<group>"; };
 		8FEF09BF27D95F1E00DC1E5F /* codec.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = codec.h; sourceTree = "<group>"; };
 		8FEF09C027D95F1E00DC1E5F /* vorbisenc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vorbisenc.h; sourceTree = "<group>"; };
+		8FEF09C727E294F100DC1E5F /* installer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = installer.entitlements; path = installer/installer.entitlements; sourceTree = "<group>"; };
 		8FF6E26027D93F1400F4BA9F /* opj_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opj_config.h; sourceTree = "<group>"; };
 		8FF6E26127D93F1400F4BA9F /* openjpeg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = openjpeg.h; sourceTree = "<group>"; };
 		8FF6E26227D93F1400F4BA9F /* opj_stdint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opj_stdint.h; sourceTree = "<group>"; };
@@ -680,6 +681,7 @@
 		9CD550BE219337510075012A = {
 			isa = PBXGroup;
 			children = (
+				8FEF09C727E294F100DC1E5F /* installer.entitlements */,
 				8F826EA727D6157C0050533D /* metal_patch.c */,
 				8FF6E25E27D93DF900F4BA9F /* include */,
 				9C35EC8B2193592300FD4FE8 /* Installer */,
@@ -1003,8 +1005,11 @@
 		9C993F842193DAD0003761DB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_ENTITLEMENTS = installer/installer.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KRCLQDE7R7;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/**",
@@ -1020,7 +1025,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				OTHER_CFLAGS = (
 					"-DPROJECT_SRC_DIR=\\\"$(SRCROOT)\\\"",
 					"-DBUILT_PRODUCTS_DIR=\\\"$(BUILT_PRODUCTS_DIR)\\\"",
@@ -1032,8 +1037,11 @@
 		9C993F852193DAD0003761DB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_ENTITLEMENTS = installer/installer.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KRCLQDE7R7;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/**",
@@ -1049,7 +1057,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				OTHER_CFLAGS = (
 					"-DPROJECT_SRC_DIR=\\\"$(SRCROOT)\\\"",
 					"-DBUILT_PRODUCTS_DIR=\\\"$(BUILT_PRODUCTS_DIR)\\\"",
@@ -1110,7 +1118,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1164,7 +1172,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
