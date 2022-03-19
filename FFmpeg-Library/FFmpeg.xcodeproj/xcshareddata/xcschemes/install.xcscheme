@@ -63,7 +63,7 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-hv"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-c"
