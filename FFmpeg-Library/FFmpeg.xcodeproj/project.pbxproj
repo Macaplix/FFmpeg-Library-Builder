@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -834,8 +834,6 @@
 				9C169A832193E8FC0044126F /* Headers */,
 				9C169A842193E8FC0044126F /* Sources */,
 				9C169A852193E8FC0044126F /* Frameworks */,
-				8FF6E50127DBB7EE00F4BA9F /* ShellScript */,
-				36D2952A04381B5909053C0F /* Finish Script */,
 			);
 			buildRules = (
 			);
@@ -900,42 +898,6 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		36D2952A04381B5909053C0F /* Finish Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Finish Script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "osascript -e 'tell application \"Terminal\"\n\tif not (exists window 1) then reopen\n\tactivate\n\ttell window 1 to do script \"/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/Debug/installer/Debug/installer --finish '$SYMROOT'\"\nend tell'\n";
-		};
-		8FF6E50127DBB7EE00F4BA9F /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(SYMROOT)/shout.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "osascript -e 'tell application \"Terminal\"\n    if not (exists window 1) then reopen\n    activate\n    tell window 1 to do script \"'$SYMROOT'/Debug/installer --finish\"\nend tell'\n\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		9C169A842193E8FC0044126F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -967,11 +929,9 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Installer/main.pch";
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/FFmpeg\"",
-					"\"$(SRCROOT)/include/SDL2\"",
 					"\"$(SRCROOT)/include\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
-					/opt/local/libexec/openssl3/lib,
 					/opt/local/lib,
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/libs",
@@ -997,11 +957,9 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Installer/main.pch";
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/FFmpeg\"",
-					"\"$(SRCROOT)/include/SDL2\"",
 					"\"$(SRCROOT)/include\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
-					/opt/local/libexec/openssl3/lib,
 					/opt/local/lib,
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/libs",
