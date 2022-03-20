@@ -22,6 +22,11 @@ int main(int argc, const char * argv[])
         for (unsigned char argi=1; argi < argc; argi++)
         {
             const char *rgestr = argv[argi];
+            if (( argi == 1) && ( strcmp(rgestr, "-t") == 0 ))
+            {
+                [installer performTest];
+                return 0;
+            }
             if (( argi == 1) && ( strcmp(rgestr, "--finish") == 0 ))
             {
                 if ( argc > 2 ) [installer setResultDestinationPath:[NSString stringWithUTF8String:argv[2]]];
