@@ -643,37 +643,6 @@ BOOL untar(const char * filename);
            if (( [fpath hasSuffix:@".c"] ) || ( [fpath hasSuffix:@".h"]))
            {
                [self _scanIncludedInFile:fpath inRootDir:srcdir subdir:dirname found:&fpaths];
-               /*
-               if ( _verboseMode ) printf("%s\n", fpath.UTF8String);
-               NSString *contentstr = [NSString stringWithContentsOfFile:[srcdir stringByAppendingPathComponent:fpath] encoding:NSUTF8StringEncoding error:&err];
-               if ( (! contentstr ) || ( err ))
-               {
-                   fprintf(stderr, "Error getting content of %s:\n%s\n", fpath.lastPathComponent.UTF8String, err.description.UTF8String);
-                   return nil;
-               }
-               for ( NSTextCheckingResult *tcrez in [regex matchesInString:contentstr options:0 range:NSMakeRange(0, [contentstr length])])
-               {
-                   NSRange r=[tcrez rangeAtIndex:1];
-                   if ( r.location == NSNotFound )
-                   {
-                       if ( _verboseMode ) fprintf(stderr, "Not really found %s\n", [contentstr substringWithRange:[tcrez rangeAtIndex:0]].UTF8String);
-                       continue;
-                   }
-                   NSString *spath =[contentstr substringWithRange:r];
-                   NSArray<NSString *> *compnts =[spath pathComponents];
-                   NSString  *rpath = spath;
-                   if (( [compnts count] < 2 ) || ( ! [dirs2search containsObject:compnts[0]] ))
-                   {
-                       rpath = [dirname stringByAppendingPathComponent:rpath];
-                   }
-                   if ( ! [fpaths containsObject:rpath] )
-                   {
-                       fpaths = [fpaths arrayByAddingObject:rpath];
-                       [newPaths push:spath];
-                       if ( _verboseMode ) printf("\tadded %s\n", rpath.UTF8String);
-                   } else if ( _verboseMode ) printf("\tignored %s\n", rpath.UTF8String );
-               }
-                */
            }
         }
     }
@@ -710,7 +679,7 @@ BOOL untar(const char * filename);
         NSRange r=[tcrez rangeAtIndex:1];
         if ( r.location == NSNotFound )
         {
-            fprintf(stderr, "Not really found %s\n", [contentstr substringWithRange:[tcrez rangeAtIndex:0]].UTF8String);
+            if( ! _quietMode ) fprintf(stderr, "Not really found %s\n", [contentstr substringWithRange:[tcrez rangeAtIndex:0]].UTF8String);
             continue;
         }
         i++;
@@ -736,7 +705,7 @@ BOOL untar(const char * filename);
             if ( ! _quietMode ) printf("\tadded %s\n", rpath.UTF8String);
         } else if (! _quietMode) printf("\tignored %s\n", rpath.UTF8String );
     }
-    if (i && (! _quietMode)) printf("\tfound %u included file%c\n", i, ((i > 1)?'s':'.') ); else if (! _quietMode) puts("\t-------------");
+    if (i && (! _quietMode)) printf("\tfound %u included file%c\n", i, ((i > 1)?'s':'.') ); else if ( _verboseMode) puts("\t-------------");
 
 }
 
