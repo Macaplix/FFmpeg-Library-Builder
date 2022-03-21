@@ -834,6 +834,7 @@
 				9C169A832193E8FC0044126F /* Headers */,
 				9C169A842193E8FC0044126F /* Sources */,
 				9C169A852193E8FC0044126F /* Frameworks */,
+				021ED1C2516FD4FCFB91E8FC /* Finish Script */,
 			);
 			buildRules = (
 			);
@@ -897,6 +898,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		021ED1C2516FD4FCFB91E8FC /* Finish Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Finish Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "osascript -e 'tell application \"Terminal\"\n\tif not (exists window 1) then reopen\n\tactivate\n\ttell window 1 to do script \"/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/Debug/installer/Debug/installer --finish '$BUILT_PRODUCTS_DIR'\"\nend tell'\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9C169A842193E8FC0044126F /* Sources */ = {
