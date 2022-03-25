@@ -11,9 +11,10 @@
 #include "libtar.h"
 #include "bzlib.h"
 #include <XcodeEditor/XcodeEditor.h>
+// ./configure --prefix=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg --enable-static --disable-shared --enable-gpl --enable-version3 --enable-pthreads --enable-postproc --enable-filters --disable-asm --disable-programs --enable-runtime-cpudetect --enable-bzlib --enable-zlib --enable-opengl --enable-libvpx --enable-libspeex  --enable-libopenjpeg --enable-libvorbis --enable-openssl --pkg-config-flags="--static --debug PKG_CONFIG_PATH=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/libs/pkgconfig"
 
 
-#define MCX_CONFIGURE_ARGUMENTS @[@"--enable-static", @"--disable-shared", @"--enable-gpl", @"--enable-version3", @"--enable-pthreads", @"--enable-postproc", @"--enable-filters", @"--disable-asm", @"--disable-programs", @"--enable-runtime-cpudetect", @"--enable-bzlib", @"--enable-zlib", @"--enable-opengl", @"--enable-libvpx", @"--enable-libspeex", @"--enable-libopenjpeg", @"--enable-libvorbis", @"--enable-openssl"]
+#define MCX_CONFIGURE_ARGUMENTS @[@"--enable-static", @"--disable-shared", @"--enable-gpl", @"--enable-version3", @"--enable-pthreads", @"--enable-postproc", @"--enable-filters", @"--disable-asm", @"--disable-programs", @"--enable-runtime-cpudetect", @"--enable-bzlib", @"--enable-zlib", @"--enable-opengl", @"--enable-libvpx", @"--enable-libspeex", @"--enable-libvorbis", @"--enable-openssl", @"--enable-libopenjpeg", @" --pkg-config-flags=\"--static\""]
 // @"--enable-libfdk-aac", @"--enable-libx264", @"--enable-nonfree",  @"--nm=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-nm"
 
 #define MCX_SOURCE_ZIP_FILENAME @"ffmpeg-snapshot.tar.bz2"
@@ -276,15 +277,37 @@ BOOL untar(const char * filename);
     if ( _clean_level > 1 )[self set_fileSystem2deleteItems:[[self _fileSystem2deleteItems] arrayByAddingObject:_sourceFFmpegDir]];
     return rez;
 }
+
+/*
+
+ C_INCLUDE_PATH=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/include/
+ PKG_CONFIG_LIBDIR=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/libs
+ PKG_CONFIG_PREFIX=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library
+ PKG_CONFIG_DEBUG_SPEW=1
+ PKG_CONFIG_PATH=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/libs/pkgconfig
+
+ configure patch:
+ 
+ replace
+ 
+ -Wl,-dynamic,-search_paths_first
+  by
+ -Wl,-dynamic,-search_paths_first,-L/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/libs,-lopenjp2,-lspeex,-lvorbis,-logg,-lopenssl,-lssl,-lcrypto
+ 
+ */
+
 -(BOOL)_configureFFmpeg
 {
     BOOL rez = YES;
-    NSArray *args= [@[[@"--prefix=" stringByAppendingString:_destinationFFmpegDir]] arrayByAddingObjectsFromArray:MCX_CONFIGURE_ARGUMENTS];
+    NSArray<NSString *>  *args= [@[[@"--prefix=" stringByAppendingString:_destinationFFmpegDir]] arrayByAddingObjectsFromArray:MCX_CONFIGURE_ARGUMENTS];
+   NSString *pkgcnfg_flags = [@" --pkg-config-flags=\"--static /Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library" stringByAppendingFormat:@"%s PKG_CONFIG_PATH=%s/libs/pkgconfig\"", ((_verboseMode )?" --debug":""), PROJECT_SRC_DIR ];
+    args = [args arrayByAddingObject:pkgcnfg_flags];
     NSString *confCommand = [@"\t./configure " stringByAppendingString:[args componentsJoinedByString:@" "]];
     _manualStep = [NSString stringWithFormat:@"\tcd \"%@\"\n%@", _sourceFFmpegDir, confCommand];
     if ( _noopMode ) return YES;
     NSTask *task = [[NSTask alloc] init];
     [task setArguments:args];
+    [task setEnvironment:@{@"PKG_CONFIG_PATH":[[_destinationFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"pkgconfig"]}];
     [task setCurrentDirectoryPath:_sourceFFmpegDir];
     [task setExecutableURL:[NSURL fileURLWithPath:[_sourceFFmpegDir stringByAppendingPathComponent:@"configure"]]];
     if ( ! _quietMode ) printf("%s\n", confCommand.UTF8String);
@@ -612,10 +635,10 @@ BOOL untar(const char * filename);
 }
 -(void)performTest
 {
-    NSString *projpath = [[NSString stringWithUTF8String:PROJECT_SRC_DIR] stringByAppendingPathComponent:@"FFmpeg.xcodeproj"];
-    XCProject* project = [[XCProject alloc] initWithFilePath:projpath];
+    //NSString *projpath = [[NSString stringWithUTF8String:PROJECT_SRC_DIR] stringByAppendingPathComponent:@"FFmpeg.xcodeproj"];
+    //XCProject* project = [[XCProject alloc] initWithFilePath:projpath];
     //XCTarget* libFFmpegTarget = [project targetWithName:@"FFmpeg"];
-    NSLog(@"%@", [project dataStore]);//BUILT_PRODUCTS_DIR
+    NSLog(@"%s", PROJECT_SRC_DIR);//BUILT_PRODUCTS_DIR
 }
 #pragma mark HELPERS
 -(NSArray<NSString *> *)_non_headers_included
@@ -643,37 +666,6 @@ BOOL untar(const char * filename);
            if (( [fpath hasSuffix:@".c"] ) || ( [fpath hasSuffix:@".h"]))
            {
                [self _scanIncludedInFile:fpath inRootDir:srcdir subdir:dirname found:&fpaths];
-               /*
-               if ( _verboseMode ) printf("%s\n", fpath.UTF8String);
-               NSString *contentstr = [NSString stringWithContentsOfFile:[srcdir stringByAppendingPathComponent:fpath] encoding:NSUTF8StringEncoding error:&err];
-               if ( (! contentstr ) || ( err ))
-               {
-                   fprintf(stderr, "Error getting content of %s:\n%s\n", fpath.lastPathComponent.UTF8String, err.description.UTF8String);
-                   return nil;
-               }
-               for ( NSTextCheckingResult *tcrez in [regex matchesInString:contentstr options:0 range:NSMakeRange(0, [contentstr length])])
-               {
-                   NSRange r=[tcrez rangeAtIndex:1];
-                   if ( r.location == NSNotFound )
-                   {
-                       if ( _verboseMode ) fprintf(stderr, "Not really found %s\n", [contentstr substringWithRange:[tcrez rangeAtIndex:0]].UTF8String);
-                       continue;
-                   }
-                   NSString *spath =[contentstr substringWithRange:r];
-                   NSArray<NSString *> *compnts =[spath pathComponents];
-                   NSString  *rpath = spath;
-                   if (( [compnts count] < 2 ) || ( ! [dirs2search containsObject:compnts[0]] ))
-                   {
-                       rpath = [dirname stringByAppendingPathComponent:rpath];
-                   }
-                   if ( ! [fpaths containsObject:rpath] )
-                   {
-                       fpaths = [fpaths arrayByAddingObject:rpath];
-                       [newPaths push:spath];
-                       if ( _verboseMode ) printf("\tadded %s\n", rpath.UTF8String);
-                   } else if ( _verboseMode ) printf("\tignored %s\n", rpath.UTF8String );
-               }
-                */
            }
         }
     }
@@ -710,7 +702,7 @@ BOOL untar(const char * filename);
         NSRange r=[tcrez rangeAtIndex:1];
         if ( r.location == NSNotFound )
         {
-            fprintf(stderr, "Not really found %s\n", [contentstr substringWithRange:[tcrez rangeAtIndex:0]].UTF8String);
+            if( ! _quietMode ) fprintf(stderr, "Not really found %s\n", [contentstr substringWithRange:[tcrez rangeAtIndex:0]].UTF8String);
             continue;
         }
         i++;
@@ -727,16 +719,10 @@ BOOL untar(const char * filename);
             *fpaths = [*fpaths arrayByAddingObject:rpath];
             if ( ! _quietMode )printf("\t");
             [self _scanIncludedInFile:rpath inRootDir:_sourceFFmpegDir subdir:dirname found:fpaths];
-            /*
-            if (![fm copyItemAtPath:[_sourceFFmpegDir stringByAppendingPathComponent:rpath] toPath:[_destinationFFmpegDir stringByAppendingPathComponent:rpath] error:&err])
-            {
-                fprintf(stderr, "Error copying %s\n", err.description.UTF8String);
-            }
-            */
             if ( ! _quietMode ) printf("\tadded %s\n", rpath.UTF8String);
         } else if (! _quietMode) printf("\tignored %s\n", rpath.UTF8String );
     }
-    if (i && (! _quietMode)) printf("\tfound %u included file%c\n", i, ((i > 1)?'s':'.') ); else if (! _quietMode) puts("\t-------------");
+    if (i && (! _quietMode)) printf("\tfound %u included file%c\n", i, ((i > 1)?'s':'.') ); else if ( _verboseMode) puts("\t-------------");
 
 }
 
