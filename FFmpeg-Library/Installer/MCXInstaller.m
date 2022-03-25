@@ -300,6 +300,8 @@ BOOL untar(const char * filename);
 {
     BOOL rez = YES;
     NSArray<NSString *>  *args= [@[[@"--prefix=" stringByAppendingString:_destinationFFmpegDir]] arrayByAddingObjectsFromArray:MCX_CONFIGURE_ARGUMENTS];
+   NSString *pkgcnfg_flags = [@" --pkg-config-flags=\"--static /Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library" stringByAppendingFormat:@"%s PKG_CONFIG_PATH=%s/libs/pkgconfig\"", ((_verboseMode )?" --debug":""), PROJECT_SRC_DIR ];
+    args = [args arrayByAddingObject:pkgcnfg_flags];
     NSString *confCommand = [@"\t./configure " stringByAppendingString:[args componentsJoinedByString:@" "]];
     _manualStep = [NSString stringWithFormat:@"\tcd \"%@\"\n%@", _sourceFFmpegDir, confCommand];
     if ( _noopMode ) return YES;
@@ -633,10 +635,10 @@ BOOL untar(const char * filename);
 }
 -(void)performTest
 {
-    NSString *projpath = [[NSString stringWithUTF8String:PROJECT_SRC_DIR] stringByAppendingPathComponent:@"FFmpeg.xcodeproj"];
-    XCProject* project = [[XCProject alloc] initWithFilePath:projpath];
+    //NSString *projpath = [[NSString stringWithUTF8String:PROJECT_SRC_DIR] stringByAppendingPathComponent:@"FFmpeg.xcodeproj"];
+    //XCProject* project = [[XCProject alloc] initWithFilePath:projpath];
     //XCTarget* libFFmpegTarget = [project targetWithName:@"FFmpeg"];
-    NSLog(@"%@", [project dataStore]);//BUILT_PRODUCTS_DIR
+    NSLog(@"%s", PROJECT_SRC_DIR);//BUILT_PRODUCTS_DIR
 }
 #pragma mark HELPERS
 -(NSArray<NSString *> *)_non_headers_included

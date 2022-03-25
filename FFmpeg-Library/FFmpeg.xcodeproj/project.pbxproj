@@ -13,11 +13,8 @@
 		8F40281527C9450D0095D637 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40281427C9450D0095D637 /* GameController.framework */; };
 		8F40284E27C94E1A0095D637 /* libiconv.2.4.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40284D27C94E1A0095D637 /* libiconv.2.4.0.tbd */; };
 		8F40285827C974670095D637 /* MCXInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F40285527C9743E0095D637 /* MCXInstaller.m */; };
-		8F4028C427CFB52A0095D637 /* XcodeEditor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4028C327CFB52A0095D637 /* XcodeEditor.framework */; };
-		8F4028C827CFBD5E0095D637 /* XcodeEditor.framework in Headers */ = {isa = PBXBuildFile; fileRef = 8F4028C327CFB52A0095D637 /* XcodeEditor.framework */; settings = {ATTRIBUTES = (Public, ); }; };
 		8F82233627E0B3F6006FE332 /* libtarbz2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82233527E0B3F6006FE332 /* libtarbz2.a */; };
 		8F82233727E0B3FC006FE332 /* libtarbz2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82233527E0B3F6006FE332 /* libtarbz2.a */; };
-		8F82234427E1FDCF006FE332 /* libsvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82234227E1FDCE006FE332 /* libsvorbis.a */; };
 		8F82234727E2281F006FE332 /* libxcb-all.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82234627E2281E006FE332 /* libxcb-all.a */; };
 		8F82234927E22CFE006FE332 /* libSDL2-all.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82234827E22CFE006FE332 /* libSDL2-all.a */; };
 		8F82234B27E22F38006FE332 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82234A27E22F37006FE332 /* libz.a */; };
@@ -37,10 +34,27 @@
 		8FF61CBA27EE521900516C4B /* opj_stdint.h in Headers */ = {isa = PBXBuildFile; fileRef = 8FF61CB827EE520D00516C4B /* opj_stdint.h */; };
 		8FF61CBB27EE521900516C4B /* openjpeg.h in Headers */ = {isa = PBXBuildFile; fileRef = 8FF61CB727EE520D00516C4B /* openjpeg.h */; };
 		8FF6E4F127DA0D1200F4BA9F /* main.pch in Headers */ = {isa = PBXBuildFile; fileRef = 9CD552C52193389B0075012A /* main.pch */; };
+		8FF7AF0427EE5A75006F8E38 /* libopenssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0227EE5A75006F8E38 /* libopenssl.a */; };
+		8FF7AF0527EE5A75006F8E38 /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0327EE5A75006F8E38 /* libvorbis.a */; };
+		8FF7AF0627EE5AAF006F8E38 /* libopenssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0227EE5A75006F8E38 /* libopenssl.a */; };
+		8FF7AF0727EE5AAF006F8E38 /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0327EE5A75006F8E38 /* libvorbis.a */; };
+		8FF7AF1227EE5C67006F8E38 /* XcodeEditor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF1127EE5C67006F8E38 /* XcodeEditor.framework */; };
+		8FF7AF1327EE5C67006F8E38 /* XcodeEditor.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF1127EE5C67006F8E38 /* XcodeEditor.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9C993F932193DB20003761DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C993F922193DB20003761DB /* main.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		8FF7AF1427EE5C67006F8E38 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8FF7AF1327EE5C67006F8E38 /* XcodeEditor.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9C993F7E2193DAD0003761DB /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
@@ -61,9 +75,7 @@
 		8F40288227CBEEFB0095D637 /* bzlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bzlib.h; sourceTree = "<group>"; };
 		8F40288427CBEEFB0095D637 /* libtar_listhash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libtar_listhash.h; sourceTree = "<group>"; };
 		8F40288527CBEEFB0095D637 /* libtar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libtar.h; sourceTree = "<group>"; };
-		8F4028C327CFB52A0095D637 /* XcodeEditor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = XcodeEditor.framework; sourceTree = "<group>"; };
 		8F82233527E0B3F6006FE332 /* libtarbz2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtarbz2.a; path = libs/libtarbz2.a; sourceTree = "<group>"; };
-		8F82234227E1FDCE006FE332 /* libsvorbis.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsvorbis.a; path = libs/libsvorbis.a; sourceTree = "<group>"; };
 		8F82234627E2281E006FE332 /* libxcb-all.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libxcb-all.a"; path = "libs/libxcb-all.a"; sourceTree = "<group>"; };
 		8F82234827E22CFE006FE332 /* libSDL2-all.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libSDL2-all.a"; path = "libs/libSDL2-all.a"; sourceTree = "<group>"; };
 		8F82234A27E22F37006FE332 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = libs/libz.a; sourceTree = "<group>"; };
@@ -275,6 +287,9 @@
 		8FF6E2EA27D93F8200F4BA9F /* asn1err.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = asn1err.h; sourceTree = "<group>"; };
 		8FF6E4F527DA10A600F4BA9F /* x264_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x264_config.h; sourceTree = "<group>"; };
 		8FF6E4F627DA10A600F4BA9F /* x264.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x264.h; sourceTree = "<group>"; };
+		8FF7AF0227EE5A75006F8E38 /* libopenssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopenssl.a; path = libs/libopenssl.a; sourceTree = "<group>"; };
+		8FF7AF0327EE5A75006F8E38 /* libvorbis.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbis.a; path = libs/libvorbis.a; sourceTree = "<group>"; };
+		8FF7AF1127EE5C67006F8E38 /* XcodeEditor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = XcodeEditor.framework; sourceTree = "<group>"; };
 		9C169A872193E8FC0044126F /* libFFmpeg.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFFmpeg.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C35EC412193553A00FD4FE8 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		9C993F802193DAD0003761DB /* installer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = installer; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -358,6 +373,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8FF7AF0627EE5AAF006F8E38 /* libopenssl.a in Frameworks */,
+				8FF7AF0727EE5AAF006F8E38 /* libvorbis.a in Frameworks */,
 				8FA0E81427E61467008FAC71 /* libogg.a in Frameworks */,
 				8FA0E81227E6127B008FAC71 /* libXau.a in Frameworks */,
 				8FA0E80C27E505C9008FAC71 /* libcrypto.a in Frameworks */,
@@ -372,7 +389,6 @@
 				8F82234B27E22F38006FE332 /* libz.a in Frameworks */,
 				8F82234927E22CFE006FE332 /* libSDL2-all.a in Frameworks */,
 				8F82234727E2281F006FE332 /* libxcb-all.a in Frameworks */,
-				8F82234427E1FDCF006FE332 /* libsvorbis.a in Frameworks */,
 				8F40284E27C94E1A0095D637 /* libiconv.2.4.0.tbd in Frameworks */,
 				8F40281527C9450D0095D637 /* GameController.framework in Frameworks */,
 				8F4027FF27C940DD0095D637 /* CoreHaptics.framework in Frameworks */,
@@ -384,8 +400,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8FF7AF0427EE5A75006F8E38 /* libopenssl.a in Frameworks */,
 				8F82233627E0B3F6006FE332 /* libtarbz2.a in Frameworks */,
-				8F4028C427CFB52A0095D637 /* XcodeEditor.framework in Frameworks */,
+				8FF7AF0527EE5A75006F8E38 /* libvorbis.a in Frameworks */,
+				8FF7AF1227EE5C67006F8E38 /* XcodeEditor.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -765,22 +783,6 @@
 		9CE714E921934C51006527D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8FA0E81327E61467008FAC71 /* libogg.a */,
-				8FA0E81127E6127B008FAC71 /* libXau.a */,
-				8FA0E80A27E505C9008FAC71 /* libcrypto.a */,
-				8FA0E80B27E505C9008FAC71 /* libssl.a */,
-				8F82235A27E27D6F006FE332 /* libspeex.a */,
-				8F82235827E27BD3006FE332 /* libvpx.a */,
-				8F82235627E27A31006FE332 /* libX11.a */,
-				8F82235427E265A3006FE332 /* libopenjp2.a */,
-				8F82235227E25DFA006FE332 /* libXdmcp.a */,
-				8F82234E27E25232006FE332 /* libx264.a */,
-				8F82234C27E23A9A006FE332 /* libmetal.a */,
-				8F82234A27E22F37006FE332 /* libz.a */,
-				8F82234827E22CFE006FE332 /* libSDL2-all.a */,
-				8F82234627E2281E006FE332 /* libxcb-all.a */,
-				8F82234227E1FDCE006FE332 /* libsvorbis.a */,
-				8F82233527E0B3F6006FE332 /* libtarbz2.a */,
 				9CE714FC21934C85006527D2 /* AudioToolbox.framework */,
 				9CE714F821934C78006527D2 /* Carbon.framework */,
 				9CE714F221934C67006527D2 /* Cocoa.framework */,
@@ -791,11 +793,28 @@
 				9CE714FA21934C80006527D2 /* ForceFeedback.framework */,
 				8F40281427C9450D0095D637 /* GameController.framework */,
 				9CE714F421934C6B006527D2 /* IOKit.framework */,
+				8FA0E80A27E505C9008FAC71 /* libcrypto.a */,
 				8F40284D27C94E1A0095D637 /* libiconv.2.4.0.tbd */,
 				9C35EC412193553A00FD4FE8 /* libiconv.tbd */,
+				8F82234C27E23A9A006FE332 /* libmetal.a */,
+				8FA0E81327E61467008FAC71 /* libogg.a */,
+				8F82235427E265A3006FE332 /* libopenjp2.a */,
+				8FF7AF0227EE5A75006F8E38 /* libopenssl.a */,
+				8F82234827E22CFE006FE332 /* libSDL2-all.a */,
+				8F82235A27E27D6F006FE332 /* libspeex.a */,
+				8FA0E80B27E505C9008FAC71 /* libssl.a */,
+				8F82233527E0B3F6006FE332 /* libtarbz2.a */,
+				8FF7AF0327EE5A75006F8E38 /* libvorbis.a */,
+				8F82235827E27BD3006FE332 /* libvpx.a */,
+				8F82235627E27A31006FE332 /* libX11.a */,
+				8F82234E27E25232006FE332 /* libx264.a */,
+				8FA0E81127E6127B008FAC71 /* libXau.a */,
+				8F82234627E2281E006FE332 /* libxcb-all.a */,
+				8F82235227E25DFA006FE332 /* libXdmcp.a */,
+				8F82234A27E22F37006FE332 /* libz.a */,
 				9CE714EA21934C51006527D2 /* Metal.framework */,
 				9CE714EE21934C5D006527D2 /* QuartzCore.framework */,
-				8F4028C327CFB52A0095D637 /* XcodeEditor.framework */,
+				8FF7AF1127EE5C67006F8E38 /* XcodeEditor.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -809,7 +828,6 @@
 			files = (
 				8F0AA8E627E8BD12007361B5 /* libtar_listhash.h in Headers */,
 				8F0AA8E727E8BD19007361B5 /* libtar.h in Headers */,
-				8F4028C827CFBD5E0095D637 /* XcodeEditor.framework in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -853,6 +871,7 @@
 				9C993F7C2193DAD0003761DB /* Sources */,
 				9C993F7D2193DAD0003761DB /* Frameworks */,
 				9C993F7E2193DAD0003761DB /* CopyFiles */,
+				8FF7AF1427EE5C67006F8E38 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1004,6 +1023,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1038,6 +1058,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
