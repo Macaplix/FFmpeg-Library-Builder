@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F0AA8E627E8BD12007361B5 /* libtar_listhash.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F40288427CBEEFB0095D637 /* libtar_listhash.h */; };
+		8F0AA8E727E8BD19007361B5 /* libtar.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F40288527CBEEFB0095D637 /* libtar.h */; };
 		8F4027FF27C940DD0095D637 /* CoreHaptics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4027FE27C940DD0095D637 /* CoreHaptics.framework */; };
 		8F40281527C9450D0095D637 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40281427C9450D0095D637 /* GameController.framework */; };
 		8F40284E27C94E1A0095D637 /* libiconv.2.4.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40284D27C94E1A0095D637 /* libiconv.2.4.0.tbd */; };
@@ -31,6 +33,9 @@
 		8FA0E80D27E505C9008FAC71 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FA0E80B27E505C9008FAC71 /* libssl.a */; };
 		8FA0E81227E6127B008FAC71 /* libXau.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FA0E81127E6127B008FAC71 /* libXau.a */; };
 		8FA0E81427E61467008FAC71 /* libogg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FA0E81327E61467008FAC71 /* libogg.a */; };
+		8FF61CB927EE521900516C4B /* opj_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 8FF61CB627EE520C00516C4B /* opj_config.h */; };
+		8FF61CBA27EE521900516C4B /* opj_stdint.h in Headers */ = {isa = PBXBuildFile; fileRef = 8FF61CB827EE520D00516C4B /* opj_stdint.h */; };
+		8FF61CBB27EE521900516C4B /* openjpeg.h in Headers */ = {isa = PBXBuildFile; fileRef = 8FF61CB727EE520D00516C4B /* openjpeg.h */; };
 		8FF6E4F127DA0D1200F4BA9F /* main.pch in Headers */ = {isa = PBXBuildFile; fileRef = 9CD552C52193389B0075012A /* main.pch */; };
 		9C993F932193DB20003761DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C993F922193DB20003761DB /* main.m */; };
 /* End PBXBuildFile section */
@@ -130,10 +135,9 @@
 		8FEF09BE27D95F1E00DC1E5F /* vorbisfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vorbisfile.h; sourceTree = "<group>"; };
 		8FEF09BF27D95F1E00DC1E5F /* codec.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = codec.h; sourceTree = "<group>"; };
 		8FEF09C027D95F1E00DC1E5F /* vorbisenc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vorbisenc.h; sourceTree = "<group>"; };
-		8FEF09C727E294F100DC1E5F /* installer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = installer.entitlements; path = installer/installer.entitlements; sourceTree = "<group>"; };
-		8FF6E26027D93F1400F4BA9F /* opj_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opj_config.h; sourceTree = "<group>"; };
-		8FF6E26127D93F1400F4BA9F /* openjpeg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = openjpeg.h; sourceTree = "<group>"; };
-		8FF6E26227D93F1400F4BA9F /* opj_stdint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opj_stdint.h; sourceTree = "<group>"; };
+		8FF61CB627EE520C00516C4B /* opj_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opj_config.h; sourceTree = "<group>"; };
+		8FF61CB727EE520D00516C4B /* openjpeg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = openjpeg.h; sourceTree = "<group>"; };
+		8FF61CB827EE520D00516C4B /* opj_stdint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opj_stdint.h; sourceTree = "<group>"; };
 		8FF6E26427D93F8200F4BA9F /* pem2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pem2.h; sourceTree = "<group>"; };
 		8FF6E26527D93F8200F4BA9F /* kdf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kdf.h; sourceTree = "<group>"; };
 		8FF6E26627D93F8200F4BA9F /* pem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pem.h; sourceTree = "<group>"; };
@@ -490,10 +494,12 @@
 		8FF6E25E27D93DF900F4BA9F /* include */ = {
 			isa = PBXGroup;
 			children = (
+				8FF61CB727EE520D00516C4B /* openjpeg.h */,
+				8FF61CB627EE520C00516C4B /* opj_config.h */,
+				8FF61CB827EE520D00516C4B /* opj_stdint.h */,
 				8F40288227CBEEFB0095D637 /* bzlib.h */,
 				8F40288327CBEEFB0095D637 /* libtar */,
 				8FEF098527D95F1E00DC1E5F /* ogg */,
-				8FF6E25F27D93F1400F4BA9F /* openjpeg-2.4 */,
 				8FF6E26327D93F8200F4BA9F /* openssl */,
 				9CE70E5721934B8A006527D2 /* SDL2 */,
 				8FEF099427D95F1E00DC1E5F /* speex */,
@@ -503,16 +509,6 @@
 				8FEF099C27D95F1E00DC1E5F /* xcb */,
 			);
 			path = include;
-			sourceTree = "<group>";
-		};
-		8FF6E25F27D93F1400F4BA9F /* openjpeg-2.4 */ = {
-			isa = PBXGroup;
-			children = (
-				8FF6E26027D93F1400F4BA9F /* opj_config.h */,
-				8FF6E26127D93F1400F4BA9F /* openjpeg.h */,
-				8FF6E26227D93F1400F4BA9F /* opj_stdint.h */,
-			);
-			path = "openjpeg-2.4";
 			sourceTree = "<group>";
 		};
 		8FF6E26327D93F8200F4BA9F /* openssl */ = {
@@ -681,7 +677,6 @@
 		9CD550BE219337510075012A = {
 			isa = PBXGroup;
 			children = (
-				8FEF09C727E294F100DC1E5F /* installer.entitlements */,
 				8F826EA727D6157C0050533D /* metal_patch.c */,
 				8FF6E25E27D93DF900F4BA9F /* include */,
 				9C35EC8B2193592300FD4FE8 /* Installer */,
@@ -812,6 +807,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F0AA8E627E8BD12007361B5 /* libtar_listhash.h in Headers */,
+				8F0AA8E727E8BD19007361B5 /* libtar.h in Headers */,
 				8F4028C827CFBD5E0095D637 /* XcodeEditor.framework in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -820,6 +817,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8FF61CBB27EE521900516C4B /* openjpeg.h in Headers */,
+				8FF61CBA27EE521900516C4B /* opj_stdint.h in Headers */,
+				8FF61CB927EE521900516C4B /* opj_config.h in Headers */,
 				8FF6E4F127DA0D1200F4BA9F /* main.pch in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -834,7 +834,7 @@
 				9C169A832193E8FC0044126F /* Headers */,
 				9C169A842193E8FC0044126F /* Sources */,
 				9C169A852193E8FC0044126F /* Frameworks */,
-				021ED1C2516FD4FCFB91E8FC /* Finish Script */,
+				33E3810A666B0707CA065D98 /* Finish Script */,
 			);
 			buildRules = (
 			);
@@ -900,7 +900,7 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		021ED1C2516FD4FCFB91E8FC /* Finish Script */ = {
+		33E3810A666B0707CA065D98 /* Finish Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -912,7 +912,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "osascript -e 'tell application \"Terminal\"\n\tif not (exists window 1) then reopen\n\tactivate\n\ttell window 1 to do script \"/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/Debug/installer/Debug/installer --finish '$BUILT_PRODUCTS_DIR'\"\nend tell'\n";
+			shellScript = "osascript -e 'tell application \"Terminal\"\n\tif not (exists window 1) then reopen\n\tactivate\n\ttell window 1 to do script \"/Users/pe/Library/Developer/Xcode/DerivedData/FFmpeg-ajncrhjsamosjqeaypnpcbjwdcnu/Build/Products/Debug/installer/Debug/installer --finish '$BUILT_PRODUCTS_DIR'\"\nend tell'\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -997,9 +997,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = installer/installer.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KRCLQDE7R7;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
@@ -1021,7 +1021,9 @@
 					"-DPROJECT_SRC_DIR=\\\"$(SRCROOT)\\\"",
 					"-DBUILT_PRODUCTS_DIR=\\\"$(BUILT_PRODUCTS_DIR)\\\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = ffmpeginstaller.com.macaplix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -1029,9 +1031,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = installer/installer.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KRCLQDE7R7;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
@@ -1053,7 +1055,9 @@
 					"-DPROJECT_SRC_DIR=\\\"$(SRCROOT)\\\"",
 					"-DBUILT_PRODUCTS_DIR=\\\"$(BUILT_PRODUCTS_DIR)\\\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = ffmpeginstaller.com.macaplix;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};

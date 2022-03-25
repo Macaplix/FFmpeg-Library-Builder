@@ -1,0 +1,11 @@
+prefix=$PKG_CONFIG_PREFIX
+exec_prefix=${prefix}
+libdir=${exec_prefix}/libs
+includedir=${prefix}/include
+
+Name: OpenSSL
+Description: Secure Sockets Layer and cryptography libraries and tools
+Version: 3.1.0-dev
+Requires: libssl libcrypto
+Libs: -L${libdir} -lopenssl -lssl -lcrypto
+Cflags: -I${includedir} -lssl -lcrypto
