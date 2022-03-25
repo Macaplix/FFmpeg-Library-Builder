@@ -11,11 +11,12 @@
 #include "libtar.h"
 #include "bzlib.h"
 #include <XcodeEditor/XcodeEditor.h>
-// ./configure --prefix=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg --enable-static --disable-shared --enable-gpl --enable-version3 --enable-pthreads --enable-postproc --enable-filters --disable-asm --disable-programs --enable-runtime-cpudetect --enable-bzlib --enable-zlib --enable-opengl --enable-libvpx --enable-libspeex  --enable-libopenjpeg --enable-libvorbis --enable-openssl --pkg-config-flags="--static --debug PKG_CONFIG_PATH=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/libs/pkgconfig"
+// ./configure --prefix=$HOME/.../FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg --enable-static --disable-shared --enable-gpl --enable-version3 --enable-pthreads --enable-postproc --enable-filters --disable-asm --disable-programs --enable-runtime-cpudetect --enable-bzlib --enable-zlib --enable-opengl --enable-libvpx --enable-libspeex  --enable-libopenjpeg --enable-libvorbis --enable-openssl --pkg-config-flags="--static --debug PKG_CONFIG_PATH=$HOME/.../FFmpeg-Library-Builder/FFmpeg-Library/libs/pkgconfig"
 
 
 #define MCX_CONFIGURE_ARGUMENTS @[@"--enable-static", @"--disable-shared", @"--enable-gpl", @"--enable-version3", @"--enable-pthreads", @"--enable-postproc", @"--enable-filters", @"--disable-asm", @"--disable-programs", @"--enable-runtime-cpudetect", @"--enable-bzlib", @"--enable-zlib", @"--enable-opengl", @"--enable-libvpx", @"--enable-libspeex", @"--enable-libvorbis", @"--enable-openssl", @"--enable-libopenjpeg", @" --pkg-config-flags=\"--static\""]
 // @"--enable-libfdk-aac", @"--enable-libx264", @"--enable-nonfree",  @"--nm=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-nm"
+#define MCX_LINKER_CFLAGS_TO_REPLACE @"-Wl,-dynamic,-search_paths_first"
 
 #define MCX_SOURCE_ZIP_FILENAME @"ffmpeg-snapshot.tar.bz2"
 #define MCX_SOURCE_URL @"https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2"
@@ -280,11 +281,11 @@ BOOL untar(const char * filename);
 
 /*
 
- C_INCLUDE_PATH=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/include/
- PKG_CONFIG_LIBDIR=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/libs
- PKG_CONFIG_PREFIX=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library
+ C_INCLUDE_PATH=$HOME/.../FFmpeg-Library-Builder/FFmpeg-Library/include/
+ PKG_CONFIG_LIBDIR=$HOME/.../FFmpeg-Library-Builder/FFmpeg-Library/libs
+ PKG_CONFIG_PREFIX=$HOME/.../FFmpeg-Library-Builder/FFmpeg-Library
  PKG_CONFIG_DEBUG_SPEW=1
- PKG_CONFIG_PATH=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/libs/pkgconfig
+ PKG_CONFIG_PATH=$HOME/.../FFmpeg-Library-Builder/FFmpeg-Library/libs/pkgconfig
 
  configure patch:
  
@@ -292,13 +293,41 @@ BOOL untar(const char * filename);
  
  -Wl,-dynamic,-search_paths_first
   by
- -Wl,-dynamic,-search_paths_first,-L/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/libs,-lopenjp2,-lspeex,-lvorbis,-logg,-lopenssl,-lssl,-lcrypto
+ -Wl,-search_paths_first,-L$HOME/.../FFmpeg-Library-Builder/FFmpeg-Library/libs,-lopenjp2,-lspeex,-lvorbis,-logg,-lopenssl,-lssl,-lcrypto
  
  */
-
+-(BOOL)_patchConfigureSript
+{
+    BOOL rez = YES;
+    NSString *fpath = [_destinationFFmpegDir stringByAppendingPathComponent:@"configure"];
+    if (! _quietMode ) printf("patching %s...\n", fpath.UTF8String);
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *err =nil;
+//    NSString *fullpath = [srcdir stringByAppendingPathComponent:fpath];
+    if ( ! [fm fileExistsAtPath:fpath])
+    {
+        fprintf(stderr, "!!! Requested file doesn't exist\n%s\n", fpath.UTF8String);
+        return NO;
+    }
+    NSString *contentstr = [NSString stringWithContentsOfFile:fpath encoding:NSUTF8StringEncoding error:&err];
+    if ( (! contentstr ) || ( err ))
+    {
+        fprintf(stderr, "Error getting content of %s:\n%s\n", fpath.lastPathComponent.UTF8String, err.description.UTF8String);
+        return NO;
+    }
+    NSString *newflags = [@"-Wl,-search_paths_first,-L/" stringByAppendingFormat:@"%s/libs,-lopenjp2,-lspeex,-lvorbis,-logg,-lopenssl,-lssl,-lcrypto", PROJECT_SRC_DIR];
+    contentstr = [contentstr stringByReplacingOccurrencesOfString:MCX_LINKER_CFLAGS_TO_REPLACE withString:newflags];
+    if ( ![contentstr writeToFile:fpath atomically:YES encoding:NSUTF8StringEncoding error:&err] )
+    {
+        fprintf(stderr, "Impoossible to write patched configure file\n%s", err.description.UTF8String);
+        return NO;
+    }
+    return rez;
+}
 -(BOOL)_configureFFmpeg
 {
     BOOL rez = YES;
+    if ( ! [self _patchConfigureSript] ) return NO;
     NSArray<NSString *>  *args= [@[[@"--prefix=" stringByAppendingString:_destinationFFmpegDir]] arrayByAddingObjectsFromArray:MCX_CONFIGURE_ARGUMENTS];
    NSString *pkgcnfg_flags = [@" --pkg-config-flags=\"--static /Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library" stringByAppendingFormat:@"%s PKG_CONFIG_PATH=%s/libs/pkgconfig\"", ((_verboseMode )?" --debug":""), PROJECT_SRC_DIR ];
     args = [args arrayByAddingObject:pkgcnfg_flags];
@@ -311,7 +340,9 @@ BOOL untar(const char * filename);
     [task setCurrentDirectoryPath:_sourceFFmpegDir];
     [task setExecutableURL:[NSURL fileURLWithPath:[_sourceFFmpegDir stringByAppendingPathComponent:@"configure"]]];
     if ( ! _quietMode ) printf("%s\n", confCommand.UTF8String);
-    [task setEnvironment:@{@"TERM":@"xterm-256color",@"PATH":[@"/opt/local/bin:" stringByAppendingFormat:@"%s", getenv("PATH")]}];
+    NSMutableDictionary<NSString *, NSString *> *envdict = [NSMutableDictionary dictionaryWithDictionary:@{@"TERM":@"xterm-256color",@"PATH":[@"/opt/local/bin:" stringByAppendingFormat:@"%s", getenv("PATH")],@"C_INCLUDE_PATH":[NSString stringWithFormat:@"%s/include", PROJECT_SRC_DIR], @"PKG_CONFIG_LIBDIR":[NSString stringWithFormat:@"%s/libs", PROJECT_SRC_DIR],@"PKG_CONFIG_PREFIX": [NSString stringWithUTF8String:PROJECT_SRC_DIR],@"PKG_CONFIG_PATH":[NSString stringWithFormat:@"%s/libs/pkgconfig", PROJECT_SRC_DIR] }];
+    if ( _verboseMode ) [envdict setValue:@"1" forKey:@"PKG_CONFIG_DEBUG_SPEW"];
+    [task setEnvironment:envdict];
     [task launch];
     [task waitUntilExit];
     if ( [task terminationStatus] )
