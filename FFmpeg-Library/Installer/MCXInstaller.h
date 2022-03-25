@@ -38,6 +38,5 @@ typedef enum:unsigned char
 @property(readonly)NSString *currentStepName;
 -(BOOL)nextStep;
 -(int)finish;
--(void)performTest;
 @end
 #endif /* MCXInstaller_h */

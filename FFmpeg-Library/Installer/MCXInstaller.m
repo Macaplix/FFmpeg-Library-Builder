@@ -449,12 +449,19 @@ BOOL untar(const char * filename);
     if ( ! _quietMode) printf("%u files added to Xcode project\n", c);
     // Script Update
     XCTarget  *target = [project targetWithName:@"FFmpeg"];
-    
+    /*
+    NSArray<XCBuildShellScript *> *scripts = [target buildShellScripts];
+    for ( XCBuildShellScript *scpt in scripts )
+    {
+        [target removeShellScriptByName:[scpt name]];
+        
+    }
+     */
     [target removeShellScriptByName:@"Finish Script"];
     NSString *scptxt = [@"osascript -e 'tell application \"Terminal\"\n"
                         @"\tif not (exists window 1) then reopen\n"
                         @"\tactivate\n"
-                        @"\ttell window 1 to do script \"" stringByAppendingFormat:@"%@/Debug/installer --finish '$BUILT_PRODUCTS_DIR'\"\n"
+                        @"\ttell window 1 to do script \"" stringByAppendingFormat:@"%@/Debug/installer --finish '$SYMROOT'\"\n"
                         @"end tell'\n", [self selfExecutablePath]];
     
     XCBuildShellScriptDefinition *newscpt = [XCBuildShellScriptDefinition shellScriptDefinitionWithName:@"Finish Script" files:nil inputPaths:nil outputPaths:nil runOnlyForDeploymentPostprocessing:NO shellPath:nil shellScript:scptxt];     [target makeAndAddShellScript:newscpt];
@@ -609,13 +616,6 @@ BOOL untar(const char * filename);
         }
     } else if ( ! _quietMode ) printf("No cleaning requested\n");
     return rez;
-}
--(void)performTest
-{
-    NSString *projpath = [[NSString stringWithUTF8String:PROJECT_SRC_DIR] stringByAppendingPathComponent:@"FFmpeg.xcodeproj"];
-    XCProject* project = [[XCProject alloc] initWithFilePath:projpath];
-    //XCTarget* libFFmpegTarget = [project targetWithName:@"FFmpeg"];
-    NSLog(@"%@", [project dataStore]);//BUILT_PRODUCTS_DIR
 }
 #pragma mark HELPERS
 -(NSArray<NSString *> *)_non_headers_included
