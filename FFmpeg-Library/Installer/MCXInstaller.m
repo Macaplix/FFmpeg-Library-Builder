@@ -650,9 +650,34 @@ BOOL untar(const char * filename);
     } fprintf(stderr, "no folder path to show in Finder\n");
     if ( [fm fileExistsAtPath:flistpath] )
     {
-        //NSInputStream *instrm = [NSInputStream inputStreamWithFileAtPath:flistpath];
+        puts("The installer will now do the requested cleaning ( \e[4my\e[0mes / \e[4mn\e[0mo / \e[4mw\e[0mait )");
+        BOOL succes = NO;
+        while (! succes )
+        {
+            char *rep="";
+            fflush(stdin);
+            fgets(rep, 5, stdin);
+            if ( strlen(rep) > 0 )
+            {
+                switch (rep[0])
+                {
+                    case 'y':
+                        succes = YES;
+                        break;
+                    case 'n':
+                        return rez;
+                        break;
+                    case 'w':
+                        printf("When you want to do the cleaning run:\n%s --finish\n", _selfExecutablePath.UTF8String);
+                        return rez;
+                        break;
+                    default:
+                        fprintf(stderr, "Unrecognize input\n");
+                        break;
+                }
+            }
+        }
         NSArray<NSString *> *fpaths = [[NSString stringWithContentsOfFile:flistpath encoding:NSUTF8StringEncoding error:&err] componentsSeparatedByString:@"\n"];
-        //(NSArray<NSString *> *)[NSPropertyListSerialization propertyListWithStream:instrm options:NSPropertyListImmutable format:nil error:&err];
         if ( ! fpaths )
         {
             fprintf(stderr, "Impossible to read file to delete list file %s\n%s\n", flistpath.lastPathComponent.UTF8String, err.description.UTF8String);
@@ -685,7 +710,7 @@ BOOL untar(const char * filename);
     //NSString *projpath = [[NSString stringWithUTF8String:PROJECT_SRC_DIR] stringByAppendingPathComponent:@"FFmpeg.xcodeproj"];
     //XCProject* project = [[XCProject alloc] initWithFilePath:projpath];
     //XCTarget* libFFmpegTarget = [project targetWithName:@"FFmpeg"];
-    NSLog(@"%s", PROJECT_SRC_DIR);//BUILT_PRODUCTS_DIR
+    NSLog(@"%s", PROJECT_SRC_DIR);
 }
 #pragma mark HELPERS
 -(NSArray<NSString *> *)_non_headers_included
