@@ -969,11 +969,14 @@
 					"\"$(SRCROOT)/include\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
-					/opt/local/lib,
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/**",
 					"$(PROJECT_DIR)/libs",
 				);
-				OTHER_CFLAGS = "-export-all-symbols";
+				OTHER_CFLAGS = (
+					"-export-all-symbols",
+					"-I$(SRCROOT)/include",
+					"-L$(SRCROOT)/libs",
+				);
 				OTHER_LDFLAGS = (
 					"-deep",
 					"-export-all-symbols",
@@ -997,11 +1000,14 @@
 					"\"$(SRCROOT)/include\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
-					/opt/local/lib,
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/**",
 					"$(PROJECT_DIR)/libs",
 				);
-				OTHER_CFLAGS = "-export-all-symbols";
+				OTHER_CFLAGS = (
+					"-export-all-symbols",
+					"-I$(SRCROOT)/include",
+					"-L$(SRCROOT)/libs",
+				);
 				OTHER_LDFLAGS = (
 					"-deep",
 					"-export-all-symbols",
@@ -1023,7 +1029,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/**",
-					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1058,7 +1063,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/**",
-					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
