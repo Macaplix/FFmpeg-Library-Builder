@@ -13,6 +13,7 @@ typedef enum:unsigned char
     MCXInstallStepBackupAndClean,
     MCXInstallStepDownloadSource,
     MCXInstallStepUnzipSource,
+    MCXInstallStepPatchConfigureScript,
     MCXInstallStepConfigure,
     MCXInstallStepMake,
     MCXInstallStepMoveSrc2dest1,

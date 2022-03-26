@@ -23,7 +23,7 @@
 
 #define MCX_LIB_DIRS @[@"libavcodec",@"libavdevice",@"libavfilter",@"libavformat",\
 @"libavresample",@"libavutil",@"libpostproc",@"libswresample",@"libswscale"]
-#define MCX_INSTALL_STEP_NAMES @[@"Backup and clean FFmpeg source and destination",@"Download FFmpeg Source", @"Unzip FFmpeg Source", @"Configure FFmpeg", @"Make FFmpeg ( without actually building )", @"Move source files to Xcode project folder", @"Add FFmpeg Sources to Xcode project", @"Finish moving & patching source files", @"Build FFmpeg Library"]
+#define MCX_INSTALL_STEP_NAMES @[@"Backup and clean FFmpeg source and destination",@"Download FFmpeg Source", @"Unzip FFmpeg Source", @"Patch configure script file", @"Configure FFmpeg", @"Make FFmpeg ( without actually building )", @"Move source files to Xcode project folder", @"Add FFmpeg Sources to Xcode project", @"Finish moving & patching source files", @"Build FFmpeg Library"]
 #define MCX_LAST_STEP MCXInstallStepBuildLibrary
 #define MCX_FFMPEGLIB_FILENAME @"libFFmpeg.a"
 
@@ -132,6 +132,9 @@ BOOL untar(const char * filename);
             break;
         case MCXInstallStepUnzipSource:
             [self _unzipSource];
+            break;
+        case MCXInstallStepPatchConfigureScript:
+            [self _patchConfigureSript];
             break;
         case MCXInstallStepConfigure:
             [self _configureFFmpeg];
@@ -299,6 +302,12 @@ BOOL untar(const char * filename);
 -(BOOL)_patchConfigureSript
 {
     BOOL rez = YES;
+    NSString *newflags = [@"-Wl,-search_paths_first,-L" stringByAppendingFormat:@"%s/libs,-lopenjp2,-lspeex,-lvorbis,-logg,-lopenssl,-lssl,-lcrypto", PROJECT_SRC_DIR];
+    _manualStep = [NSString stringWithFormat:
+                   @"\t Open configure file in ffmpeg directory root ( %@ ) with a text editor \n"
+                   @"\t Search \"%@\" and replace it by:\n%@\n"
+                   ,_sourceFFmpegDir, MCX_LINKER_CFLAGS_TO_REPLACE, newflags];
+    if ( _noopMode ) return rez;
     NSString *fpath = [_destinationFFmpegDir stringByAppendingPathComponent:@"configure"];
     if (! _quietMode ) printf("patching %s...\n", fpath.UTF8String);
     NSFileManager *fm = [NSFileManager defaultManager];
@@ -314,7 +323,6 @@ BOOL untar(const char * filename);
         fprintf(stderr, "Error getting content of %s:\n%s\n", fpath.lastPathComponent.UTF8String, err.description.UTF8String);
         return NO;
     }
-    NSString *newflags = [@"-Wl,-search_paths_first,-L/" stringByAppendingFormat:@"%s/libs,-lopenjp2,-lspeex,-lvorbis,-logg,-lopenssl,-lssl,-lcrypto", PROJECT_SRC_DIR];
     contentstr = [contentstr stringByReplacingOccurrencesOfString:MCX_LINKER_CFLAGS_TO_REPLACE withString:newflags];
     if ( ![contentstr writeToFile:fpath atomically:YES encoding:NSUTF8StringEncoding error:&err] )
     {
@@ -337,7 +345,6 @@ BOOL untar(const char * filename);
 -(BOOL)_configureFFmpeg
 {
     BOOL rez = YES;
-    if ( ! [self _patchConfigureSript] ) return NO;
     NSArray<NSString *>  *args= [@[[@"--prefix=" stringByAppendingString:_destinationFFmpegDir]] arrayByAddingObjectsFromArray:MCX_CONFIGURE_ARGUMENTS];
    NSString *pkgcnfg_flags = [@" --pkg-config-flags=\"--static /Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library" stringByAppendingFormat:@"%s PKG_CONFIG_PATH=%s/libs/pkgconfig\"", ((_verboseMode )?" --debug":""), PROJECT_SRC_DIR ];
     args = [args arrayByAddingObject:pkgcnfg_flags];
@@ -360,7 +367,7 @@ BOOL untar(const char * filename);
         fprintf(stderr, "%s\n", msg.UTF8String);
         rez = NO;
     } else {
-        if ( ! _quietMode ) printf("\tffmpeg configured\n");
+        if ( ! _quietMode ) printf("\tffmpeg configuration done\n");
 
     }
     return rez;

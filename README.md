@@ -138,27 +138,41 @@ In this step latest source tar.bz2 file is downloaded from ffmpeg website <https
 
 	Double click on the file **ffmpeg-snapshot.tar.bz2** to unzip and untar in place.
 
-### step 4 - Configure FFmpeg
+
+### step 4 - Patch configure script file
+
+ * **Manual step:**
+
+	 Open *configure* file in ffmpeg directory root ( */FFmpeg-Library-Builder/ffmpeg/configure* ) with a text editor    
+	 Search **"-Wl,-dynamic,-search_paths_first"** and replace it by:   
+	 
+     **-Wl,-search_paths_first,-L/.../FFmpeg-Library-Builder/FFmpeg-Library/libs,-lopenjp2,-lspeex,-lvorbis,-logg,-lopenssl,-lssl,-lcrypto**  
+     ( without any whitespace and replacing ... by the absolute path of project root folder )
+
+
+### step 5 - Configure FFmpeg
 
 Runs the configure script in the source folder obtained by previous steps.
 The default arguments used to run configure are those listed bellow. If you need different settings, you can either run this step manually or either edit the argument list to be performed automatically in the macro MCX\_CONFIGURE\_ARGUMENTS located in the file installer/MCXInstaller.m  
 
  * **Manual step:**   
  
+ ( replace ... by your path to FFmpeg-Library-Builder directory )
  
 ```
 	cd "FFmpeg-Library-Builder/ffmpeg"  
 	
-	./configure --prefix=FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg \
-	--enable-static --disable-shared --enable-gpl --enable-version3 \
-	--enable-pthreads --enable-postproc --enable-filters --disable-asm \
-	--disable-programs --enable-runtime-cpudetect --enable-bzlib \
-	 --enable-zlib --enable-opengl --enable-libvpx \
-	 --enable-libspeex --enable-libopenjpeg  
+	./configure --prefix=.../FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg --enable-static
+	 --disable-shared --enable-gpl --enable-version3 --enable-pthreads --enable-postproc
+	  --enable-filters --disable-asm --disable-programs --enable-runtime-cpudetect
+	  --enable-bzlib --enable-zlib --enable-opengl --enable-libvpx --enable-libspeex --enable-libvorbis
+	  --enable-openssl --enable-libopenjpeg  --pkg-config-flags="--static" 
+	  --pkg-config-flags="--static .../FFmpeg-Library-Builder/FFmpeg-Library --debug
+	  PKG_CONFIG_PATH=.../FFmpeg-Library-Builder/FFmpeg-Library/libs/pkgconfig"
 	 
 ```
 
-### step 5 - Make FFmpeg ( without actually building )
+### step 6 - Make FFmpeg ( without actually building )
 
 Runs *make* with *-t* ( touch ) argument which only generate empty .o files in place where *make* would normally build the binary files. The library isn't built at this step, it would be unnecessary and time consuming, but the empty files will later give us a clue on what source files are needed, taking in consideration the configuration that was set in previous step.
 
@@ -171,7 +185,7 @@ Runs *make* with *-t* ( touch ) argument which only generate empty .o files in p
 	cd "FFmpeg-Library-Builder/ffmpeg"   
 	make -t
 ```
-### step 6 - Move source files to Xcode project folder
+### step 7 - Move source files to Xcode project folder
 
 First make sure there is no files in *FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg* directory and in the corresponding group in Xcode project.    
 If this group is still full select all the files, delete them and choose *Move to Trash* instead of the default *Remove Reference* 
@@ -191,7 +205,7 @@ Which consist on:
 	**5 -** removing libavutil/time.h   
 
 
-### step 7 - Add FFmpeg Sources to Xcode project
+### step 8 - Add FFmpeg Sources to Xcode project
 
 To automate this step I am using XcodeEditor framework from Jasper Blues available at : <https://github.com/appsquickly/XcodeEditor>
 
@@ -202,7 +216,7 @@ To automate this step I am using XcodeEditor framework from Jasper Blues availab
 	![add to xcode](images/add.png)   
 
 
-### step 8 - Finish moving & patching source files
+### step 9 - Finish moving & patching source files
 
 
 
@@ -225,11 +239,11 @@ Which consist on:
 
 
 
-### step 9 - Build FFmpeg Library
+### step 10 - Build FFmpeg Library
 
  * **Manual step:**
 
-	Select scheme FFmpeg in Xcode project and build Library (  B )
+	Select scheme FFmpeg in Xcode project and build or archive Library (  B )
 
 
 

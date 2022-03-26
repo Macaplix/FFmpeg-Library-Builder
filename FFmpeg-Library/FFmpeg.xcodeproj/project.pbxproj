@@ -39,7 +39,7 @@
 		8FF7AF0627EE5AAF006F8E38 /* libopenssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0227EE5A75006F8E38 /* libopenssl.a */; };
 		8FF7AF0727EE5AAF006F8E38 /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0327EE5A75006F8E38 /* libvorbis.a */; };
 		8FF7AF1227EE5C67006F8E38 /* XcodeEditor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF1127EE5C67006F8E38 /* XcodeEditor.framework */; };
-		8FF7AF1327EE5C67006F8E38 /* XcodeEditor.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF1127EE5C67006F8E38 /* XcodeEditor.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8FF7AF1527EF5114006F8E38 /* XcodeEditor.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF1127EE5C67006F8E38 /* XcodeEditor.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9C993F932193DB20003761DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C993F922193DB20003761DB /* main.m */; };
 /* End PBXBuildFile section */
 
@@ -50,7 +50,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8FF7AF1327EE5C67006F8E38 /* XcodeEditor.framework in Embed Frameworks */,
+				8FF7AF1527EF5114006F8E38 /* XcodeEditor.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
