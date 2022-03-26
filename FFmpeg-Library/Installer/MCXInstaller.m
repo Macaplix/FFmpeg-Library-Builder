@@ -303,7 +303,6 @@ BOOL untar(const char * filename);
     if (! _quietMode ) printf("patching %s...\n", fpath.UTF8String);
     NSFileManager *fm = [NSFileManager defaultManager];
     NSError *err =nil;
-//    NSString *fullpath = [srcdir stringByAppendingPathComponent:fpath];
     if ( ! [fm fileExistsAtPath:fpath])
     {
         fprintf(stderr, "!!! Requested file doesn't exist\n%s\n", fpath.UTF8String);
@@ -322,6 +321,17 @@ BOOL untar(const char * filename);
         fprintf(stderr, "Impoossible to write patched configure file\n%s", err.description.UTF8String);
         return NO;
     }
+    contentstr = nil;
+    if ( [fm isExecutableFileAtPath:fpath])
+    {
+        if ( ! _quietMode ) printf("The file %s is already executable\n", fpath.UTF8String );
+        return YES;
+    }
+    if ( ! [fm setAttributes:@{NSFilePosixPermissions:[NSNumber numberWithShort:S_IXUSR]} ofItemAtPath:fpath error:&err] )
+   {
+       fprintf(stderr, "Impoossible to change mode of configure file\n%s", err.description.UTF8String);
+       return NO;
+   }
     return rez;
 }
 -(BOOL)_configureFFmpeg
@@ -336,11 +346,10 @@ BOOL untar(const char * filename);
     if ( _noopMode ) return YES;
     NSTask *task = [[NSTask alloc] init];
     [task setArguments:args];
-    [task setEnvironment:@{@"PKG_CONFIG_PATH":[[_destinationFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"pkgconfig"]}];
     [task setCurrentDirectoryPath:_sourceFFmpegDir];
     [task setExecutableURL:[NSURL fileURLWithPath:[_sourceFFmpegDir stringByAppendingPathComponent:@"configure"]]];
     if ( ! _quietMode ) printf("%s\n", confCommand.UTF8String);
-    NSMutableDictionary<NSString *, NSString *> *envdict = [NSMutableDictionary dictionaryWithDictionary:@{@"TERM":@"xterm-256color",@"PATH":[@"/opt/local/bin:" stringByAppendingFormat:@"%s", getenv("PATH")],@"C_INCLUDE_PATH":[NSString stringWithFormat:@"%s/include", PROJECT_SRC_DIR], @"PKG_CONFIG_LIBDIR":[NSString stringWithFormat:@"%s/libs", PROJECT_SRC_DIR],@"PKG_CONFIG_PREFIX": [NSString stringWithUTF8String:PROJECT_SRC_DIR],@"PKG_CONFIG_PATH":[NSString stringWithFormat:@"%s/libs/pkgconfig", PROJECT_SRC_DIR] }];
+    NSMutableDictionary<NSString *, NSString *> *envdict = [NSMutableDictionary dictionaryWithDictionary:@{@"TERM":@"xterm-256color",@"PATH":[@"/opt/local/bin:" stringByAppendingFormat:@"%s", getenv("PATH")], @"C_INCLUDE_PATH":[NSString stringWithFormat:@"%s/include", PROJECT_SRC_DIR], @"PKG_CONFIG_LIBDIR":[NSString stringWithFormat:@"%s/libs", PROJECT_SRC_DIR],  @"PKG_CONFIG_PREFIX": [NSString stringWithUTF8String:PROJECT_SRC_DIR], @"PKG_CONFIG_PATH":[NSString stringWithFormat:@"%s/libs/pkgconfig", PROJECT_SRC_DIR] }];
     if ( _verboseMode ) [envdict setValue:@"1" forKey:@"PKG_CONFIG_DEBUG_SPEW"];
     [task setEnvironment:envdict];
     [task launch];
