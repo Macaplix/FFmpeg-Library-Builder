@@ -111,7 +111,7 @@ BOOL untar(const char * filename);
         {
             _currentStep = _lastStep;
             if (( ! _noopMode ) && ( ! _quietMode )) printf("All the selected steps have been done successfully\n"); else if (! _quietMode ) puts("");
-            return NO;
+            return YES;
         }
         rez = [self nextStep];
     } else {
@@ -330,16 +330,14 @@ BOOL untar(const char * filename);
         return NO;
     }
     contentstr = nil;
-    if ( [fm isExecutableFileAtPath:fpath])
+    if ( ! [fm isExecutableFileAtPath:fpath])
     {
-        if ( ! _quietMode ) printf("The file %s is already executable\n", fpath.UTF8String );
-        return YES;
+        if ( ! [fm setAttributes:@{NSFilePosixPermissions:[NSNumber numberWithShort:S_IXUSR]} ofItemAtPath:fpath error:&err] )
+       {
+           fprintf(stderr, "Impoossible to change mode of configure file\n%s", err.description.UTF8String);
+           return NO;
+       }
     }
-    if ( ! [fm setAttributes:@{NSFilePosixPermissions:[NSNumber numberWithShort:S_IXUSR]} ofItemAtPath:fpath error:&err] )
-   {
-       fprintf(stderr, "Impoossible to change mode of configure file\n%s", err.description.UTF8String);
-       return NO;
-   }
     return rez;
 }
 -(BOOL)_configureFFmpeg
@@ -611,9 +609,8 @@ BOOL untar(const char * filename);
 {
     int rez = 0;
     NSError *err = nil;
-    NSString *libpath = [_sourceFFmpegDir stringByDeletingLastPathComponent];
-    NSString *flistpath = [libpath stringByAppendingPathComponent:MCX_TO_DELETE_LIST_FILENAME];
-    libpath = [libpath stringByAppendingPathComponent:[@"Debug" stringByAppendingPathComponent:MCX_FFMPEGLIB_FILENAME]];
+    NSString *flistpath = [[_sourceFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:MCX_TO_DELETE_LIST_FILENAME];
+    NSString *libpath = [_resultDestinationPath stringByAppendingPathComponent:MCX_FFMPEGLIB_FILENAME];
     NSFileManager *fm =[NSFileManager defaultManager];
     if ( [fm fileExistsAtPath:libpath] )
     {
@@ -654,7 +651,8 @@ BOOL untar(const char * filename);
         BOOL succes = NO;
         while (! succes )
         {
-            char *rep="";
+            char rep[6];
+            rep[0] =0;
             fflush(stdin);
             fgets(rep, 5, stdin);
             if ( strlen(rep) > 0 )

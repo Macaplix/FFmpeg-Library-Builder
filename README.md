@@ -141,6 +141,17 @@ In this step latest source tar.bz2 file is downloaded from ffmpeg website <https
 
 ### step 4 - Patch configure script file
 
+In order to check its availability, the *configure* script runs a whole test procedure for each of the requested third party libraries.   
+This procedure involves creating a basic C file with a *main* function that calls one of the method defined by the library.     
+Actually it doesn't really call the method but instead gets a pointer to it.   
+Roughly, if it succeed to have this pointer it means that the linker knows where to find the piece of executable when the method is called but not that the piece of code would really successfully produce the expected result.   
+The temporary C file is then compiled and probably also ran.
+But the only steps that can fail are at pre-compiler and compiler stage.  
+Whatever step in the test the procedure fails, the default output will always print "pkg-config library not found", you'll only find more detailed explanations in *ffbuild/configure.log* if present.   
+This is where the original *configure* script has something that needs to be corrected:   
+When the script calls the compiler, the flags passed are hardcoded, there is no way to influence the compiler behaviour using environment variable or argument passed to the script.   
+Thats why we have to edit the *configure* script to make sure the linker can find the static libraries where they are in order to compile the test script.
+
  * **Manual step:**
 
 	 Open *configure* file in ffmpeg directory root ( */FFmpeg-Library-Builder/ffmpeg/configure* ) with a text editor    
