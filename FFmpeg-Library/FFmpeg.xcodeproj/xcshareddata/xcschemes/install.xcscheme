@@ -70,7 +70,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-c"
+            argument = "-cv"
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>

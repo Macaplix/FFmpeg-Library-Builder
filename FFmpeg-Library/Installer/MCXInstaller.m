@@ -14,8 +14,8 @@
 // ./configure --prefix=$HOME/.../FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg --enable-static --disable-shared --enable-gpl --enable-version3 --enable-pthreads --enable-postproc --enable-filters --disable-asm --disable-programs --enable-runtime-cpudetect --enable-bzlib --enable-zlib --enable-opengl --enable-libvpx --enable-libspeex  --enable-libopenjpeg --enable-libvorbis --enable-openssl --pkg-config-flags="--static --debug PKG_CONFIG_PATH=$HOME/.../FFmpeg-Library-Builder/FFmpeg-Library/libs/pkgconfig"
 
 
-#define MCX_CONFIGURE_ARGUMENTS @[@"--enable-static", @"--disable-shared", @"--enable-gpl", @"--enable-version3", @"--enable-pthreads", @"--enable-postproc", @"--enable-filters", @"--disable-asm", @"--disable-programs", @"--enable-runtime-cpudetect", @"--enable-bzlib", @"--enable-zlib", @"--enable-opengl", @"--enable-libvpx", @"--enable-libspeex", @"--enable-libvorbis", @"--enable-openssl", @"--enable-libopenjpeg", @" --pkg-config-flags=\"--static\""]
-// @"--enable-libfdk-aac", @"--enable-libx264", @"--enable-nonfree",  @"--nm=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-nm"
+#define MCX_CONFIGURE_ARGUMENTS @[@"--enable-static", @"--disable-shared", @"--enable-gpl", @"--enable-version3", @"--enable-pthreads", @"--enable-postproc", @"--enable-filters", @"--disable-asm", @"--disable-programs", @"--enable-runtime-cpudetect", @"--enable-bzlib", @"--enable-zlib", @"--enable-opengl", @"--enable-libvpx", @"--enable-libspeex", @"--enable-libvorbis", @"--enable-openssl", @"--enable-libopenjpeg"]
+// @"--enable-libfdk-aac", @"--enable-libx264", @"--enable-nonfree", @" --pkg-config-flags=\"--static\"",  @"--nm=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-nm"
 #define MCX_LINKER_CFLAGS_TO_REPLACE @"-Wl,-dynamic,-search_paths_first"
 
 #define MCX_SOURCE_ZIP_FILENAME @"ffmpeg-snapshot.tar.bz2"
@@ -113,9 +113,9 @@ BOOL untar(const char * filename);
             if (( ! _noopMode ) && ( ! _quietMode )) printf("All the selected steps have been done successfully\n"); else if (! _quietMode ) puts("");
             return NO;
         }
-        return [self nextStep];
+        rez = [self nextStep];
     } else {
-        fprintf(stderr, "The step %s failed\nTry to manually run %s\nAborting...", [self currentStepName].UTF8String, "" );
+        fprintf(stderr, "The step %s failed\nTry to manually run\n%s\nAborting...", [self currentStepName].UTF8String, _manualStep.UTF8String );
     }
     return rez;
 }
@@ -131,28 +131,28 @@ BOOL untar(const char * filename);
             rez = [self _downloadSource];
             break;
         case MCXInstallStepUnzipSource:
-            [self _unzipSource];
+            rez = [self _unzipSource];
             break;
         case MCXInstallStepPatchConfigureScript:
-            [self _patchConfigureSript];
+            rez = [self _patchConfigureSript];
             break;
         case MCXInstallStepConfigure:
-            [self _configureFFmpeg];
+            rez = [self _configureFFmpeg];
             break;
         case MCXInstallStepMake:
-            [self _makeFFmpeg];
+            rez = [self _makeFFmpeg];
             break;
         case MCXInstallStepMoveSrc2dest1:
-            [self _moveSrc2dest1];
+            rez = [self _moveSrc2dest1];
             break;
         case MCXInstallStepImportInXcode:
-            [self _importInXcode];
+            rez = [self _importInXcode];
             break;
         case MCXInstallStepMoveSrc2dest2:
-            [self _moveSrc2dest2];
+            rez = [self _moveSrc2dest2];
             break;
         case MCXInstallStepBuildLibrary:
-            [self _buildLibrary];
+            rez = [self _buildLibrary];
             break;
         case MCXInstallStepClean:
             //[self ];
@@ -308,7 +308,7 @@ BOOL untar(const char * filename);
                    @"\t Search \"%@\" and replace it by:\n%@\n"
                    ,_sourceFFmpegDir, MCX_LINKER_CFLAGS_TO_REPLACE, newflags];
     if ( _noopMode ) return rez;
-    NSString *fpath = [_destinationFFmpegDir stringByAppendingPathComponent:@"configure"];
+    NSString *fpath = [_sourceFFmpegDir stringByAppendingPathComponent:@"configure"];
     if (! _quietMode ) printf("patching %s...\n", fpath.UTF8String);
     NSFileManager *fm = [NSFileManager defaultManager];
     NSError *err =nil;
@@ -346,10 +346,10 @@ BOOL untar(const char * filename);
 {
     BOOL rez = YES;
     NSArray<NSString *>  *args= [@[[@"--prefix=" stringByAppendingString:_destinationFFmpegDir]] arrayByAddingObjectsFromArray:MCX_CONFIGURE_ARGUMENTS];
-   NSString *pkgcnfg_flags = [@" --pkg-config-flags=\"--static /Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library" stringByAppendingFormat:@"%s PKG_CONFIG_PATH=%s/libs/pkgconfig\"", ((_verboseMode )?" --debug":""), PROJECT_SRC_DIR ];
+   NSString *pkgcnfg_flags = [@"--pkg-config-flags=\"--static " stringByAppendingFormat:@"%s PKG_CONFIG_PATH=%s/libs/pkgconfig\"", ((_verboseMode )?"--debug ":""), PROJECT_SRC_DIR ];//
     args = [args arrayByAddingObject:pkgcnfg_flags];
     NSString *confCommand = [@"\t./configure " stringByAppendingString:[args componentsJoinedByString:@" "]];
-    _manualStep = [NSString stringWithFormat:@"\tcd \"%@\"\n%@", _sourceFFmpegDir, confCommand];
+    _manualStep = [NSString stringWithFormat:@"\tcd \"%@\"\n%@\n", _sourceFFmpegDir, confCommand];
     if ( _noopMode ) return YES;
     NSTask *task = [[NSTask alloc] init];
     [task setArguments:args];
@@ -524,7 +524,7 @@ BOOL untar(const char * filename);
     NSString *scptxt = [@"osascript -e 'tell application \"Terminal\"\n"
                         @"\tif not (exists window 1) then reopen\n"
                         @"\tactivate\n"
-                        @"\ttell window 1 to do script \"" stringByAppendingFormat:@"%@/Debug/installer --finish '$BUILT_PRODUCTS_DIR'\"\n"
+                        @"\ttell window 1 to do script \"" stringByAppendingFormat:@"%@ --finish '$BUILT_PRODUCTS_DIR'\"\n"
                         @"end tell'\n", [self selfExecutablePath]];
     
     XCBuildShellScriptDefinition *newscpt = [XCBuildShellScriptDefinition shellScriptDefinitionWithName:@"Finish Script" files:nil inputPaths:nil outputPaths:nil runOnlyForDeploymentPostprocessing:NO shellPath:nil shellScript:scptxt];     [target makeAndAddShellScript:newscpt];

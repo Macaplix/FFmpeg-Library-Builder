@@ -13,6 +13,7 @@ void showHelp( void );
 
 int main(int argc, const char * argv[])
 {
+    int ret = 0;
     @autoreleasepool
     {
         MCXInstaller *installer = [[MCXInstaller alloc] init];
@@ -88,9 +89,9 @@ int main(int argc, const char * argv[])
         }
         [installer setFirstStep:fstep];
         [installer setLastStep:lstep];
-        [installer nextStep];
+        ret =([installer nextStep])?0:4;
     }
-    return 0;
+    return ret;
 }
 void showHelp( void )
 {
