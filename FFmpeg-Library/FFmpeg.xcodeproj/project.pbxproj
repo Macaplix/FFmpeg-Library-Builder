@@ -1029,9 +1029,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/**",
-					"$(BUILT_PRODUCT_DIR)/**",
 				);
-				HEADER_SEARCH_PATHS = "$(BUILT_PRODUCT_DIR)/**";
+				HEADER_SEARCH_PATHS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(PRODUCT_DIR)",
@@ -1064,9 +1063,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/**",
-					"$(BUILT_PRODUCT_DIR)/**",
 				);
-				HEADER_SEARCH_PATHS = "$(BUILT_PRODUCT_DIR)/**";
+				HEADER_SEARCH_PATHS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(PRODUCT_DIR)",
