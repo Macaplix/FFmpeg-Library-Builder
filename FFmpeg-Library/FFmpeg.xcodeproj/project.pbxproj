@@ -38,8 +38,8 @@
 		8FF7AF0527EE5A75006F8E38 /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0327EE5A75006F8E38 /* libvorbis.a */; };
 		8FF7AF0627EE5AAF006F8E38 /* libopenssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0227EE5A75006F8E38 /* libopenssl.a */; };
 		8FF7AF0727EE5AAF006F8E38 /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0327EE5A75006F8E38 /* libvorbis.a */; };
-		8FF7AF1727EF648D006F8E38 /* XcodeEditor.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF1627EF648D006F8E38 /* XcodeEditor.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		8FF7AF1827EF64A7006F8E38 /* XcodeEditor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF1627EF648D006F8E38 /* XcodeEditor.framework */; };
+		8FF7AF1E27F09CD8006F8E38 /* XcodeEditor.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF1D27F09CD8006F8E38 /* XcodeEditor.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8FF7AF1F27F09CEC006F8E38 /* XcodeEditor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF1D27F09CD8006F8E38 /* XcodeEditor.framework */; };
 		9C993F932193DB20003761DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C993F922193DB20003761DB /* main.m */; };
 /* End PBXBuildFile section */
 
@@ -50,7 +50,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8FF7AF1727EF648D006F8E38 /* XcodeEditor.framework in Embed Frameworks */,
+				8FF7AF1E27F09CD8006F8E38 /* XcodeEditor.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -289,7 +289,7 @@
 		8FF6E4F627DA10A600F4BA9F /* x264.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x264.h; sourceTree = "<group>"; };
 		8FF7AF0227EE5A75006F8E38 /* libopenssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopenssl.a; path = libs/libopenssl.a; sourceTree = "<group>"; };
 		8FF7AF0327EE5A75006F8E38 /* libvorbis.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbis.a; path = libs/libvorbis.a; sourceTree = "<group>"; };
-		8FF7AF1627EF648D006F8E38 /* XcodeEditor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = XcodeEditor.framework; sourceTree = "<group>"; };
+		8FF7AF1D27F09CD8006F8E38 /* XcodeEditor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = XcodeEditor.framework; sourceTree = "<group>"; };
 		9C169A872193E8FC0044126F /* libFFmpeg.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFFmpeg.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C35EC412193553A00FD4FE8 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		9C993F802193DAD0003761DB /* installer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = installer; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -400,7 +400,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8FF7AF1827EF64A7006F8E38 /* XcodeEditor.framework in Frameworks */,
+				8FF7AF1F27F09CEC006F8E38 /* XcodeEditor.framework in Frameworks */,
 				8FF7AF0427EE5A75006F8E38 /* libopenssl.a in Frameworks */,
 				8F82233627E0B3F6006FE332 /* libtarbz2.a in Frameworks */,
 				8FF7AF0527EE5A75006F8E38 /* libvorbis.a in Frameworks */,
@@ -783,7 +783,6 @@
 		9CE714E921934C51006527D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8FF7AF1627EF648D006F8E38 /* XcodeEditor.framework */,
 				9CE714FC21934C85006527D2 /* AudioToolbox.framework */,
 				9CE714F821934C78006527D2 /* Carbon.framework */,
 				9CE714F221934C67006527D2 /* Cocoa.framework */,
@@ -815,6 +814,7 @@
 				8F82234A27E22F37006FE332 /* libz.a */,
 				9CE714EA21934C51006527D2 /* Metal.framework */,
 				9CE714EE21934C5D006527D2 /* QuartzCore.framework */,
+				8FF7AF1D27F09CD8006F8E38 /* XcodeEditor.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1029,6 +1029,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1063,6 +1064,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
