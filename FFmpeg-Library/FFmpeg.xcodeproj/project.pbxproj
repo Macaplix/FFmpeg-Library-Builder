@@ -9,12 +9,9 @@
 /* Begin PBXBuildFile section */
 		8F0AA8E627E8BD12007361B5 /* libtar_listhash.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F40288427CBEEFB0095D637 /* libtar_listhash.h */; };
 		8F0AA8E727E8BD19007361B5 /* libtar.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F40288527CBEEFB0095D637 /* libtar.h */; };
-		8F4027FF27C940DD0095D637 /* CoreHaptics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F4027FE27C940DD0095D637 /* CoreHaptics.framework */; };
-		8F40281527C9450D0095D637 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40281427C9450D0095D637 /* GameController.framework */; };
 		8F40284E27C94E1A0095D637 /* libiconv.2.4.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F40284D27C94E1A0095D637 /* libiconv.2.4.0.tbd */; };
 		8F40285827C974670095D637 /* MCXInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F40285527C9743E0095D637 /* MCXInstaller.m */; };
 		8F82233627E0B3F6006FE332 /* libtarbz2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82233527E0B3F6006FE332 /* libtarbz2.a */; };
-		8F82233727E0B3FC006FE332 /* libtarbz2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82233527E0B3F6006FE332 /* libtarbz2.a */; };
 		8F82234727E2281F006FE332 /* libxcb-all.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82234627E2281E006FE332 /* libxcb-all.a */; };
 		8F82234927E22CFE006FE332 /* libSDL2-all.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82234827E22CFE006FE332 /* libSDL2-all.a */; };
 		8F82234B27E22F38006FE332 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82234A27E22F37006FE332 /* libz.a */; };
@@ -40,6 +37,7 @@
 		8FF7AF0727EE5AAF006F8E38 /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0327EE5A75006F8E38 /* libvorbis.a */; };
 		8FF7AF1E27F09CD8006F8E38 /* XcodeEditor.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF1D27F09CD8006F8E38 /* XcodeEditor.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8FF7AF1F27F09CEC006F8E38 /* XcodeEditor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF1D27F09CD8006F8E38 /* XcodeEditor.framework */; };
+		8FF7B5CF27F20E6F006F8E38 /* libtarbz2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F82233527E0B3F6006FE332 /* libtarbz2.a */; };
 		9C993F932193DB20003761DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C993F922193DB20003761DB /* main.m */; };
 /* End PBXBuildFile section */
 
@@ -373,6 +371,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8FF7B5CF27F20E6F006F8E38 /* libtarbz2.a in Frameworks */,
 				8FF7AF0627EE5AAF006F8E38 /* libopenssl.a in Frameworks */,
 				8FF7AF0727EE5AAF006F8E38 /* libvorbis.a in Frameworks */,
 				8FA0E81427E61467008FAC71 /* libogg.a in Frameworks */,
@@ -390,9 +389,6 @@
 				8F82234927E22CFE006FE332 /* libSDL2-all.a in Frameworks */,
 				8F82234727E2281F006FE332 /* libxcb-all.a in Frameworks */,
 				8F40284E27C94E1A0095D637 /* libiconv.2.4.0.tbd in Frameworks */,
-				8F40281527C9450D0095D637 /* GameController.framework in Frameworks */,
-				8F4027FF27C940DD0095D637 /* CoreHaptics.framework in Frameworks */,
-				8F82233727E0B3FC006FE332 /* libtarbz2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
