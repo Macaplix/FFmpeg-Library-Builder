@@ -31,8 +31,6 @@
 		8FF61CBA27EE521900516C4B /* opj_stdint.h in Headers */ = {isa = PBXBuildFile; fileRef = 8FF61CB827EE520D00516C4B /* opj_stdint.h */; };
 		8FF61CBB27EE521900516C4B /* openjpeg.h in Headers */ = {isa = PBXBuildFile; fileRef = 8FF61CB727EE520D00516C4B /* openjpeg.h */; };
 		8FF6E4F127DA0D1200F4BA9F /* main.pch in Headers */ = {isa = PBXBuildFile; fileRef = 9CD552C52193389B0075012A /* main.pch */; };
-		8FF7AF0427EE5A75006F8E38 /* libopenssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0227EE5A75006F8E38 /* libopenssl.a */; };
-		8FF7AF0527EE5A75006F8E38 /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0327EE5A75006F8E38 /* libvorbis.a */; };
 		8FF7AF0627EE5AAF006F8E38 /* libopenssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0227EE5A75006F8E38 /* libopenssl.a */; };
 		8FF7AF0727EE5AAF006F8E38 /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF0327EE5A75006F8E38 /* libvorbis.a */; };
 		8FF7AF1E27F09CD8006F8E38 /* XcodeEditor.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF7AF1D27F09CD8006F8E38 /* XcodeEditor.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -65,8 +63,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		8F4027FE27C940DD0095D637 /* CoreHaptics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreHaptics.framework; path = System/Library/Frameworks/CoreHaptics.framework; sourceTree = SDKROOT; };
-		8F40281427C9450D0095D637 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		8F40284D27C94E1A0095D637 /* libiconv.2.4.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.4.0.tbd; path = usr/lib/libiconv.2.4.0.tbd; sourceTree = SDKROOT; };
 		8F40285527C9743E0095D637 /* MCXInstaller.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCXInstaller.m; sourceTree = "<group>"; };
 		8F40285727C974610095D637 /* MCXInstaller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCXInstaller.h; sourceTree = "<group>"; };
@@ -397,9 +393,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8FF7AF1F27F09CEC006F8E38 /* XcodeEditor.framework in Frameworks */,
-				8FF7AF0427EE5A75006F8E38 /* libopenssl.a in Frameworks */,
 				8F82233627E0B3F6006FE332 /* libtarbz2.a in Frameworks */,
-				8FF7AF0527EE5A75006F8E38 /* libvorbis.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -784,10 +778,8 @@
 				9CE714F221934C67006527D2 /* Cocoa.framework */,
 				9CE714EC21934C56006527D2 /* CoreAudio.framework */,
 				9CE714F621934C72006527D2 /* CoreFoundation.framework */,
-				8F4027FE27C940DD0095D637 /* CoreHaptics.framework */,
 				9CE714F021934C62006527D2 /* CoreVideo.framework */,
 				9CE714FA21934C80006527D2 /* ForceFeedback.framework */,
-				8F40281427C9450D0095D637 /* GameController.framework */,
 				9CE714F421934C6B006527D2 /* IOKit.framework */,
 				8FA0E80A27E505C9008FAC71 /* libcrypto.a */,
 				8F40284D27C94E1A0095D637 /* libiconv.2.4.0.tbd */,
@@ -848,7 +840,7 @@
 				9C169A832193E8FC0044126F /* Headers */,
 				9C169A842193E8FC0044126F /* Sources */,
 				9C169A852193E8FC0044126F /* Frameworks */,
-				875517F33B82FA263AD31742 /* Finish Script */,
+				1F5648E3CE752F8B56766F04 /* Finish Script */,
 			);
 			buildRules = (
 			);
@@ -915,7 +907,7 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		875517F33B82FA263AD31742 /* Finish Script */ = {
+		1F5648E3CE752F8B56766F04 /* Finish Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (

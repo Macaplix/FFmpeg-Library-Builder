@@ -621,7 +621,7 @@ BOOL untar(const char * filename);
             if ( ( ! modif ) ||( -[modif timeIntervalSinceNow] > 15.0 ))
             {
                 fprintf(stderr, "Library seems to old: %s\n", ((modif)?[modif descriptionWithLocale:nil].UTF8String:"[no date available]"));
-                return 1;
+                //return 1;
             }
         } else {
             fprintf(stderr, "Impossible to get library's attributes\n%s\n", err.description.UTF8String);
