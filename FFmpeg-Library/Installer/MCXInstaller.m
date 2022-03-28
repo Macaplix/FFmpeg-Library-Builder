@@ -621,7 +621,7 @@ BOOL untar(const char * filename);
             NSDate *modif = [attrdict fileModificationDate];
             if ( ( ! modif ) ||( -[modif timeIntervalSinceNow] > 15.0 ))
             {
-                fprintf(stderr, "Library seems to old: %s\n", ((modif)?[modif descriptionWithLocale:nil].UTF8String:"[no date available]"));
+                fprintf(stderr, "Library seems to old: %s\n", ((modif)?[modif descriptionWithLocale:[NSLocale systemLocale]].UTF8String:"[no date available]"));
                 tooold = YES;
                 //return 1;
             }
@@ -646,7 +646,7 @@ BOOL untar(const char * filename);
             fprintf(stderr, "Can't execute script:\n%s\n%s\n", scpt.UTF8String, errdict.description.UTF8String);
             rez = 1;
         }
-    } fprintf(stderr, "no folder path to show in Finder\n");
+    } else fprintf(stderr, "no folder path to show in Finder\n");
     if ( [fm fileExistsAtPath:flistpath] )
     {
         puts("The installer will now do the requested cleaning ( \e[4my\e[0mes / \e[4mn\e[0mo / \e[4mw\e[0mait )");
@@ -665,10 +665,15 @@ BOOL untar(const char * filename);
                         succes = YES;
                         break;
                     case 'n':
-                        return rez;
+                        {
+                            NSDictionary<NSString *,id> * _Nullable __autoreleasing * _Nullable errdict=nil;
+                            [[[NSAppleScript alloc] initWithSource:@"tell application \"Terminal\" to close window frontmost"] compileAndReturnError:errdict];
+                            if ( errdict ) NSLog(@"Error: %@", errdict );
+                            return rez;
+                        }
                         break;
                     case 'w':
-                        printf("When you want to do the cleaning run:\n%s --finish\n", _selfExecutablePath.UTF8String);
+                        printf("When you want to do the cleaning hit ↑ to move up in command history and hit return to run ../../installer --finish <path to the built directory>\n");
                         return rez;
                         break;
                     default:
