@@ -612,6 +612,7 @@ BOOL untar(const char * filename);
     NSString *flistpath = [[_sourceFFmpegDir stringByDeletingLastPathComponent] stringByAppendingPathComponent:MCX_TO_DELETE_LIST_FILENAME];
     NSString *libpath = [_resultDestinationPath stringByAppendingPathComponent:MCX_FFMPEGLIB_FILENAME];
     NSFileManager *fm =[NSFileManager defaultManager];
+    BOOL tooold = NO;
     if ( [fm fileExistsAtPath:libpath] )
     {
         NSDictionary<NSFileAttributeKey, id> *attrdict = [fm attributesOfItemAtPath:libpath error:&err];
@@ -621,6 +622,7 @@ BOOL untar(const char * filename);
             if ( ( ! modif ) ||( -[modif timeIntervalSinceNow] > 15.0 ))
             {
                 fprintf(stderr, "Library seems to old: %s\n", ((modif)?[modif descriptionWithLocale:nil].UTF8String:"[no date available]"));
+                tooold = YES;
                 //return 1;
             }
         } else {
@@ -631,7 +633,7 @@ BOOL untar(const char * filename);
         fprintf(stderr, "Library file doesn't exist at path: %s\n", libpath.UTF8String );
         return 1;
     }
-    if ( ! _quietMode ) printf("Library seems properly built\nCleaning...\n");
+    if (( ! _quietMode ) && ( ! tooold )) printf("Library seems properly built\nCleaning...\n");
     if ( _resultDestinationPath )
     {
         NSString *scpt = [@"tell application \"Finder\"\n\t open POSIX file \"" stringByAppendingFormat:@"%@\"\n\tactivate\nend tell\n", _resultDestinationPath];
