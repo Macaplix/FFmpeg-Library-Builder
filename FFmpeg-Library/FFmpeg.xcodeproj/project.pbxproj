@@ -840,7 +840,7 @@
 				9C169A832193E8FC0044126F /* Headers */,
 				9C169A842193E8FC0044126F /* Sources */,
 				9C169A852193E8FC0044126F /* Frameworks */,
-				021C0ECD03B79D96C5A28456 /* Finish Script */,
+				5D70DA1E14729DBB038228F0 /* Finish Script */,
 			);
 			buildRules = (
 			);
@@ -907,7 +907,7 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		021C0ECD03B79D96C5A28456 /* Finish Script */ = {
+		5D70DA1E14729DBB038228F0 /* Finish Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -919,7 +919,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "osascript -e 'tell application \"Terminal\"\n\tif not (exists window 1) then reopen\n\tactivate\n\ttell window 1 to do script \"/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/Debug/installer --finish '$BUILT_PRODUCTS_DIR'\"\nend tell'\n";
+			shellScript = "osascript -e 'tell application \"Terminal\"\n\tif not (exists window 1) then reopen\n\tactivate\n\ttell window 1 to do script \"/Users/pe/Library/Developer/Xcode/DerivedData/FFmpeg-ajncrhjsamosjqeaypnpcbjwdcnu/Build/Products/Debug/installer --finish '$BUILT_PRODUCTS_DIR'\"\nend tell'\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -14,8 +14,9 @@
 // ./configure --prefix=$HOME/.../FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg --enable-static --disable-shared --enable-gpl --enable-version3 --enable-pthreads --enable-postproc --enable-filters --disable-asm --disable-programs --enable-runtime-cpudetect --enable-bzlib --enable-zlib --enable-opengl --enable-libvpx --enable-libspeex  --enable-libopenjpeg --enable-libvorbis --enable-openssl --pkg-config-flags="--static --debug PKG_CONFIG_PATH=$HOME/.../FFmpeg-Library-Builder/FFmpeg-Library/libs/pkgconfig"
 
 
-#define MCX_CONFIGURE_ARGUMENTS @[@"--enable-static", @"--disable-shared", @"--enable-gpl", @"--enable-version3", @"--enable-pthreads", @"--enable-postproc", @"--enable-filters", @"--disable-asm", @"--disable-programs", @"--enable-runtime-cpudetect", @"--enable-bzlib", @"--enable-zlib", @"--enable-opengl", @"--enable-libvpx", @"--enable-libspeex", @"--enable-libvorbis", @"--enable-openssl", @"--enable-libopenjpeg"]
-// @"--enable-libfdk-aac", @"--enable-libx264", @"--enable-nonfree", @" --pkg-config-flags=\"--static\"",  @"--nm=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-nm"
+#define MCX_CONFIGURE_ARGUMENTS @[@"--enable-static", @"--disable-shared", @"--enable-gpl", @"--enable-version3", @"--enable-pthreads", @"--enable-postproc", @"--enable-filters", @"--disable-asm", @"--disable-programs", @"--enable-runtime-cpudetect", @"--enable-bzlib", @"--enable-zlib", @"--enable-opengl", @"--enable-openssl"]
+// @"--enable-libfdk-aac", @"--enable-libx264", @"--enable-nonfree", @"--enable-libopenjpeg", @"--enable-libspeex", @"--enable-libvpx", @" --pkg-config-flags=\"--static\"", @"--enable-libvorbis",
+
 #define MCX_LINKER_CFLAGS_TO_REPLACE @"-Wl,-dynamic,-search_paths_first"
 
 #define MCX_SOURCE_ZIP_FILENAME @"ffmpeg-snapshot.tar.bz2"
@@ -435,6 +436,7 @@ BOOL untar(const char * filename);
     }
     //SGFCopy(SGFAppend(_sourceFFmpegDir, @"config.h"), SGFAppend(_destinationFFmpegDir, @"config.h"), YES);
     [self _SGFCopy:[self _SGFAppendTo:_sourceFFmpegDir suffix:@"config.h"] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:@"config.h"] forcing:YES];
+    [self _SGFCopy:[self _SGFAppendTo:_sourceFFmpegDir suffix:@"config_components.h"] toDest:[self _SGFAppendTo:_destinationFFmpegDir suffix:@"config_components.h"] forcing:YES];
     // SGFRemove(SGFAppend(_destinationFFmpegDir, @"libavutil/time.h"));
     [self _SGFRemove:[self _SGFAppendTo:_destinationFFmpegDir suffix:@"libavutil/time.h"]];
     return rez;
