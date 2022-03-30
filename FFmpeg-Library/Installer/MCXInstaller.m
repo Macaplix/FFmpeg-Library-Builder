@@ -668,8 +668,8 @@ BOOL untar(const char * filename);
                         break;
                     case 'n':
                         {
-                            NSDictionary<NSString *,id> * _Nullable __autoreleasing * _Nullable errdict=nil;
-                            [[[NSAppleScript alloc] initWithSource:@"tell application \"Terminal\" to close window frontmost"] compileAndReturnError:errdict];
+                            NSDictionary<NSString *,id> * _Nullable __autoreleasing errdict=nil;
+                            [[[NSAppleScript alloc] initWithSource:@"tell application \"Terminal\" to close window frontmost"] compileAndReturnError:&errdict];
                             if ( errdict ) NSLog(@"Error: %@", errdict );
                             return rez;
                         }
