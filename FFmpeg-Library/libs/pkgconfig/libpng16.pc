@@ -1,6 +1,6 @@
-prefix=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/libs
+prefix=$PKG_CONFIG_PREFIX
 exec_prefix=${prefix}
-libdir=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/libs
+libdir=${prefix}
 includedir=${prefix}/include/libpng16
 
 Name: libpng
