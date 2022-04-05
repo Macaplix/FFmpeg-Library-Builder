@@ -308,7 +308,7 @@ BOOL untar(const char * filename);
                    @"\t Open configure file in ffmpeg directory root ( %@ ) with a text editor \n"
                    @"\t Search \"%@\" and replace it by:\n%@\n"
                    ,_sourceFFmpegDir, MCX_LINKER_CFLAGS_TO_REPLACE, newflags];
-    if ( rez ) return rez;
+    //if ( rez ) return rez;
     if ( _noopMode ) return rez;
     NSString *fpath = [_sourceFFmpegDir stringByAppendingPathComponent:@"configure"];
     if (! _quietMode ) printf("patching %s...\n", fpath.UTF8String);
