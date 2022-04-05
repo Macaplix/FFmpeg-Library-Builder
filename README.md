@@ -60,12 +60,19 @@ Ffmpeg is using a set of Apple System Frameworks plus some third party C librair
 
 The Frameworks are linked as dynamic librairies as they are supposed to be available through the system on any Mac.   
 The third party librairies are all compiled binaries I provide to be included in the final library.   
-They have not been cross-compiled and they are only build for arm64 architecture ( M1 ship )
+They have not yet all been cross-compiled and some are only build for arm64 architecture ( M1 ship )
 
-```
-Todo: provide cross-compiled binaries so the library would run on any Mac
-```
 ## Running the installer
+
+~~~
+	 Note:    
+
+There is an issue with XcodeEditor framework I haven't solved yet,
+if it is not the first time you run the installer, 
+you'll have to clean the build folder to be able to run the
+installer again
+
+~~~
 
 After checking the help page like explained above, you can run the installer without arguments, so the installer can perform all the steps.  
 You'll need for that to edit the Xcode scheme *install* (  < ) in order to deactivate arguments -h and -v.  
