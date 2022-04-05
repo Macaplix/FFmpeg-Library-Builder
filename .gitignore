@@ -1,3 +1,4 @@
 libFFmpeg.a
 ffmpeg-snapshot.tar.bz2
 ffmpeg
+.DS_Store
