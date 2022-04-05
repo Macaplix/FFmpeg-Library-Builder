@@ -303,7 +303,7 @@ BOOL untar(const char * filename);
 -(BOOL)_patchConfigureSript
 {
     BOOL rez = YES;
-    NSString *newflags = [@"-Wl,-search_paths_first,-L" stringByAppendingFormat:@"%s/libs,-lopenjp2,-lspeex,-lvorbis,-logg,-lopenssl,-lssl,-lcrypto", PROJECT_SRC_DIR];
+    NSString *newflags = [@"-Wl,-search_paths_first,-L" stringByAppendingFormat:@"%s/libs,-lopenjp2", PROJECT_SRC_DIR];//,-lspeex,-lvorbis,-logg,-lopenssl,-lssl,-lcrypto
     _manualStep = [NSString stringWithFormat:
                    @"\t Open configure file in ffmpeg directory root ( %@ ) with a text editor \n"
                    @"\t Search \"%@\" and replace it by:\n%@\n"
