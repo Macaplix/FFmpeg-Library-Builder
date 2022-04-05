@@ -1,0 +1,11 @@
+prefix=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/libs
+exec_prefix=${prefix}
+libdir=/Users/pe/classeur/developer/github/FFmpeg-Library-Builder/FFmpeg-Library/libs
+includedir=${prefix}/include
+
+Name: lcms2
+Description: LCMS Color Management Library
+Version: 2.13
+Libs: -L${libdir} -llcms2 
+Libs.private: -lm -lpthread
+Cflags: -I${includedir}
