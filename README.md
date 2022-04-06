@@ -60,12 +60,19 @@ Ffmpeg is using a set of Apple System Frameworks plus some third party C librair
 
 The Frameworks are linked as dynamic librairies as they are supposed to be available through the system on any Mac.   
 The third party librairies are all compiled binaries I provide to be included in the final library.   
-They have not been cross-compiled and they are only build for arm64 architecture ( M1 ship )
+They have not yet all been cross-compiled and some are only build for arm64 architecture ( M1 ship )
 
-```
-Todo: provide cross-compiled binaries so the library would run on any Mac
-```
 ## Running the installer
+
+~~~
+	 Note:    
+
+There is an issue with XcodeEditor framework I haven't solved yet,
+if it is not the first time you run the installer, 
+you'll have to clean the build folder to be able to run the
+installer again
+
+~~~
 
 After checking the help page like explained above, you can run the installer without arguments, so the installer can perform all the steps.  
 You'll need for that to edit the Xcode scheme *install* (  < ) in order to deactivate arguments -h and -v.  
@@ -138,27 +145,52 @@ In this step latest source tar.bz2 file is downloaded from ffmpeg website <https
 
 	Double click on the file **ffmpeg-snapshot.tar.bz2** to unzip and untar in place.
 
-### step 4 - Configure FFmpeg
+
+### step 4 - Patch configure script file
+
+In order to check its availability, the *configure* script runs a whole test procedure for each of the requested third party libraries.   
+This procedure involves creating a basic C file with a *main* function that calls one of the method defined by the library.     
+Actually it doesn't really call the method but instead gets a pointer to it.   
+Roughly, if it succeed to have this pointer it means that the linker knows where to find the piece of executable when the method is called but not that the piece of code would really successfully produce the expected result.   
+The temporary C file is then compiled and probably also ran.
+But the only steps that can fail are at pre-compiler and compiler stage.  
+Whatever step in the test the procedure fails, the default output will always print "pkg-config library not found", you'll only find more detailed explanations in *ffbuild/configure.log* if present.   
+This is where the original *configure* script has something that needs to be corrected:   
+When the script calls the compiler, the flags passed are hardcoded, there is no way to influence the compiler behaviour using environment variable or argument passed to the script.   
+Thats why we have to edit the *configure* script to make sure the linker can find the static libraries where they are in order to compile the test script.
+
+ * **Manual step:**
+
+	 Open *configure* file in ffmpeg directory root ( */FFmpeg-Library-Builder/ffmpeg/configure* ) with a text editor    
+	 Search **"-Wl,-dynamic,-search_paths_first"** and replace it by:   
+	 
+     **-Wl,-search_paths_first,-L/.../FFmpeg-Library-Builder/FFmpeg-Library/libs,-lopenjp2,-lspeex,-lvorbis,-logg,-lopenssl,-lssl,-lcrypto**  
+     ( without any whitespace and replacing ... by the absolute path of project root folder )
+
+
+### step 5 - Configure FFmpeg
 
 Runs the configure script in the source folder obtained by previous steps.
 The default arguments used to run configure are those listed bellow. If you need different settings, you can either run this step manually or either edit the argument list to be performed automatically in the macro MCX\_CONFIGURE\_ARGUMENTS located in the file installer/MCXInstaller.m  
 
  * **Manual step:**   
  
+ ( replace ... by your path to FFmpeg-Library-Builder directory )
  
 ```
 	cd "FFmpeg-Library-Builder/ffmpeg"  
 	
-	./configure --prefix=FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg \
-	--enable-static --disable-shared --enable-gpl --enable-version3 \
-	--enable-pthreads --enable-postproc --enable-filters --disable-asm \
-	--disable-programs --enable-runtime-cpudetect --enable-bzlib \
-	 --enable-zlib --enable-opengl --enable-libvpx \
-	 --enable-libspeex --enable-libopenjpeg  
+	./configure --prefix=.../FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg --enable-static
+	 --disable-shared --enable-gpl --enable-version3 --enable-pthreads --enable-postproc
+	  --enable-filters --disable-asm --disable-programs --enable-runtime-cpudetect
+	  --enable-bzlib --enable-zlib --enable-opengl --enable-libvpx --enable-libspeex --enable-libvorbis
+	  --enable-openssl --enable-libopenjpeg  --pkg-config-flags="--static" 
+	  --pkg-config-flags="--static .../FFmpeg-Library-Builder/FFmpeg-Library --debug
+	  PKG_CONFIG_PATH=.../FFmpeg-Library-Builder/FFmpeg-Library/libs/pkgconfig"
 	 
 ```
 
-### step 5 - Make FFmpeg ( without actually building )
+### step 6 - Make FFmpeg ( without actually building )
 
 Runs *make* with *-t* ( touch ) argument which only generate empty .o files in place where *make* would normally build the binary files. The library isn't built at this step, it would be unnecessary and time consuming, but the empty files will later give us a clue on what source files are needed, taking in consideration the configuration that was set in previous step.
 
@@ -171,7 +203,7 @@ Runs *make* with *-t* ( touch ) argument which only generate empty .o files in p
 	cd "FFmpeg-Library-Builder/ffmpeg"   
 	make -t
 ```
-### step 6 - Move source files to Xcode project folder
+### step 7 - Move source files to Xcode project folder
 
 First make sure there is no files in *FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg* directory and in the corresponding group in Xcode project.    
 If this group is still full select all the files, delete them and choose *Move to Trash* instead of the default *Remove Reference* 
@@ -191,7 +223,7 @@ Which consist on:
 	**5 -** removing libavutil/time.h   
 
 
-### step 7 - Add FFmpeg Sources to Xcode project
+### step 8 - Add FFmpeg Sources to Xcode project
 
 To automate this step I am using XcodeEditor framework from Jasper Blues available at : <https://github.com/appsquickly/XcodeEditor>
 
@@ -202,7 +234,7 @@ To automate this step I am using XcodeEditor framework from Jasper Blues availab
 	![add to xcode](images/add.png)   
 
 
-### step 8 - Finish moving & patching source files
+### step 9 - Finish moving & patching source files
 
 
 
@@ -225,11 +257,11 @@ Which consist on:
 
 
 
-### step 9 - Build FFmpeg Library
+### step 10 - Build FFmpeg Library
 
  * **Manual step:**
 
-	Select scheme FFmpeg in Xcode project and build Library (  B )
+	Select scheme FFmpeg in Xcode project and build or archive Library (  B )
 
 
 

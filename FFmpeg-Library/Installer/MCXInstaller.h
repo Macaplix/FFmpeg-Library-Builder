@@ -13,6 +13,7 @@ typedef enum:unsigned char
     MCXInstallStepBackupAndClean,
     MCXInstallStepDownloadSource,
     MCXInstallStepUnzipSource,
+    MCXInstallStepPatchConfigureScript,
     MCXInstallStepConfigure,
     MCXInstallStepMake,
     MCXInstallStepMoveSrc2dest1,
@@ -26,6 +27,7 @@ typedef enum:unsigned char
 @property(readwrite, retain)NSString *selfExecutablePath;
 @property(readwrite, retain)NSString *sourceFFmpegDir;
 @property(readwrite, retain)NSString *destinationFFmpegDir;
+@property(readwrite, retain)NSString *resultDestinationPath;
 @property(readwrite, retain)NSString *manualStep;
 @property(readwrite, assign)MCXInstallStep firstStep;
 @property(readwrite, assign)MCXInstallStep lastStep;
@@ -37,5 +39,6 @@ typedef enum:unsigned char
 @property(readonly)NSString *currentStepName;
 -(BOOL)nextStep;
 -(int)finish;
+-(void)performTest;
 @end
 #endif /* MCXInstaller_h */

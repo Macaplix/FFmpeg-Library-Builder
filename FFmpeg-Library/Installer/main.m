@@ -13,6 +13,7 @@ void showHelp( void );
 
 int main(int argc, const char * argv[])
 {
+    int ret = 0;
     @autoreleasepool
     {
         MCXInstaller *installer = [[MCXInstaller alloc] init];
@@ -22,8 +23,14 @@ int main(int argc, const char * argv[])
         for (unsigned char argi=1; argi < argc; argi++)
         {
             const char *rgestr = argv[argi];
+            if (( argi == 1) && ( strcmp(rgestr, "-t") == 0 ))
+            {
+                [installer performTest];
+                return 0;
+            }
             if (( argi == 1) && ( strcmp(rgestr, "--finish") == 0 ))
             {
+                if ( argc > 2 ) [installer setResultDestinationPath:[NSString stringWithUTF8String:argv[2]]];
                 return [installer finish];
             }
             if ( strlen(rgestr) < 1 ) continue;
@@ -82,9 +89,9 @@ int main(int argc, const char * argv[])
         }
         [installer setFirstStep:fstep];
         [installer setLastStep:lstep];
-        [installer nextStep];
+        ret =([installer nextStep])?0:4;
     }
-    return 0;
+    return ret;
 }
 void showHelp( void )
 {
