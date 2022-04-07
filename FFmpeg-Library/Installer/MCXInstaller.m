@@ -14,8 +14,8 @@
 // ./configure --prefix=$HOME/.../FFmpeg-Library-Builder/FFmpeg-Library/FFmpeg --enable-static --disable-shared --enable-gpl --enable-version3 --enable-pthreads --enable-postproc --enable-filters --disable-asm --disable-programs --enable-runtime-cpudetect --enable-bzlib --enable-zlib --enable-opengl --enable-libvpx --enable-libspeex  --enable-libopenjpeg --enable-libvorbis --enable-openssl --pkg-config-flags="--static --debug PKG_CONFIG_PATH=$HOME/.../FFmpeg-Library-Builder/FFmpeg-Library/libs/pkgconfig"
 
 
-#define MCX_CONFIGURE_ARGUMENTS @[@"--enable-static", @"--disable-shared", @"--enable-gpl", @"--enable-version3", @"--enable-pthreads", @"--enable-postproc", @"--enable-filters", @"--disable-asm", @"--disable-programs", @"--enable-runtime-cpudetect", @"--enable-bzlib", @"--enable-zlib", @"--enable-opengl", @"--enable-libopenjpeg"]
-// @"--enable-libfdk-aac", @"--enable-libx264", @"--enable-nonfree", @"--enable-openssl", @"--enable-libspeex", @"--enable-libvpx", @" --pkg-config-flags=\"--static\"", @"--enable-libvorbis",
+#define MCX_CONFIGURE_ARGUMENTS @[@"--enable-static", @"--disable-shared", @"--enable-gpl", @"--enable-version3", @"--enable-pthreads", @"--enable-postproc", @"--enable-filters", @"--disable-asm", @"--disable-programs", @"--enable-runtime-cpudetect", @"--enable-bzlib", @"--enable-zlib", @"--enable-opengl", @"--enable-libopenjpeg", @"--enable-openssl"]
+// @"--enable-libfdk-aac", @"--enable-libx264", @"--enable-nonfree", @"--enable-libspeex", @"--enable-libvpx", @" --pkg-config-flags=\"--static\"", @"--enable-libvorbis",
 
 #define MCX_LINKER_CFLAGS_TO_REPLACE @"-Wl,-dynamic,-search_paths_first"
 
@@ -303,7 +303,7 @@ BOOL untar(const char * filename);
 -(BOOL)_patchConfigureSript
 {
     BOOL rez = YES;
-    NSString *newflags = [@"-Wl,-search_paths_first,-L" stringByAppendingFormat:@"%s/libs,-lopenjp2", PROJECT_SRC_DIR];//,-lspeex,-lvorbis,-logg,-lopenssl,-lssl,-lcrypto
+    NSString *newflags = [@"-Wl,-search_paths_first,-L" stringByAppendingFormat:@"%s/libs,-lopenjp2,-logg,-lopenssl", PROJECT_SRC_DIR];//,-lspeex,-lvorbis,-lssl,-lcrypto
     _manualStep = [NSString stringWithFormat:
                    @"\t Open configure file in ffmpeg directory root ( %@ ) with a text editor \n"
                    @"\t Search \"%@\" and replace it by:\n%@\n"
