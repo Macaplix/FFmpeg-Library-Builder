@@ -32,6 +32,7 @@
 
 BOOL unzip(const char *fname, char **outfile );
 BOOL untar(const char * filename);
+/*
 @interface NSMutableArray (StackAdditions)
 - (id)pop;
 - (void)push:(id)obj;
@@ -49,6 +50,7 @@ BOOL untar(const char * filename);
      [self addObject: obj];
 }
 @end
+ */
 @interface MCXInstaller()<NSURLSessionDownloadDelegate>
 {
     MCXInstallStep _currentStep;
@@ -63,7 +65,6 @@ BOOL untar(const char * filename);
 -(NSString *)_prefixBackup;
 -(void)_clearFFmpegGroupIncludingFiles:(BOOL)delt;
 -(BOOL)_SGFCopy:(NSString *)src toDest:( NSString *)dest forcing:( BOOL) force;
-//-(BOOL)_SGFCopySource:(NSString *)src toDest:( NSString *)dest forcing:(BOOL)force;
 -(BOOL)_SGFCopyExtSource:(NSString *)src toDest:(NSString *)dest forcing:(BOOL) force withExt:( NSString *)ext exts2copy:( NSArray<NSString *> *) exts;
 -(BOOL)_SGFRemove:(NSString *)src;
 -(BOOL)_SGFReplaceInfile:(NSString *)fpath search:(NSString *)srch withText:( NSString *)txt;
@@ -80,7 +81,6 @@ BOOL untar(const char * filename);
 -(BOOL)_importInXcode;
 -(BOOL)_moveSrc2dest2;
 -(BOOL)_buildLibrary;
-//-(BOOL)_clean;
 @end
 @implementation MCXInstaller
 @synthesize sourceFFmpegDir = _sourceFFmpegDir, destinationFFmpegDir =_destinationFFmpegDir, resultDestinationPath=_resultDestinationPath, firstStep = _firstStep, lastStep = _lastStep, manualStep=_manualStep, noopMode=_noopMode, verboseMode=_verboseMode, quietMode = _quietMode, selfExecutablePath=_selfExecutablePath, clean_level=_clean_level;
