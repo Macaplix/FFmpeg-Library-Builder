@@ -123,6 +123,7 @@ BOOL untar(const char * filename);
 -(BOOL)_performCurrentStep
 {
     BOOL rez = YES;
+    if ( _currentStep > MCX_LAST_STEP ) return NO;
     if ( ! _quietMode ) printf("%u - %s\n", _currentStep +1 , [[self currentStepName] UTF8String]);
     switch (_currentStep) {
         case MCXInstallStepBackupAndClean:
