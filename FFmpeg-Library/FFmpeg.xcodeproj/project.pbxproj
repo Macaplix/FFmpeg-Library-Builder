@@ -840,7 +840,7 @@
 				9C169A832193E8FC0044126F /* Headers */,
 				9C169A842193E8FC0044126F /* Sources */,
 				9C169A852193E8FC0044126F /* Frameworks */,
-				517DD8A25304BB3191E84F29 /* Finish Script */,
+				BE802306AAC890E1C4676D89 /* Finish Script */,
 			);
 			buildRules = (
 			);
@@ -907,7 +907,7 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		517DD8A25304BB3191E84F29 /* Finish Script */ = {
+		BE802306AAC890E1C4676D89 /* Finish Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
