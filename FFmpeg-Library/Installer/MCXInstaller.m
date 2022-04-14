@@ -983,7 +983,10 @@ BOOL untar(const char * filename);
     return [src stringByAppendingPathComponent:appd];
 }
 
-
+-(NSString *)description
+{
+    return [@"Installer at " stringByAppendingFormat:@"%u from %u to %u", _currentStep, _firstStep, _lastStep];
+}
 
 
 

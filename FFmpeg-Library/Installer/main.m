@@ -89,6 +89,7 @@ int main(int argc, const char * argv[])
         }
         [installer setFirstStep:fstep];
         [installer setLastStep:lstep];
+        NSLog(@"%@", installer );
         ret =([installer nextStep])?0:4;
     }
     return ret;
